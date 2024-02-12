@@ -1,0 +1,78 @@
+[gd_scene load_steps=3 format=3 uid="uid://uvrnuuca3qrb"]
+
+[ext_resource type="Script" path="res://Country.gd" id="1_k08s0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2rmnm"]
+bg_color = Color(0.137255, 0.478431, 0.478431, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+expand_margin_left = 5.0
+
+[node name="Node2D" type="Node2D"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+offset_right = 1153.0
+offset_bottom = 649.0
+color = Color(0.384314, 0.576471, 0.686275, 1)
+
+[node name="Country1" type="Panel" parent="."]
+offset_left = 170.0
+offset_top = 150.0
+offset_right = 231.0
+offset_bottom = 212.0
+script = ExtResource("1_k08s0")
+
+[node name="PointBar" type="ProgressBar" parent="."]
+offset_left = 17.0
+offset_top = 549.0
+offset_right = 233.0
+offset_bottom = 576.0
+
+[node name="ExportBar" type="ProgressBar" parent="."]
+offset_left = 920.0
+offset_top = 549.0
+offset_right = 1136.0
+offset_bottom = 576.0
+
+[node name="Drink" type="Label" parent="."]
+offset_left = 283.0
+offset_top = 526.0
+offset_right = 473.0
+offset_bottom = 549.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_2rmnm")
+text = "Дегустировавшие      0"
+
+[node name="Drunkhead" type="Label" parent="."]
+offset_left = 683.0
+offset_top = 526.0
+offset_right = 873.0
+offset_bottom = 549.0
+theme_override_styles/normal = SubResource("StyleBoxFlat_2rmnm")
+text = "Алкоголики                  0"
+
+[node name="Wine" type="Button" parent="."]
+offset_left = 17.0
+offset_top = 587.0
+offset_right = 234.0
+offset_bottom = 642.0
+text = "Вино"
+
+[node name="World" type="Button" parent="."]
+offset_left = 921.0
+offset_top = 587.0
+offset_right = 1138.0
+offset_bottom = 642.0
+text = "Мир"
+
+[node name="CountryButton" type="Button" parent="."]
+unique_name_in_owner = true
+offset_left = 467.0
+offset_top = 521.0
+offset_right = 684.0
+offset_bottom = 552.0
+text = "Мир"

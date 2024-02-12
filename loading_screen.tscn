@@ -1,0 +1,38 @@
+[gd_scene load_steps=4 format=3 uid="uid://d2pqs1i64jqhk"]
+
+[ext_resource type="Script" path="res://ExitButton.gd" id="1_nd1u6"]
+[ext_resource type="Script" path="res://loading_screen.gd" id="1_pkksc"]
+[ext_resource type="Script" path="res://StartButton.gd" id="1_sx1s3"]
+
+[node name="LoadingScreen" type="CanvasLayer"]
+script = ExtResource("1_pkksc")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.843137, 0.309804, 0.717647, 1)
+
+[node name="StartButton" type="Button" parent="."]
+offset_left = 426.0
+offset_top = 268.0
+offset_right = 731.0
+offset_bottom = 323.0
+text = "Play"
+script = ExtResource("1_sx1s3")
+
+[node name="SettingsButton" type="Button" parent="."]
+offset_left = 426.0
+offset_top = 422.0
+offset_right = 731.0
+offset_bottom = 477.0
+text = "EXIT"
+
+[node name="ExitButton" type="Button" parent="."]
+offset_left = 426.0
+offset_top = 347.0
+offset_right = 731.0
+offset_bottom = 402.0
+text = "Settings"
+script = ExtResource("1_nd1u6")
+
+[connection signal="button_down" from="StartButton" to="StartButton" method="_on_button_down"]
