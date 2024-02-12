@@ -22,17 +22,18 @@ script = ExtResource("1_sx1s3")
 
 [node name="SettingsButton" type="Button" parent="."]
 offset_left = 426.0
-offset_top = 422.0
+offset_top = 351.0
 offset_right = 731.0
-offset_bottom = 477.0
-text = "EXIT"
+offset_bottom = 406.0
+text = "Settings"
 
 [node name="ExitButton" type="Button" parent="."]
-offset_left = 426.0
-offset_top = 347.0
-offset_right = 731.0
-offset_bottom = 402.0
-text = "Settings"
+offset_left = 423.0
+offset_top = 433.0
+offset_right = 728.0
+offset_bottom = 488.0
+text = "EXIT"
 script = ExtResource("1_nd1u6")
 
 [connection signal="button_down" from="StartButton" to="StartButton" method="_on_button_down"]
+[connection signal="button_down" from="ExitButton" to="." method="_on_exit_button_button_down"]
