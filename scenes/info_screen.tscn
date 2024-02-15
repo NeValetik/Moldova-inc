@@ -1,0 +1,60 @@
+[gd_scene load_steps=4 format=3 uid="uid://byvpjh2stc7g5"]
+
+[ext_resource type="Texture2D" uid="uid://xmqilx18306g" path="res://gui/info_sign.png" id="1_0k6cn"]
+[ext_resource type="Script" path="res://scenes/info_screen.gd" id="1_eigmx"]
+[ext_resource type="Script" path="res://scenes/CloseButton.gd" id="3_wtliy"]
+
+[node name="InfoScreen" type="CanvasLayer"]
+script = ExtResource("1_eigmx")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.258824, 0.521569, 0.705882, 1)
+
+[node name="ColorRect" type="ColorRect" parent="ColorRect"]
+layout_mode = 0
+offset_top = 28.0
+offset_right = 1152.0
+offset_bottom = 117.0
+color = Color(0.466667, 0.866667, 0.905882, 1)
+
+[node name="Button" type="Button" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = -0.066
+anchor_top = -0.04
+anchor_right = -0.066
+anchor_bottom = -0.04
+offset_left = 131.032
+offset_top = 48.92
+offset_right = 223.032
+offset_bottom = 146.92
+icon = ExtResource("1_0k6cn")
+flat = true
+expand_icon = true
+
+[node name="CountryImg" type="TextureRect" parent="."]
+unique_name_in_owner = true
+anchors_preset = -1
+anchor_right = 0.017
+anchor_bottom = 0.062
+offset_left = 49.0
+offset_top = 181.0
+offset_right = 299.416
+offset_bottom = 403.824
+
+[node name="CloseButton" type="Button" parent="."]
+anchors_preset = -1
+anchor_left = 0.151
+anchor_top = 0.152
+anchor_right = 0.151
+anchor_bottom = 0.152
+offset_left = 869.048
+offset_top = -55.496
+offset_right = 959.048
+offset_bottom = 9.50399
+text = "X"
+script = ExtResource("3_wtliy")
+
+[connection signal="button_down" from="CloseButton" to="." method="_on_close_button_button_down"]

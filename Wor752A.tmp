@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://uvrnuuca3qrb"]
+[gd_scene load_steps=10 format=3 uid="uid://uvrnuuca3qrb"]
 
 [ext_resource type="Script" path="res://Ocean.gd" id="1_7yddk"]
 [ext_resource type="Script" path="res://Country.gd" id="1_k08s0"]
@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://cw8qwd0g2cpqg" path="res://scenes/wine_cellar.tscn" id="6_6151l"]
 [ext_resource type="PackedScene" uid="uid://byvpjh2stc7g5" path="res://scenes/info_screen.tscn" id="7_03v8p"]
 [ext_resource type="PackedScene" uid="uid://brb5qip2bq4ec" path="res://scenes/escape_scene.tscn" id="8_nfni3"]
-[ext_resource type="PackedScene" uid="uid://cfa0jeu6y16mj" path="res://scenes/world_scene.tscn" id="9_y863x"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2rmnm"]
 bg_color = Color(0.137255, 0.478431, 0.478431, 1)
@@ -139,10 +138,6 @@ visible = false
 unique_name_in_owner = true
 visible = false
 
-[node name="WorldScene" parent="." instance=ExtResource("9_y863x")]
-unique_name_in_owner = true
-visible = false
-
 [connection signal="tree_exiting" from="." to="LoadingScreen" method="_on_node_2d_tree_exiting"]
 [connection signal="focus_entered" from="Ocean/ColorRect" to="Ocean" method="_on_color_rect_focus_entered"]
 [connection signal="focus_entered" from="Ocean/Country1" to="Ocean/Country1" method="_on_focus_entered"]
@@ -158,6 +153,5 @@ visible = false
 [connection signal="focus_exited" from="Ocean/Country4" to="Ocean/Country4" method="_on_focus_exited"]
 [connection signal="gui_input" from="Ocean/Country4" to="Ocean/Country4" method="_on_gui_input"]
 [connection signal="button_down" from="Ocean/WineButton" to="WineCellar" method="_on_wine_button_button_down"]
-[connection signal="button_down" from="Ocean/WorldButton" to="WorldScene" method="_on_world_button_button_down"]
 [connection signal="button_down" from="Ocean/CountryButton" to="InfoScreen" method="_on_country_button_button_down"]
 [connection signal="tree_exited" from="LoadingScreen" to="." method="_on_loading_screen_tree_exited"]

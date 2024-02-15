@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=3 uid="uid://cfa0jeu6y16mj"]
+
+[ext_resource type="Script" path="res://scenes/world_scene.gd" id="1_ihs70"]
+
+[node name="WorldScene" type="CanvasLayer"]
+script = ExtResource("1_ihs70")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1153.0
+offset_bottom = 645.0
+color = Color(0.443137, 0.737255, 0.988235, 0.356863)
+
+[node name="Close_Button" type="Button" parent="."]
+offset_left = 996.0
+offset_top = 24.0
+offset_right = 1098.0
+offset_bottom = 111.0
+text = "X"
+
+[connection signal="button_down" from="Close_Button" to="." method="_on_close_button_button_down"]

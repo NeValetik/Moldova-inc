@@ -1,6 +1,5 @@
-[gd_scene load_steps=4 format=3 uid="uid://d2pqs1i64jqhk"]
+[gd_scene load_steps=3 format=3 uid="uid://d2pqs1i64jqhk"]
 
-[ext_resource type="Script" path="res://ExitButton.gd" id="1_nd1u6"]
 [ext_resource type="Script" path="res://loading_screen.gd" id="1_pkksc"]
 [ext_resource type="Script" path="res://StartButton.gd" id="1_sx1s3"]
 
@@ -33,7 +32,6 @@ offset_top = 433.0
 offset_right = 728.0
 offset_bottom = 488.0
 text = "EXIT"
-script = ExtResource("1_nd1u6")
 
 [connection signal="button_down" from="StartButton" to="StartButton" method="_on_button_down"]
 [connection signal="button_down" from="ExitButton" to="." method="_on_exit_button_button_down"]

@@ -1,0 +1,34 @@
+[gd_scene load_steps=4 format=3 uid="uid://d3ucu51pjmp2k"]
+
+[ext_resource type="Texture2D" uid="uid://dehdj2ijv4gh1" path="res://gui/Start_sign.png" id="1_j4q51"]
+[ext_resource type="Script" path="res://StartSign.gd" id="2_k3om0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mpugd"]
+radius = 21.017
+
+[node name="StartSign" type="Sprite2D"]
+position = Vector2(66, 71)
+scale = Vector2(1, 1.18447)
+texture = ExtResource("1_j4q51")
+offset = Vector2(0, -24)
+script = ExtResource("2_k3om0")
+
+[node name="Animation" type="AnimationPlayer" parent="."]
+
+[node name="Button" type="Button" parent="."]
+offset_left = -21.0
+offset_top = -43.9013
+offset_right = 19.0
+offset_bottom = -13.9013
+flat = true
+metadata/_edit_use_anchors_ = true
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-1, -27.0162)
+shape = SubResource("CircleShape2D_mpugd")
+
+[connection signal="mouse_entered" from="Button" to="." method="_on_button_mouse_entered"]
+[connection signal="mouse_exited" from="Button" to="." method="_on_button_mouse_exited"]
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

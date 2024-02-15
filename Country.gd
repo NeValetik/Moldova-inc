@@ -1,35 +1,46 @@
 extends Panel
 
-var db : SQLite
-var db_name = "res://dataBase/CountryDataset.db"
+var focused = false
+
+var game_started;
 
 
-func evaluate(command, variable_names = [], variable_values = []):
-	var expression = Expression.new()
-	var error = expression.parse(command, variable_names)
-	if error != OK:
-		push_error(expression.get_error_text())
-		return
-
-	var result = expression.execute(variable_values, self)
-
-	if not expression.has_execute_failed():
-		print(str(result))
-		return result
 
 
-#func _ready():
-	#db = SQLite.new()
-	#db.path = db_name
-	#db.open_db()
-	#var graph_links = db.select_rows("CountryData","ID",["ID","Country","Edges"])
-	#print(self.get_meta("metadata/Index"))
-	#self.editor_description = graph_links[self.get_meta("metadata/Index")]["Country"]
-	#self.set_meta("links",evaluate(graph_links[self.get_meta("metadata/Index")]["Edges"]))
+func _ready():
+	self.process_priority = 1
+	game_started = get_parent().game_started 
 
+func _process(delta):
+	game_started = get_parent().game_started 
 
 func _on_focus_entered():
 	if Input.is_action_pressed("on_mouse_press"):
+		
 		var countryName = self.editor_description
-		%CountryButton.text = countryName
+		$"../CountryButton".text = countryName
+		
+		if game_started == false:
+			focused = true
+			var start_sign = preload("res://gui/start_sign.tscn").instantiate()
+			start_sign.global_position = get_local_mouse_position()
+			add_child(start_sign)
 
+var on_sign = false
+
+func _on_focus_exited():
+	if on_sign == false and game_started == false:
+		self.get_child(0).queue_free()
+		focused = false
+	else:
+		pass
+
+
+
+func _on_gui_input(event):
+	if focused == true and game_started == false:
+		if event.is_action_pressed("on_mouse_press"):
+			self.get_child(0).queue_free()
+			var start_sign = preload("res://gui/start_sign.tscn").instantiate()
+			start_sign.global_position = get_local_mouse_position()
+			add_child(start_sign)
