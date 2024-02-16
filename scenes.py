@@ -1,6 +1,7 @@
-import pygame, random, os, sys, math
+import pygame, os, sys
 import matplotlib.pyplot as plt
 import numpy as np
+from objects import *
 pygame.init()
 
 class GameState:
@@ -12,6 +13,8 @@ class GameState:
     country_statistic = False
     upgrade_menu = False
 
+    window = None
+
     @classmethod
     def update(cls, window):
         if GameState.main_menu:
@@ -19,9 +22,8 @@ class GameState:
         if GameState.play:
             ToSellButton.one_time_activation()
             Map.update(window)
-            Plane.display_planes(window)
-        # if GameState.country_statistic:
-        #     CountryStatistic.update()
+        if GameState.country_statistic:
+            CountryStatistic.update()
         if GameState.statistic:
             Statistic.update(window)
         if GameState.upgrade_menu:
@@ -31,26 +33,31 @@ class GameState:
         if GameState.settings:
             Settings.update(window)
 
-class Button(pygame.sprite.Sprite):
-    def __init__(self, name, image_path, position, rescale=None):
-        super().__init__()
-        self.name = name
-        if rescale == None:
-            self.image = pygame.image.load(os.path.join(os.getcwd(),image_path))
-        else:
-            self.image = pygame.transform.scale(pygame.image.load(os.path.join(os.getcwd(),image_path)), rescale)
-        self.rect = self.image.get_rect()
-        self.rect.center = position
+    @classmethod
+    def set_window(cls, window):
+        cls.window = window
+        MainMenu.set_window(window)
+
 
 class MainMenu:
     buttons = [
-        Button("start", "images/buttons/start-btn.png", (400, 350)),
-        # Button("settings", "images/buttons/settings-btn.png", (400, 450)),
-        Button("exit", "images/buttons/exit-btn.png", (400, 550)),
+        Button("start", "images/ButtonsAsset/png/in-use/Play.png", (500, 200)),
+        Button("settings", image_path=None, position=(500, 400)),
+        Button("exit", "images/ButtonsAsset/png/in-use/Exit.png", (500, 500)),
     ]
+
+    background = pygame.transform.scale(pygame.image.load("images/wine-field.jpg"), (1200, 800))
+    background.set_alpha(100)
+
+    panel_surface = pygame.Surface((300, 400), pygame.SRCALPHA)
+    panel_for_buttons = pygame.draw.rect(panel_surface, (55, 55, 55) + (120,), panel_surface.get_rect(), border_radius=10)
+
 
     @classmethod
     def update(cls, window):
+        cls.display_background(window)
+        cls.display_title(window)
+        cls.dispay_panel_for_buttons(window)
         cls.display_buttons(window)
         cls.check_collisions()
     
@@ -67,14 +74,46 @@ class MainMenu:
                     GameState.main_menu = False
                     GameState.play = True
                 elif button.name == "settings":
-                    pass
+                    Settings.back_is = "main_menu"
+                    GameState.main_menu = False
+                    GameState.settings = True
                 elif button.name == "exit":
                     sys.exit()
+    
+    @classmethod
+    def display_background(cls, window):
+        window.blit(cls.background, cls.background.get_rect())
+    
+    @classmethod
+    def dispay_panel_for_buttons(cls, window):
+        window.blit(cls.panel_surface, (450, 200))
+    
+    @classmethod
+    def display_title(cls, window):
+        font_path = "images/font/evil-empire.ttf"
+        font_size = 36
+        font_color = (0, 0, 0)
+        font = pygame.font.Font(font_path, font_size)
+
+        text = "Moldova Inc"
+        text_surface = font.render(text, True, font_color)  # White color
+        window.blit(text_surface, (470, 150))
+    
+    @classmethod
+    def set_window(cls, window):
+        print(window.get_size())
+        cls.window = window
+        cls.background = pygame.transform.scale(pygame.image.load("images/wine-field.jpg"), window.get_size())
+        cls.background.set_alpha(100)
+
+
+
+
 
 class Pause:
     buttons = [
         Button("resume", "images/buttons/resume-btn.png", (400, 350)),
-        # Button("settings", "images/buttons/settings-btn.png", (400, 450)),
+        Button("settings", image_path=None , position=(400, 450)),
         Button("exit", "images/buttons/exit-btn.png", (400, 550)),
     ]
 
@@ -96,7 +135,9 @@ class Pause:
                     GameState.pause = False
                     GameState.play = True
                 elif button.name == "settings":
-                    pass
+                    Settings.back_is = "pause"
+                    GameState.pause = False
+                    GameState.settings = True
                 elif button.name == "exit":
                     sys.exit()
 
@@ -136,12 +177,20 @@ class UpgradeMenu:
     ]
 
     image = pygame.transform.scale(pygame.image.load('images/cellar.jpg'),  (1200,800))
+    image.set_alpha(50)
     rect = image.get_rect()
     pressed = False
 
     @classmethod
     def update(cls, window):
+        window.fill((0, 0, 0))
         window.blit(cls.image, cls.rect)
+
+        transparent_gray = (55, 55, 55) + (120,)
+        transparent_surface = pygame.Surface((window.get_size()[0]-60, window.get_size()[1]-60), pygame.SRCALPHA)
+        pygame.draw.rect(transparent_surface, transparent_gray, transparent_surface.get_rect(), border_radius=10)
+        window.blit(transparent_surface, (30, 30)) 
+
         cls.display_buttons(window)
         cls.check_collisions()
 
@@ -162,33 +211,70 @@ class UpgradeMenu:
                             GameState.play = True
                 else:
                     cls.pressed = False
-            
 
-
-class Settings:
+class CountryStatistic:
     buttons = [
-        # soon
+        Button("back", image_path=None, position=(500,500))
     ]
 
     @classmethod
     def update(cls, window):
         cls.display_buttons(window)
+        cls.check_collisions()
+
+    @classmethod
+    def display_buttons(cls, window):
+        for button in cls.buttons:
+            window.blit(button, button.get_rect())
+
+    @classmethod
+    def check_collisions(cls):
+        for button in cls.buttons:
+            if button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+                if button.name == "back":
+                    GameState.country_statistic = False
+                    GameState.play = True
+
+
+class Settings:
+    buttons = [
+        Button("back", image_path=None, position=(500,100))
+    ]
+
+    back_is = None
+
+    @classmethod
+    def update(cls, window):
+        cls.display_buttons(window)
+        cls.check_collisions()
 
     @classmethod
     def display_buttons(cls, window):
         for button in cls.buttons:
             window.blit(button.image, button.rect)
+    
+    @classmethod
+    def check_collisions(cls):
+        for button in cls.buttons:
+            if button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+                if button.name == "back":
+                    GameState.settings = False
+                    if Settings.back_is == "main_menu":
+                        GameState.main_menu = True
+                    elif Settings.back_is == "pause":
+                        GameState.pause = True
+                    
+
 
 class Map:
     buttons = [
         Button("upgrade_menu", "images/buttons/cellar-icon-btn.png", (1150,750), (100, 100)),
-        # Button("statistics", "images/stats.png", (630,480)),
-        # Button("settings", "images/settings.png", (620,480)),
+        Button("statistics", image_path=None, position=(630,480)),
     ]
 
-    image = pygame.image.load("images/map.jpg")
-    initial_image = pygame.image.load("images/map.jpg")
-
+    image = pygame.transform.scale(pygame.image.load("images/map.png"), (1200, 800))
+    initial_image = pygame.image.load("images/map.png")
+    
     width = image.get_width()
     height = image.get_height()
 
@@ -213,13 +299,18 @@ class Map:
 
     @classmethod
     def update(cls, window):
+        Map.personal_update(window)
+        Country.update(window, Map)
+        ToSellButton.update(window, Map)
+        Tranport.update(window, Map)
+
+    @classmethod
+    def personal_update(cls, window):
         window.blit(cls.image, cls.rect)
         cls.display_buttons(window)
         cls.to_scale()
         cls.to_drag()
         cls.check_collisions()
-        ToSellButton.display_buttons(window)
-        ToSellButton.check_collisions()
 
     @classmethod
     def to_drag(cls):
@@ -242,15 +333,15 @@ class Map:
         cls.last_pos = cls.rect.center
 
         if cls.scroll == 1:  
-            if cls.scale >= 1.9:
-                cls.scale = 2
+            if cls.scale >= 2.9:
+                cls.scale = 3
             else:
-                cls.scale += 0.1
+                cls.scale += 0.2
         elif cls.scroll == -1:  
             if cls.scale <= 1.1:
                 cls.scale = 1
             else:  
-                cls.scale -= 0.1
+                cls.scale -= 0.2
         cls.scroll = 0
 
         cls.image = pygame.transform.scale(cls.initial_image, (cls.scale*cls.width, cls.scale*cls.height))
@@ -279,157 +370,9 @@ class Map:
                 else:
                     cls.pressed_icon = False
 
-
-class ToSellButton(pygame.sprite.Sprite):
-    coor = {
-        "Canada": (230,230),
-        "Republic of Moldova": (685,316),
-        "China": (948,371),
-        "USA": (228,349),
-    }
-
-    initiated = False  # For first and last initiation
-    buttons = []
-    
-
-    def __init__(self, name, pos):
-        super().__init__()
-        self.name = name
-        self.pos = pos
-        self.is_available = False
-        self.image = pygame.transform.scale(pygame.image.load("images/wine.png"), (50, 70))
-        self.rect = self.image.get_rect()
-        self.rect.center = (self.pos[0], self.pos[1])
-
-
     @classmethod
-    def one_time_activation(cls):
-        if not cls.initiated:
-            cls.initiated = True
-            for country, coor in cls.coor.items():
-                cls.buttons.append(ToSellButton(country, coor))
-
-
-    @classmethod
-    def display_buttons(cls, window):
-        cls.random_availability()
-
-        for button in [button for button  in cls.buttons if button.is_available]:
-            button.rect.center = (Map.rect.topleft[0] + Map.scale*button.pos[0],
-                                Map.rect.topleft[1] + Map.scale*button.pos[1])
-
-            if button.is_available:
-                window.blit(button.image, button.rect)
-
-    @classmethod
-    def random_availability(cls):
-        for button in cls.buttons:
-            if random.randint(1, 100) == 1:
-                button.is_available = True
-
-    @classmethod
-    def check_collisions(cls):
-        for button in cls.buttons:
-            if button.is_available and button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
-                    button.is_available = False
-                    if button.pos != (685,316):
-                        Plane(button.pos)
-
-
-
-class Plane(pygame.sprite.Sprite):
-    planes = []
-
-    def __init__(self, destination):
-        super().__init__()
-        self.image = pygame.transform.scale(pygame.image.load("images/plane.png"), (30,30)).convert_alpha()
-        self.initial_image = pygame.transform.scale(pygame.image.load("images/plane.png"), (30,30)).convert_alpha()
-        self.rect = self.image.get_rect()
-        self.mask = pygame.mask.from_surface(self.image)
-         
-        self.origin = (685,316)  # Moldova
-        self.destination = destination
-        self.rect.center = self.origin
-
-        self.before_middle_point = True
-        self.path = Plane.get_path(self.origin, self.destination)
-        self.middle_point = self.path[len(self.path) // 2]
-        Plane.planes.append(self)
-
-    @classmethod
-    def display_planes(cls, window):
-        for plane in Plane.planes:
-            if len(plane.path) <= 1:
-                del plane
-            else:
-                plane.rect.center = (Map.rect.topleft[0] + Map.scale*plane.path[0][0],
-                                    Map.rect.topleft[1] + Map.scale*plane.path[0][1])
-
-                # Look at middle point (before middle point), look at destination (after middle point)
-                if plane.before_middle_point and plane.path[0] != plane.middle_point:
-                    plane.before_middle_point = False
-                    plane.image = pygame.transform.rotate(plane.image, -120 + Plane.angle_between_points(plane.origin, plane.middle_point))
-                elif plane.path[0] == plane.middle_point:
-                    plane.image = pygame.transform.rotate(plane.image, -150 + Plane.angle_between_points(plane.middle_point, plane.destination))
-                
-
-                window.blit(plane.image, plane.rect)
-                del plane.path[0]
-        
-    @classmethod
-    def get_path(cls, c1, c2):
-        middle_point = (min([c1[0], c2[0]]) + (abs(c1[0] - c2[0]) / 2), min([c1[1], c2[1]]) + (abs(c1[1] - c2[1]) / 2))
-        direction_vector = (c2[0] - c1[0], c2[1] - c1[1])
-
-        perp_vect = (-direction_vector[1], direction_vector[0])
-        magnitude = math.sqrt(sum(component**2 for component in perp_vect))
-        normalized_perp_vector = (perp_vect[0] / magnitude, perp_vect[1] / magnitude)
-
-        distance = 100
-        third_point = (middle_point[0] + normalized_perp_vector[0]*distance, middle_point[1] + normalized_perp_vector[1]*distance)
-        
-
-        x_values = [c1[0], third_point[0], c2[0]]
-        y_values = [c1[1], third_point[1], c2[1]]
-            
-        x = np.array(x_values)
-        y = np.array(y_values)
-        coefficients = np.polyfit(x, y, 2)  # Fit a quadratic polynomial (degree 2)
-        curve_x = np.linspace(int(min(x)), int(max(x)), int(max(x)-min(x)+1))
-        curve_y = np.polyval(coefficients, curve_x)
-        coordinates = [(x_val, y_val) for x_val, y_val in zip(curve_x, curve_y)]
-
-        if c1[0] > c2[0]:
-            coordinates.sort(reverse=True)
-        return coordinates
-    
-    @classmethod
-    def angle_between_points(cls, point1, point2):
-        dx = point2[0] - point1[0]
-        dy = point2[1] - point1[1]
-        angle = math.degrees(math.atan2(dy, dx))
-        angle_degrees = angle % 360
-        return angle_degrees
-                
-
-class Ship(pygame.sprite.Sprite):
-    ships = []
-
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.transform.scale(pygame.image.load("images/ship.png"), (30,30)).convert_alpha()
-        self.initial_image = pygame.transform.scale(pygame.image.load("images/ship.png"), (30,30)).convert_alpha()
-        self.rect = self.image.get_rect()
-        self.mask = pygame.mask.from_surface(self.image)
-        self.pos = None
-        Ship.ships.append(self)
-
-    @classmethod
-    def display_ships(cls, window):
-        for ship in Plane.ships:
-            ship.rect.center = (Map.rect.topleft[0] + Map.scale*ship.pos[0],
-                                Map.rect.topleft[1] + Map.scale*ship.pos[1])
-
-            window.blit(ship.image, ship.rect)
+    def set_window(cls, window):
+        cls.window = pygame.transform.scale(pygame.image.load("images/map2.png"), (window.get_size()[0] / cls.initial_image.get_size()[0],
+                                                                                    window.get_size()[1] / cls.initial_image.get_size()[1]))
 
 pygame.quit()
