@@ -213,9 +213,10 @@ class Country(pygame.sprite.Sprite):
         Country.countries.append(self)
 
     @classmethod
-    def update(cls, window, Map):
-        Country.scale_on_focus()
-        Country.display_countries(window, Map)
+    def update(cls, window, Map, GameState, CountryStatistic):
+        cls.scale_on_focus()
+        cls.display_countries(window, Map)
+        cls.check_collisions(GameState, CountryStatistic)
 
     @classmethod
     def display_countries(cls, window, Map):
@@ -238,17 +239,31 @@ class Country(pygame.sprite.Sprite):
             else:
                 country.image = country.initial_image
                 country.focused = False
+    
+    @classmethod
+    def check_collisions(cls, GameState, CountryStatistic):
+        for country in cls. countries:
+            if country.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+                GameState.country_statistic = True
+                GameState.play = False
+                CountryStatistic.focus_country = country
 
 class Wine:
-    trandmarks = []
+    name = "Traminer"
 
-    def __init__(self, name):
-        self.name = name
-        self.total_sold = 0
+    taste = 0
+    naturality = 0
+    advertisement = 0
+    
+    # trandmarks = []
 
-        self.taste = 0
-        self.naturality = 0
-        self.advertisement = 0
+    # def __init__(self, name):
+    #     self.name = name
+    #     self.total_sold = 0
+
+    #     self.taste = 0
+    #     self.naturality = 0
+    #     self.advertisement = 0
 
 
 pygame.quit()

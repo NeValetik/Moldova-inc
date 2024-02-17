@@ -23,7 +23,7 @@ class GameState:
             ToSellButton.one_time_activation()
             Map.update(window)
         if GameState.country_statistic:
-            CountryStatistic.update()
+            CountryStatistic.update(window)
         if GameState.statistic:
             Statistic.update(window)
         if GameState.upgrade_menu:
@@ -176,23 +176,40 @@ class UpgradeMenu:
         Button("world-icon", "images/buttons/world-icon-btn.png", (1150,750), (100, 100))
     ]
 
+    upgrade_buttons = [
+        Button("taste-up", image_path=None, position=(500, 500)),
+        Button("naturality-up", image_path=None, position=(500, 600)),
+        Button("advertisement-up", image_path=None, position=(500, 700)),
+
+        Button("taste-down", image_path=None, position=(400, 500)),
+        Button("naturality-down", image_path=None, position=(400, 600)),
+        Button("advertisement-down", image_path=None, position=(400, 700)), 
+    ]
+
     image = pygame.transform.scale(pygame.image.load('images/cellar.jpg'),  (1200,800))
     image.set_alpha(50)
     rect = image.get_rect()
-    pressed = False
+    pressed_1 = False
+    pressed_2 = False
 
     @classmethod
     def update(cls, window):
+        cls.display_background(window)
+        cls.display_buttons(window)
+        cls.display_upgrade_buttons(window)
+        cls.display_wine_data(window)
+        cls.check_collisions()
+
+    @classmethod
+    def display_background(cls, window):
         window.fill((0, 0, 0))
         window.blit(cls.image, cls.rect)
 
         transparent_gray = (55, 55, 55) + (120,)
         transparent_surface = pygame.Surface((window.get_size()[0]-60, window.get_size()[1]-60), pygame.SRCALPHA)
         pygame.draw.rect(transparent_surface, transparent_gray, transparent_surface.get_rect(), border_radius=10)
-        window.blit(transparent_surface, (30, 30)) 
+        window.blit(transparent_surface, (30, 30))
 
-        cls.display_buttons(window)
-        cls.check_collisions()
 
     @classmethod
     def display_buttons(cls, window):
@@ -204,28 +221,67 @@ class UpgradeMenu:
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 if pygame.mouse.get_pressed()[0]:
-                    if not cls.pressed:
-                        cls.pressed = True
+                    if not cls.pressed_1:
+                        cls.pressed_1 = True
                         if button.name == "world-icon":
                             GameState.upgrade_menu = False
                             GameState.play = True
                 else:
-                    cls.pressed = False
+                    cls.pressed_1 = False
+        
+        for button in cls.upgrade_buttons:
+            if button.rect.collidepoint(pygame.mouse.get_pos()):
+                if pygame.mouse.get_pressed()[0]:
+                    if not cls.pressed_2:
+                        cls.pressed_2 = True
+                        if pygame.mouse.get_pressed()[0]:
+                            if button.name == "taste-up":
+                                Wine.taste += 1
+                            elif button.name == "taste-down":
+                                if Wine.taste > 0:
+                                    Wine.taste -= 1
+                            elif button.name == "naturality-up":
+                                Wine.naturality += 1
+                            elif button.name == "naturality-down":
+                                if Wine.naturality > 0:
+                                    Wine.naturality -= 1
+                            elif button.name == "advertisement-up":
+                                Wine.advertisement += 1
+                            elif button.name == "advertisement-down":
+                                if Wine.naturality > 0:
+                                    Wine.naturality -= 1
+                else:
+                    cls.pressed_2 = False
 
+    @classmethod
+    def display_wine_data(cls, window):
+        font = pygame.font.Font("images/font/evil-empire.ttf", 18)
+        text = f"Taste: {Wine.taste}, Naturality: {Wine.naturality}, Advertisement: {Wine.advertisement}"
+        text_render = font.render(text, True, (255, 255, 255))
+        window.blit(text_render, (100, 100))
+
+
+    @classmethod
+    def display_upgrade_buttons(cls, window):
+        for button in cls.upgrade_buttons:
+            window.blit(button.image, button.rect)
 class CountryStatistic:
     buttons = [
         Button("back", image_path=None, position=(500,500))
     ]
 
+    focus_country = None
+
     @classmethod
     def update(cls, window):
+        cls.display_country_statistics(window)
         cls.display_buttons(window)
         cls.check_collisions()
 
     @classmethod
     def display_buttons(cls, window):
         for button in cls.buttons:
-            window.blit(button, button.get_rect())
+            window.blit(button.image, button.rect)
 
     @classmethod
     def check_collisions(cls):
@@ -234,6 +290,11 @@ class CountryStatistic:
                 if button.name == "back":
                     GameState.country_statistic = False
                     GameState.play = True
+
+    @classmethod
+    def display_country_statistics(cls, window):
+        if cls.focus_country != None:
+            window.blit(cls.focus_country.image, cls.focus_country.rect)
 
 
 class Settings:
@@ -269,7 +330,7 @@ class Settings:
 class Map:
     buttons = [
         Button("upgrade_menu", "images/buttons/cellar-icon-btn.png", (1150,750), (100, 100)),
-        Button("statistics", image_path=None, position=(630,480)),
+        Button("statistics", image_path=None, position=(800,480)),
     ]
 
     image = pygame.transform.scale(pygame.image.load("images/map.png"), (1200, 800))
@@ -300,7 +361,7 @@ class Map:
     @classmethod
     def update(cls, window):
         Map.personal_update(window)
-        Country.update(window, Map)
+        Country.update(window, Map, GameState, CountryStatistic)
         ToSellButton.update(window, Map)
         Tranport.update(window, Map)
 
@@ -367,6 +428,9 @@ class Map:
                         if button.name == "upgrade_menu":
                             GameState.play = False
                             GameState.upgrade_menu = True
+                        elif button.name == "statistics":
+                            GameState.play = False
+                            GameState.statistic = True
                 else:
                     cls.pressed_icon = False
 
