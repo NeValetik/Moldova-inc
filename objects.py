@@ -13,12 +13,13 @@ class Button(pygame.sprite.Sprite):
             else:
                 self.image = pygame.transform.scale(pygame.image.load(os.path.join(os.getcwd(),image_path)), rescale)
         else:
-            self.image = Button.make_surface(text, position)
+            self.image = Button.make_surface(position)
         self.rect = self.image.get_rect()
         self.rect.center = position
+        self.text = text
     
     @classmethod
-    def make_surface(cls, text, position, size=(70,40), color=(50,50,50)):
+    def make_surface(cls, position, size=(70,40), color=(70,70,70)):
         box = pygame.Surface(size)
         box.fill(color)
         font = pygame.font.Font("images/font/evil-empire.ttf", 12)
@@ -29,6 +30,9 @@ class Button(pygame.sprite.Sprite):
 
         box.blit(text, text_rect)
         return  box
+
+
+
 class ToSellButton(pygame.sprite.Sprite):
     coor = {
         "Canada": (230,230),
@@ -53,6 +57,7 @@ class ToSellButton(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(pygame.image.load("images/Icons/Circle.png"), (20, 30))
         self.rect = self.image.get_rect()
         self.rect.center = (self.pos[0], self.pos[1])
+        self.mask = pygame.mask.from_surface(self.image)
 
 
     @classmethod
@@ -84,9 +89,12 @@ class ToSellButton(pygame.sprite.Sprite):
     def check_collisions(cls):
         for button in cls.buttons:
             if button.is_available and button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
-                    button.is_available = False
-                    if button.pos != (685,316):
-                        Plane(button.pos)
+                    relative_x = pygame.mouse.get_pos()[0] - button.rect.x
+                    relative_y = pygame.mouse.get_pos()[1] - button.rect.y
+                    if button.mask.get_at((relative_x, relative_y)):
+                        button.is_available = False
+                        if button.pos != (685,316):
+                            Plane(button.pos)
 
 
 class Tranport:
@@ -201,13 +209,19 @@ class Ship(pygame.sprite.Sprite):
 class Country(pygame.sprite.Sprite):
     countries = []
 
-    def __init__(self):
-        self.image = pygame.transform.scale(pygame.image.load("images/countries/10242.png").convert_alpha(), (180,180))
-        self.initial_image = pygame.transform.scale(pygame.image.load("images/countries/10242.png").convert_alpha(), (180,180))
+    activated = False
+    initiation = {
+        "USA" : ["images/countries/10242.png", (250,350)]
+    }
+
+
+    def __init__(self, name, image_path, pos):
+        self.image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), (180,180))
+        self.initial_image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), (180,180))
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
-        self.name = "USA"
-        self.pos = (250,350)
+        self.name = name
+        self.pos = pos
         self.rect.center = self.pos
         self.focused = False
         Country.countries.append(self)
@@ -232,10 +246,13 @@ class Country(pygame.sprite.Sprite):
     def scale_on_focus(cls):
         for country in Country.countries:
             if country.rect.collidepoint(pygame.mouse.get_pos()):
-                if not country.focused:
-                    country.image = pygame.transform.scale(country.image, (0.9*country.image.get_size()[0],
-                                                                            0.9*country.image.get_size()[1]))
-                    country.focused = True
+                relative_x = pygame.mouse.get_pos()[0] - country.rect.x
+                relative_y = pygame.mouse.get_pos()[1] - country.rect.y
+                if country.mask.get_at((relative_x, relative_y)): 
+                    if not country.focused:
+                        country.image = pygame.transform.scale(country.image, (0.9*country.image.get_size()[0],
+                                                                                0.9*country.image.get_size()[1]))
+                        country.focused = True
             else:
                 country.image = country.initial_image
                 country.focused = False
@@ -247,6 +264,13 @@ class Country(pygame.sprite.Sprite):
                 GameState.country_statistic = True
                 GameState.play = False
                 CountryStatistic.focus_country = country
+    
+    @classmethod
+    def one_time_activation(cls):
+        if not cls.activated:
+            cls.activated = True
+            for key, value in cls.initiation.items():
+                Country(key, value[0], value[1])
 
 class Wine:
     name = "Traminer"
@@ -254,7 +278,7 @@ class Wine:
     taste = 0
     naturality = 0
     advertisement = 0
-    
+
     # trandmarks = []
 
     # def __init__(self, name):

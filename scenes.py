@@ -13,14 +13,13 @@ class GameState:
     country_statistic = False
     upgrade_menu = False
 
-    window = None
-
     @classmethod
     def update(cls, window):
         if GameState.main_menu:
             MainMenu.update(window)
         if GameState.play:
             ToSellButton.one_time_activation()
+            Country.one_time_activation() 
             Map.update(window)
         if GameState.country_statistic:
             CountryStatistic.update(window)
@@ -33,10 +32,7 @@ class GameState:
         if GameState.settings:
             Settings.update(window)
 
-    @classmethod
-    def set_window(cls, window):
-        cls.window = window
-        MainMenu.set_window(window)
+  
 
 
 class MainMenu:
