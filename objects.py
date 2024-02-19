@@ -22,13 +22,13 @@ class Button(pygame.sprite.Sprite):
     def make_surface(cls, position, size=(70,40), color=(70,70,70)):
         box = pygame.Surface(size)
         box.fill(color)
-        font = pygame.font.Font("images/font/evil-empire.ttf", 12)
+        # font = pygame.font.Font("images/font/evil-empire.ttf", 12)
 
-        text = font.render(text, True, (255,255,255))
-        text_rect = text.get_rect()
-        text_rect.center = position
+        # text = font.render(text, True, (255,255,255))
+        # text_rect = text.get_rect()
+        # text_rect.center = position
 
-        box.blit(text, text_rect)
+        # box.blit(text, text_rect)
         return  box
 
 
