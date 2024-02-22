@@ -7,7 +7,7 @@
 > <ul>
 > <li>Vova</li>
 > <li>Vovan</li>
-> <li>Vladimir/li>
+> <li>Vladimir</li>
 > <li>VV</li>
 > </ul>
 > </details>
