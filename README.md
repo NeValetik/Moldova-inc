@@ -8,8 +8,8 @@
   -  Vova  
   -  Vladimir Vladimirovich  
   -  Vlad  
-  -   VV  
-> </details>
+  -   VV
+<details>
 
 > [!TIP]
 > How to play:
