@@ -1,15 +1,15 @@
 # Moldova-Inc :wine_glass:
 
 > [!NOTE]
-> PBL project developed by sowtware engeneering students of Technical Univesity of Moldova.
+> PBL project developed by software engineering students of Technical University of Moldova.
 > <details>
 >  <summary>The team</summary>
->  - Vladimir
->  - Vova
->  - Vladimir Vladimirovici
->  - Vlad
->  - VVV
-</details>
+>  - Vladimir  
+>  - Vova  
+>  - Vladimir Vladimirovich  
+>  - Vlad  
+>  - VVV  
+> </details>
 
 > [!TIP]
 > How to play:
