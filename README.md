@@ -9,7 +9,6 @@
   -  Vladimir Vladimirovich  
   -  Vlad  
   -   VV
-<details>
-
+</details>
 > [!TIP]
 > How to play:
