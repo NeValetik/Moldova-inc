@@ -25,8 +25,6 @@ class GameState:
         elif GameState.upgrade_menu:
             UpgradeMenu.update(window)
         elif GameState.play:
-            ToSellButton.one_time_activation()
-            Country.one_time_activation() 
             Map.update(window)
         if GameState.statistic:
             Statistic.update(window)
@@ -352,7 +350,9 @@ class Map:
 
     @classmethod
     def update(cls, window):
+        Country.one_time_activation() 
         Map.personal_update(window)
+        ToSellButton.check_collisions()  # put it here, before Country.update(), because of collisions of clicking on it and on country itslef
         Country.update(window, Map, GameState, CountryStatistic)
         ToSellButton.update(window, Map)
         Tranport.update(window, Map)

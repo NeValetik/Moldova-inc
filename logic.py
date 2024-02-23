@@ -3,18 +3,19 @@ from objects import *
 
 
 class Graph_countries(nx.Graph):
-    # print(countries)
-    # countries = [{"name":"USA","deal": ["Moldova"]},{"name":"Russia/Ukraina","deal": ["Moldova"]},
-                #  {"name":"Arabian","deal": []},{"name":"Africa","deal": []},{"name":"Moldova","deal": []}]
 
+    def __init__(self):
+        super().__init__()
+        self.initialization()
 
     def initialization(self):
-        for i in Country.countries:
-            self.add_node(i.name)
-        for i in Country.countries:
-            if len(i.deal)>0:
-                self.add_edge(i.name,i.deal[0])
+        for country in Country.countries:
+            self.add_node(country.name)
+        for country in Country.countries:
+            if len(country.deal) > 0:
+                for other_country in country.deal:
+                    self.add_edge(country.name, other_country.name)
 
 
 graph = Graph_countries()
-graph.initialization()
+# graph.initialization()

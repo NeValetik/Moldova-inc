@@ -33,38 +33,25 @@ class Button(pygame.sprite.Sprite):
 
 
 class ToSellButton(pygame.sprite.Sprite):
-    coor = {
-        "Canada": (230,230),
-        "Republic of Moldova": (685,316),
-        "China": (948,371),
-        "USA": (228,349),
-    }
-
-    initiated = False  # For first and last initiation
     buttons = []
     
+    def __init__(self, country):
+        super().__init__()
+        self.is_available = False
+        self.country = country
+        self.image = pygame.transform.scale(pygame.image.load("images/Icons/Circle.png"), (20, 30))
+        self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
+
+        self.pos = country.rect.center
+        self.rect.center = self.pos
+
+        ToSellButton.buttons.append(self)
+
     @classmethod
     def update(cls, window, Map):
         ToSellButton.display_buttons(window, Map)
-        ToSellButton.check_collisions()
-
-    def __init__(self, name, pos):
-        super().__init__()
-        self.name = name
-        self.pos = pos
-        self.is_available = False
-        self.image = pygame.transform.scale(pygame.image.load("images/Icons/Circle.png"), (20, 30))
-        self.rect = self.image.get_rect()
-        self.rect.center = (self.pos[0], self.pos[1])
-        self.mask = pygame.mask.from_surface(self.image)
-
-
-    @classmethod
-    def one_time_activation(cls):
-        if not cls.initiated:
-            cls.initiated = True
-            for country, coor in cls.coor.items():
-                cls.buttons.append(ToSellButton(country, coor))
+        # ToSellButton.check_collisions()
 
 
     @classmethod
@@ -225,8 +212,8 @@ class Country(pygame.sprite.Sprite):
         self.pos = pos
         self.rect.center = self.pos
         self.focused = False
-        self.deal = ["Moldova"]
-        # self.deal = []
+        self.deal = []
+        self.to_sell_button = ToSellButton(self)
         Country.countries.append(self)
 
     @classmethod
