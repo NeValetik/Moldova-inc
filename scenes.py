@@ -25,6 +25,7 @@ class GameState:
         elif GameState.upgrade_menu:
             UpgradeMenu.update(window)
         elif GameState.play:
+            graph.check_new_contracts()
             Map.update(window)
         if GameState.statistic:
             Statistic.update(window)
@@ -58,6 +59,7 @@ class MainMenu:
     def display_buttons(cls, window):
         for button in MainMenu.buttons:
             window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
     
     @classmethod
     def check_collisions(cls):
@@ -116,6 +118,7 @@ class Pause:
     def display_buttons(cls, window):
         for button in Pause.buttons:
             window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
         
     @classmethod
     def check_collisions(cls):
@@ -132,7 +135,8 @@ class Pause:
                     sys.exit()
 
 class Statistic:
-    one_plot = True  # To generate one plot per space button (not each frame)
+    # don't touch (to generate one plot per space button, not each frame)
+    _one_plot = True
 
     @classmethod
     def update(cls, window):
@@ -140,7 +144,7 @@ class Statistic:
 
     @classmethod
     def display_plot(cls, window):
-        if Statistic.one_plot:
+        if Statistic._one_plot:
             x = np.linspace(0, 10, 100) 
             y = np.sin(x)  
             plt.plot(x, y)
@@ -150,7 +154,7 @@ class Statistic:
             plot = pygame.image.load('plot.png')
             rect = plot.get_rect()
             window.blit(plot, rect)
-            Statistic.one_plot = False
+            Statistic._one_plot = False
         else:
             plot = pygame.image.load('plot.png')
             rect = plot.get_rect()
@@ -161,7 +165,6 @@ class Statistic:
         os.remove('plot.png')
 
 class UpgradeMenu:
-    # Soon here will be buttons for gameplay, but for now just...
     buttons = [
         Button("world-icon", "images/buttons/world-icon-btn.png", (1150,750), (100, 100))
     ]
@@ -179,7 +182,7 @@ class UpgradeMenu:
     image = pygame.transform.scale(pygame.image.load('images/cellar.jpg'),  (1200,800))
     image.set_alpha(50)
     rect = image.get_rect()
-    pressed_1 = False
+    pressed_1 = True
     pressed_2 = False
 
     @classmethod
@@ -205,6 +208,7 @@ class UpgradeMenu:
     def display_buttons(cls, window):
         for button in UpgradeMenu.buttons:
             window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
 
     @classmethod
     def check_collisions(cls):
@@ -272,6 +276,7 @@ class CountryStatistic:
     def display_buttons(cls, window):
         for button in cls.buttons:
             window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
 
     @classmethod
     def check_collisions(cls):
@@ -303,6 +308,7 @@ class Settings:
     def display_buttons(cls, window):
         for button in cls.buttons:
             window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
     
     @classmethod
     def check_collisions(cls):
@@ -343,18 +349,17 @@ class Map:
     pressed = 0
     motion = 0 
 
+    # general information
     pressed = False
     motion = False
 
-    pressed_icon = False  # for check_collisions() method
+    # for check_collisions() method
+    pressed_icon = False  
 
     @classmethod
     def update(cls, window):
-        Country.one_time_activation() 
         Map.personal_update(window)
-        ToSellButton.check_collisions()  # put it here, before Country.update(), because of collisions of clicking on it and on country itslef
         Country.update(window, Map, GameState, CountryStatistic)
-        ToSellButton.update(window, Map)
         Tranport.update(window, Map)
 
     @classmethod
@@ -409,6 +414,7 @@ class Map:
     def display_buttons(cls, window):
         for button in cls.buttons:
             window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
 
     @classmethod
     def check_collisions(cls):

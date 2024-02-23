@@ -12,25 +12,28 @@ class Button(pygame.sprite.Sprite):
                 self.image = pygame.image.load(os.path.join(os.getcwd(),image_path))
             else:
                 self.image = pygame.transform.scale(pygame.image.load(os.path.join(os.getcwd(),image_path)), rescale)
+            self.have_icon = True
         else:
-            self.image = Button.make_surface(position)
+            self.image = Button.make_surface()
+            self.have_icon = False
         self.rect = self.image.get_rect()
         self.rect.center = position
-        self.text = text
     
     @classmethod
-    def make_surface(cls, position, size=(70,40), color=(70,70,70)):
+    def make_surface(cls, size=(70,40), color=(70,70,70)):
         box = pygame.Surface(size)
         box.fill(color)
-        # font = pygame.font.Font("images/font/evil-empire.ttf", 12)
+        return box
 
-        # text = font.render(text, True, (255,255,255))
-        # text_rect = text.get_rect()
-        # text_rect.center = position
-
-        # box.blit(text, text_rect)
-        return  box
-
+    @classmethod
+    def dislpay_text_on_buttons(cls, window, buttons):
+        for button in buttons:
+            if not button.have_icon:
+                font = pygame.font.Font("images/font/evil-empire.ttf", 12)
+                text = font.render(button.name, True, (255,255,255))
+                text_rect = text.get_rect()
+                text_rect.center = button.rect.center
+                window.blit(text, text_rect)
 
 class ToSellButton(pygame.sprite.Sprite):
     buttons = []
@@ -51,8 +54,6 @@ class ToSellButton(pygame.sprite.Sprite):
     @classmethod
     def update(cls, window, Map):
         ToSellButton.display_buttons(window, Map)
-        # ToSellButton.check_collisions()
-
 
     @classmethod
     def display_buttons(cls, window, Map):
@@ -68,19 +69,10 @@ class ToSellButton(pygame.sprite.Sprite):
     @classmethod
     def random_availability(cls):
         for button in cls.buttons:
-            if random.randint(1, 100) == 1:
+            if button.country.name == "Moldova":
+                pass
+            elif random.randint(1, 100) == 1:
                 button.is_available = True
-
-    @classmethod
-    def check_collisions(cls):
-        for button in cls.buttons:
-            if button.is_available and button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
-                    relative_x = pygame.mouse.get_pos()[0] - button.rect.x
-                    relative_y = pygame.mouse.get_pos()[1] - button.rect.y
-                    if button.mask.get_at((relative_x, relative_y)):
-                        button.is_available = False
-                        if button.pos != (685,316):
-                            Plane(button.pos)
 
 
 class Tranport:
@@ -136,7 +128,10 @@ class Plane(pygame.sprite.Sprite):
     @classmethod
     def get_path(cls, c1, c2):
         middle_point = (min([c1[0], c2[0]]) + (abs(c1[0] - c2[0]) / 2), min([c1[1], c2[1]]) + (abs(c1[1] - c2[1]) / 2))
-        direction_vector = (c2[0] - c1[0], c2[1] - c1[1])
+        if c2[1] - c1[1] > 0:
+            direction_vector = (-c2[0] + c1[0], c2[1] - c1[1])
+        else:
+            direction_vector = (c2[0] - c1[0], -c2[1] + c1[1])
 
         perp_vect = (-direction_vector[1], direction_vector[0])
         magnitude = math.sqrt(sum(component**2 for component in perp_vect))
@@ -196,12 +191,17 @@ class Ship(pygame.sprite.Sprite):
 
 class Country(pygame.sprite.Sprite):
     countries = []
+    contracts = []  # after selling, the deal between two counties will be added here, after which logic part will handle this list entirely
 
     activated = False
     initiation = {
-        "USA" : ["images/countries/10242.png", (250,350)]
+        "USA" : ["images/countries/10242.png", (250,250)],
+        "Brasil" : ["images/countries/10242.png", (250, 550)],
+        "Moldova" : ["images/countries/10242.png", (800, 250)],
+        # "Australia" : ["images/countries/10242.png", (850, 550)],
     }
 
+    moldova = None
 
     def __init__(self, name, image_path, pos):
         self.image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), (180,180))
@@ -212,14 +212,20 @@ class Country(pygame.sprite.Sprite):
         self.pos = pos
         self.rect.center = self.pos
         self.focused = False
-        self.deal = []
+        self.buy_from = []
+        self.sell_to = []
         self.to_sell_button = ToSellButton(self)
+
         Country.countries.append(self)
+        if name == "Moldova":
+            Country.moldova = self
 
     @classmethod
     def update(cls, window, Map, GameState, CountryStatistic):
+        cls.one_time_activation()
         cls.scale_on_focus()
         cls.display_countries(window, Map)
+        ToSellButton.display_buttons(window, Map)
         cls.check_collisions(GameState, CountryStatistic)
 
     @classmethod
@@ -250,11 +256,24 @@ class Country(pygame.sprite.Sprite):
     @classmethod
     def check_collisions(cls, GameState, CountryStatistic):
         for country in cls. countries:
-            if country.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+            # Checking sell button mask collition
+            if country.to_sell_button.is_available and country.to_sell_button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+                relative_x = pygame.mouse.get_pos()[0] - country.to_sell_button.rect.x
+                relative_y = pygame.mouse.get_pos()[1] - country.to_sell_button.rect.y
+                if country.to_sell_button.mask.get_at((relative_x, relative_y)):
+                    country.to_sell_button.is_available = False
+                    if country != Country.moldova:
+                        Plane(country.to_sell_button.pos)
+                        cls.contracts.append([Country.moldova, country])
+                        Country.moldova.sell_to.append(country)
+                        country.buy_from.append(Country.moldova)
+            # Checking country mask collition             
+            elif country.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0] and \
+            not country.to_sell_button.rect.collidepoint(pygame.mouse.get_pos()) and not country.to_sell_button.is_available:
                 GameState.country_statistic = True
                 GameState.play = False
                 CountryStatistic.focus_country = country
-    
+
     @classmethod
     def one_time_activation(cls):
         if not cls.activated:
@@ -262,23 +281,22 @@ class Country(pygame.sprite.Sprite):
             for key, value in cls.initiation.items():
                 Country(key, value[0], value[1])
 
+    def __repr__(self):
+        return self.name
 
 class Wine:
-    name = "Traminer"
+    trandmarks = []
 
     taste = 0
     naturality = 0
     advertisement = 0
 
-    # trandmarks = []
+    def __init__(self, name):
+        self.name = name
+        self.total_sold = 0
 
-    # def __init__(self, name):
-    #     self.name = name
-    #     self.total_sold = 0
-
-    #     self.taste = 0
-    #     self.naturality = 0
-    #     self.advertisement = 0
-
+        self.taste = 0
+        self.naturality = 0
+        self.advertisement = 0
 
 pygame.quit()
