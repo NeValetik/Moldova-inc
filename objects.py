@@ -32,7 +32,6 @@ class Button(pygame.sprite.Sprite):
         return  box
 
 
-
 class ToSellButton(pygame.sprite.Sprite):
     coor = {
         "Canada": (230,230),
@@ -102,6 +101,7 @@ class Tranport:
     def update(cls, window, Map):
         Plane.update(window, Map)
         Ship.update(window, Map)
+
 
 class Plane(pygame.sprite.Sprite):
     planes = []
@@ -206,6 +206,7 @@ class Ship(pygame.sprite.Sprite):
 
             window.blit(ship.image, ship.rect)
 
+
 class Country(pygame.sprite.Sprite):
     countries = []
 
@@ -224,6 +225,8 @@ class Country(pygame.sprite.Sprite):
         self.pos = pos
         self.rect.center = self.pos
         self.focused = False
+        self.deal = ["Moldova"]
+        # self.deal = []
         Country.countries.append(self)
 
     @classmethod
@@ -271,6 +274,7 @@ class Country(pygame.sprite.Sprite):
             cls.activated = True
             for key, value in cls.initiation.items():
                 Country(key, value[0], value[1])
+
 
 class Wine:
     name = "Traminer"

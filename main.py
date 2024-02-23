@@ -1,7 +1,6 @@
 import pygame, sys
 from pygame.locals import *
 from scenes import *
-from objects import *
 pygame.init()
 
 WINDOW_WIDTH  = 1200

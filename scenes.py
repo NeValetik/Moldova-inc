@@ -2,6 +2,7 @@ import pygame, os, sys
 import matplotlib.pyplot as plt
 import numpy as np
 from objects import *
+from logic import *
 pygame.init()
 
 class GameState:
@@ -17,22 +18,20 @@ class GameState:
     def update(cls, window):
         if GameState.main_menu:
             MainMenu.update(window)
-        if GameState.play:
+        elif GameState.pause:
+            Pause.update(window)
+        elif GameState.country_statistic:
+            CountryStatistic.update(window)
+        elif GameState.upgrade_menu:
+            UpgradeMenu.update(window)
+        elif GameState.play:
             ToSellButton.one_time_activation()
             Country.one_time_activation() 
             Map.update(window)
-        if GameState.country_statistic:
-            CountryStatistic.update(window)
         if GameState.statistic:
             Statistic.update(window)
-        if GameState.upgrade_menu:
-            UpgradeMenu.update(window)
-        if GameState.pause:
-            Pause.update(window)
         if GameState.settings:
             Settings.update(window)
-
-  
 
 
 class MainMenu:
@@ -101,9 +100,6 @@ class MainMenu:
         cls.window = window
         cls.background = pygame.transform.scale(pygame.image.load("images/wine-field.jpg"), window.get_size())
         cls.background.set_alpha(100)
-
-
-
 
 
 class Pause:
@@ -434,5 +430,4 @@ class Map:
     def set_window(cls, window):
         cls.window = pygame.transform.scale(pygame.image.load("images/map2.png"), (window.get_size()[0] / cls.initial_image.get_size()[0],
                                                                                     window.get_size()[1] / cls.initial_image.get_size()[1]))
-
 pygame.quit()
