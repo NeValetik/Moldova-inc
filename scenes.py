@@ -1,4 +1,4 @@
-import pygame, os, sys
+import pygame, os, sys, datetime
 import matplotlib.pyplot as plt
 import numpy as np
 from objects import *
@@ -27,6 +27,8 @@ class GameState:
         elif GameState.play:
             graph.check_new_contracts()
             Map.update(window)
+            Timer.update(window)
+            News.update(window)
         if GameState.statistic:
             Statistic.update(window)
         if GameState.settings:
@@ -326,7 +328,7 @@ class Settings:
 class Map:
     buttons = [
         Button("upgrade_menu", "images/buttons/cellar-icon-btn.png", (1150,750), (100, 100)),
-        Button("statistics", image_path=None, position=(800,480)),
+        Button("statistics", image_path=None, position=(900,700)),
     ]
 
     image = pygame.transform.scale(pygame.image.load("images/map.png"), (1200, 800))
@@ -436,4 +438,74 @@ class Map:
     def set_window(cls, window):
         cls.window = pygame.transform.scale(pygame.image.load("images/map2.png"), (window.get_size()[0] / cls.initial_image.get_size()[0],
                                                                                     window.get_size()[1] / cls.initial_image.get_size()[1]))
+        
+class Timer:
+    start_time = datetime.datetime(1950, 12, 30, 12, 0, 0)
+    current_time = start_time
+    frame = 1
+
+    @classmethod
+    def update(cls, window):
+        cls.update_timer()
+        cls.display_timer(window)
+    
+    @classmethod
+    def display_timer(cls, window):
+        time = cls.get_time()
+                
+        font = pygame.font.Font("images/font/evil-empire.ttf", 48)
+        text = font.render(time, True, (0,0,0))
+        text_rect = text.get_rect()
+        text_rect.center = (1100, 50)
+        window.blit(text, text_rect)
+
+    @classmethod
+    def get_time(cls):
+        return f"{cls.current_time.day}/{cls.current_time.month}/{cls.current_time.year}"
+
+    @classmethod
+    def update_timer(cls):
+        if cls.frame >= 60:
+            cls.frame = 1
+            cls.current_time += datetime.timedelta(weeks=1)
+        else:
+            cls.frame += 1
+class News:
+    buttons = [
+        Button("okay", image_path=None, position=(600, 750))
+    ]
+
+    stored_notifications = []
+    current_notification = None
+
+    @classmethod
+    def update(cls, window):
+        cls.check_data()
+        cls.display_notification()
+        cls.store_notification()
+
+    @classmethod
+    def check_data(cls):
+        '''
+        Method wich will look at countries data,
+        and notify about presetted events
+        '''
+        pass
+
+    @classmethod
+    def display_notification(cls):
+        '''
+        Method wich will display current_notification on window
+        '''
+        pass
+
+    @classmethod
+    def store_notification(cls):
+        if cls.current_notification is not None:
+            cls.store_notification.append(cls.current_notification)
+            cls.current_notification = None
+            if len(cls.store_notification) > 10:
+                cls.store_notification = cls.store_notification[-10:]
+    
+
 pygame.quit()
