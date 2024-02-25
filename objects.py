@@ -310,47 +310,44 @@ class Wine:
 
 
 class ProgressBar:
+    def __init__(self, start_value, max_value, bar_width, bar_height, bar_color, background_color, position, getter):
+        self.start_value = start_value
+        self.max_value = max_value
+        self.current_value = start_value
+        self.bar_width = bar_width
+        self.bar_height = bar_height
+        self.bar_color = bar_color
+        self.background_color = background_color
+        self.position = position
+        self.getter = getter
 
-    start_value = 69
-    max_value = 100
-    current_value = start_value
-    bar_width = 400
-    bar_height = 30
-    bar_color = Wine.wine_color
-    background_color = (255, 255, 255)
+    def update(self, window, new_value=0):
+        self.update_progress_bar(new_value)
+        self.display_progress_bar(window)
 
-    @classmethod
-    def update(cls, window, new_value=0):
-        cls.update_progress_bar(new_value)
-        cls.display_progress_bar(window)
+    def display_progress_bar(self, window):
+        # Extract position coordinates
+        bar_x, bar_y = self.position
 
-    @classmethod
-    def display_progress_bar(cls, window):
-        # Position variables
-        bar_x = 20
-        bar_y = 700
-
-        progress_width = int((cls.current_value / cls.max_value) * cls.bar_width)
+        progress_width = int((self.current_value / self.max_value) * self.bar_width)
 
         # Draw background
-        pygame.draw.rect(window, cls.background_color, (bar_x, bar_y, cls.bar_width, cls.bar_height))
+        pygame.draw.rect(window, self.background_color, (bar_x, bar_y, self.bar_width, self.bar_height))
 
         # Draw progress bar
-        pygame.draw.rect(window, cls.bar_color, (bar_x, bar_y, progress_width, cls.bar_height))
+        pygame.draw.rect(window, self.bar_color, (bar_x, bar_y, progress_width, self.bar_height))
 
-        # Calculate text position
         # Calculate text position
         font = pygame.font.Font("images/font/evil-empire.ttf", 24)  # Adjust font size as needed
-        percent_text = f"{int((cls.current_value / cls.max_value) * 100)}%"
+        percent_text = f"{int((self.current_value / self.max_value) * 100)}%"
         text = font.render(percent_text, True, (0, 0, 0))
         text_rect = text.get_rect()
-        text_rect.center = (bar_x + progress_width // 2,
-                            bar_y + cls.bar_height // 2)  # Center text horizontally and vertically within the progress bar
+
+        # Center text horizontally and vertically over the progress bar
+        text_rect.center = (bar_x + progress_width // 2, bar_y + self.bar_height // 2)
         window.blit(text, text_rect)
 
-    @classmethod
-    def update_progress_bar(cls, new_value):
-        cls.current_value = min(cls.current_value + new_value, cls.max_value)
-
+    def update_progress_bar(self, getter):
+        self.current_value = min(self.getter(), self.max_value)
 
 pygame.quit()
