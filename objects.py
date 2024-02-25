@@ -89,14 +89,13 @@ class Tranport:
 
 class Plane(pygame.sprite.Sprite):
     planes = []
-
     def __init__(self, destination):
         super().__init__()
         self.image = pygame.transform.scale(pygame.image.load("images/plane.png"), (30,30)).convert_alpha()
         self.initial_image = pygame.transform.scale(pygame.image.load("images/plane.png"), (30,30)).convert_alpha()
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
-         
+
         self.origin = (685,316)  # Moldova
         self.destination = destination
         self.rect.center = self.origin
@@ -141,7 +140,7 @@ class Plane(pygame.sprite.Sprite):
 
                 window.blit(plane.image, plane.rect)
                 del plane.path[0]
-        
+
 
     @classmethod
     def get_path(cls, c1, c2):
@@ -167,6 +166,7 @@ class Plane(pygame.sprite.Sprite):
 
         if c1[0] > c2[0]:
             coordinates.sort(reverse=True)
+        print(coordinates)
         return coordinates
     
     @classmethod
@@ -357,6 +357,9 @@ class ProgressBar:
 
         progress_width = int((self.current_value / self.max_value) * self.bar_width)
 
+        # Draw black border
+        pygame.draw.rect(window, (0, 0, 0), (bar_x - 1, bar_y - 1, self.bar_width + 2, self.bar_height + 2), 1)
+
         # Draw background
         pygame.draw.rect(window, self.background_color, (bar_x, bar_y, self.bar_width, self.bar_height))
 
@@ -370,7 +373,7 @@ class ProgressBar:
         text_rect = text.get_rect()
 
         # Center text horizontally and vertically over the progress bar
-        text_rect.center = (bar_x + progress_width // 2, bar_y + self.bar_height // 2)
+        text_rect.center = (bar_x + self.bar_width // 2, bar_y + self.bar_height // 2)
         window.blit(text, text_rect)
 
     def update_progress_bar(self, getter):
