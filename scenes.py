@@ -218,7 +218,6 @@ class UpgradeMenu:
         pygame.draw.rect(transparent_surface, transparent_gray, transparent_surface.get_rect(), border_radius=10)
         window.blit(transparent_surface, (30, 30))
 
-
     @classmethod
     def display_buttons(cls, window):
         for button in UpgradeMenu.buttons:
@@ -315,10 +314,33 @@ class Settings:
         Button("back", image_path=None, position=(500,100))
     ]
 
+    image_path = "images/settings.png"
+    initial_image = pygame.image.load(image_path)
+
+    image = pygame.transform.scale(pygame.image.load(image_path), (1200, 800))
+    image.set_alpha(50)
+    rect = image.get_rect()
+
+    @classmethod
+    def display_background(cls, window):
+        window.fill((0, 0, 0))
+        window.blit(cls.image, cls.rect)
+        transparent_gray = (55, 55, 55) + (120,)
+        transparent_surface = pygame.Surface((window.get_size()[0] - 60, window.get_size()[1] - 60), pygame.SRCALPHA)
+        pygame.draw.rect(transparent_surface, transparent_gray, transparent_surface.get_rect(), border_radius=10)
+        window.blit(transparent_surface, (30, 30))
+
+    @classmethod
+    def display_buttons(cls, window):
+        for button in UpgradeMenu.buttons:
+            window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
+
     back_is = None
 
     @classmethod
     def update(cls, window):
+        cls.display_background(window)
         cls.display_buttons(window)
         cls.check_collisions()
 
