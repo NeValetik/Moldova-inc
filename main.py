@@ -5,7 +5,7 @@ pygame.init()
 from pygame import mixer
 
 mixer.init()
-mixer.music.load('images/theme.ogg')
+mixer.music.load('sound/theme.ogg')
 mixer.music.play(loops=-1)
 pygame.mixer.music.set_volume(0.5)
 

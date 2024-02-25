@@ -6,7 +6,7 @@ from objects import *
 from logic import *
 pygame.init()
 
-click_sound = pygame.mixer.Sound("images/menu_click_08.ogg")
+click_sound = pygame.mixer.Sound("sound/menu_click_08.ogg")
 
 # Progress bars
 progress_bar_world = ProgressBar(0, 1_000, 400, 30, Wine.wine_color, (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress)
