@@ -19,5 +19,10 @@ class Graph(nx.Graph):
             del Country.contracts[0]
         # print(self.edges)
 
-
 graph = Graph()
+
+
+class BarsGetters:
+    def get_world_progress(self):
+        return 69
+

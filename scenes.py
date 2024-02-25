@@ -5,11 +5,8 @@ from objects import *
 from logic import *
 pygame.init()
 
-def world_progress_getter():
-    return 55
-
 # Progress bars
-progress_bar_world = ProgressBar(0, 100, 400, 30, Wine.wine_color, (255, 255, 255), (30, 700), world_progress_getter)
+progress_bar_world = ProgressBar(0, 100, 400, 30, Wine.wine_color, (255, 255, 255), (30, 700), BarsGetters.get_world_progress())
 
 class GameState:
     main_menu = True
