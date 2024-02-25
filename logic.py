@@ -17,7 +17,7 @@ class Graph(nx.Graph):
             contract = Country.contracts[0]
             self.add_edge(contract[0], contract[1])
             del Country.contracts[0]
-        print(self.edges)
+        # print(self.edges)
 
 
 graph = Graph()
