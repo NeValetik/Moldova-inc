@@ -9,8 +9,6 @@ def world_progress_getter():
     return 55
 
 # Progress bars
-    # def __init__(self, start_value, max_value, bar_width, bar_height, bar_color, background_color, position, getter):
-
 progress_bar_world = ProgressBar(0, 100, 400, 30, Wine.wine_color, (255, 255, 255), (30, 700), world_progress_getter)
 
 class GameState:
