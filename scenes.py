@@ -28,6 +28,7 @@ class GameState:
             graph.check_new_contracts()
             Map.update(window)
             Timer.update(window)
+            ProgressBar.update(window)
             News.update(window)
         if GameState.statistic:
             Statistic.update(window)
@@ -36,6 +37,7 @@ class GameState:
 
 
 class MainMenu:
+
     buttons = [
         Button("start", "images/ButtonsAsset/png/in-use/Play.png", (500, 200)),
         Button("settings", image_path=None, position=(500, 400)),

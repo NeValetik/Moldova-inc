@@ -292,6 +292,8 @@ class Country(pygame.sprite.Sprite):
         return self.name
 
 class Wine:
+
+    wine_color = (89, 16, 56)
     trandmarks = []
 
     taste = 0
@@ -305,5 +307,50 @@ class Wine:
         self.taste = 0
         self.naturality = 0
         self.advertisement = 0
+
+
+class ProgressBar:
+
+    start_value = 69
+    max_value = 100
+    current_value = start_value
+    bar_width = 400
+    bar_height = 30
+    bar_color = Wine.wine_color
+    background_color = (255, 255, 255)
+
+    @classmethod
+    def update(cls, window, new_value=0):
+        cls.update_progress_bar(new_value)
+        cls.display_progress_bar(window)
+
+    @classmethod
+    def display_progress_bar(cls, window):
+        # Position variables
+        bar_x = 20
+        bar_y = 700
+
+        progress_width = int((cls.current_value / cls.max_value) * cls.bar_width)
+
+        # Draw background
+        pygame.draw.rect(window, cls.background_color, (bar_x, bar_y, cls.bar_width, cls.bar_height))
+
+        # Draw progress bar
+        pygame.draw.rect(window, cls.bar_color, (bar_x, bar_y, progress_width, cls.bar_height))
+
+        # Calculate text position
+        # Calculate text position
+        font = pygame.font.Font("images/font/evil-empire.ttf", 24)  # Adjust font size as needed
+        percent_text = f"{int((cls.current_value / cls.max_value) * 100)}%"
+        text = font.render(percent_text, True, (0, 0, 0))
+        text_rect = text.get_rect()
+        text_rect.center = (bar_x + progress_width // 2,
+                            bar_y + cls.bar_height // 2)  # Center text horizontally and vertically within the progress bar
+        window.blit(text, text_rect)
+
+    @classmethod
+    def update_progress_bar(cls, new_value):
+        cls.current_value = min(cls.current_value + new_value, cls.max_value)
+
 
 pygame.quit()
