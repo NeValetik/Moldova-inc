@@ -9,7 +9,7 @@ pygame.init()
 click_sound = pygame.mixer.Sound("sound/menu_click_08.ogg")
 
 # Progress bars
-progress_bar_world = ProgressBar(0, 1_000, 200, 30, Wine.wine_color, (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress)
+progress_bar_world = ProgressBar(0, 10, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress)
 
 class GameState:
     main_menu = True
@@ -46,7 +46,7 @@ class GameState:
 class MainMenu:
 
     buttons = [
-        Button("start", "images/ButtonsAsset/png/in-use/Play.png", (500, 200)),
+        Button("start", "images/ButtonsAsset/png/in-use/Play.png", (500, 300)),
         Button("settings", image_path=None, position=(500, 400)),
         Button("exit", "images/ButtonsAsset/png/in-use/Exit.png", (500, 500)),
     ]
