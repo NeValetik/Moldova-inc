@@ -2,19 +2,22 @@ import networkx as nx
 from objects import *
 
 
-class Graph_countries(nx.Graph):
-    # print(countries)
-    # countries = [{"name":"USA","deal": ["Moldova"]},{"name":"Russia/Ukraina","deal": ["Moldova"]},
-                #  {"name":"Arabian","deal": []},{"name":"Africa","deal": []},{"name":"Moldova","deal": []}]
-
+class Graph(nx.Graph):
+    initiated = False
+    def __init__(self):
+        super().__init__()
+        self.initialization()
 
     def initialization(self):
-        for i in Country.countries:
-            self.add_node(i.name)
-        for i in Country.countries:
-            if len(i.deal)>0:
-                self.add_edge(i.name,i.deal[0])
+        for country in Country.countries:
+            self.add_node(country.name)
+
+    def check_new_contracts(self):
+        while len(Country.contracts) != 0:
+            contract = Country.contracts[0]
+            self.add_edge(contract[0], contract[1])
+            del Country.contracts[0]
+        print(self.edges)
 
 
-graph = Graph_countries()
-graph.initialization()
+graph = Graph()

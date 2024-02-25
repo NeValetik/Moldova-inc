@@ -1,4 +1,4 @@
-import pygame, os, sys
+import pygame, os, sys, datetime
 import matplotlib.pyplot as plt
 import numpy as np
 from objects import *
@@ -25,9 +25,10 @@ class GameState:
         elif GameState.upgrade_menu:
             UpgradeMenu.update(window)
         elif GameState.play:
-            ToSellButton.one_time_activation()
-            Country.one_time_activation() 
+            graph.check_new_contracts()
             Map.update(window)
+            Timer.update(window)
+            News.update(window)
         if GameState.statistic:
             Statistic.update(window)
         if GameState.settings:
@@ -60,6 +61,7 @@ class MainMenu:
     def display_buttons(cls, window):
         for button in MainMenu.buttons:
             window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
     
     @classmethod
     def check_collisions(cls):
@@ -118,6 +120,7 @@ class Pause:
     def display_buttons(cls, window):
         for button in Pause.buttons:
             window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
         
     @classmethod
     def check_collisions(cls):
@@ -134,7 +137,8 @@ class Pause:
                     sys.exit()
 
 class Statistic:
-    one_plot = True  # To generate one plot per space button (not each frame)
+    # don't touch (to generate one plot per space button, not each frame)
+    _one_plot = True
 
     @classmethod
     def update(cls, window):
@@ -142,7 +146,7 @@ class Statistic:
 
     @classmethod
     def display_plot(cls, window):
-        if Statistic.one_plot:
+        if Statistic._one_plot:
             x = np.linspace(0, 10, 100) 
             y = np.sin(x)  
             plt.plot(x, y)
@@ -152,7 +156,7 @@ class Statistic:
             plot = pygame.image.load('plot.png')
             rect = plot.get_rect()
             window.blit(plot, rect)
-            Statistic.one_plot = False
+            Statistic._one_plot = False
         else:
             plot = pygame.image.load('plot.png')
             rect = plot.get_rect()
@@ -163,7 +167,6 @@ class Statistic:
         os.remove('plot.png')
 
 class UpgradeMenu:
-    # Soon here will be buttons for gameplay, but for now just...
     buttons = [
         Button("world-icon", "images/buttons/world-icon-btn.png", (1150,750), (100, 100))
     ]
@@ -181,7 +184,7 @@ class UpgradeMenu:
     image = pygame.transform.scale(pygame.image.load('images/cellar.jpg'),  (1200,800))
     image.set_alpha(50)
     rect = image.get_rect()
-    pressed_1 = False
+    pressed_1 = True
     pressed_2 = False
 
     @classmethod
@@ -207,6 +210,7 @@ class UpgradeMenu:
     def display_buttons(cls, window):
         for button in UpgradeMenu.buttons:
             window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
 
     @classmethod
     def check_collisions(cls):
@@ -274,6 +278,7 @@ class CountryStatistic:
     def display_buttons(cls, window):
         for button in cls.buttons:
             window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
 
     @classmethod
     def check_collisions(cls):
@@ -305,6 +310,7 @@ class Settings:
     def display_buttons(cls, window):
         for button in cls.buttons:
             window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
     
     @classmethod
     def check_collisions(cls):
@@ -322,7 +328,7 @@ class Settings:
 class Map:
     buttons = [
         Button("upgrade_menu", "images/buttons/cellar-icon-btn.png", (1150,750), (100, 100)),
-        Button("statistics", image_path=None, position=(800,480)),
+        Button("statistics", image_path=None, position=(900,700)),
     ]
 
     image = pygame.transform.scale(pygame.image.load("images/map.png"), (1200, 800))
@@ -345,16 +351,17 @@ class Map:
     pressed = 0
     motion = 0 
 
+    # general information
     pressed = False
     motion = False
 
-    pressed_icon = False  # for check_collisions() method
+    # for check_collisions() method
+    pressed_icon = False  
 
     @classmethod
     def update(cls, window):
         Map.personal_update(window)
         Country.update(window, Map, GameState, CountryStatistic)
-        ToSellButton.update(window, Map)
         Tranport.update(window, Map)
 
     @classmethod
@@ -409,6 +416,7 @@ class Map:
     def display_buttons(cls, window):
         for button in cls.buttons:
             window.blit(button.image, button.rect)
+        Button.dislpay_text_on_buttons(window, cls.buttons)
 
     @classmethod
     def check_collisions(cls):
@@ -430,4 +438,74 @@ class Map:
     def set_window(cls, window):
         cls.window = pygame.transform.scale(pygame.image.load("images/map2.png"), (window.get_size()[0] / cls.initial_image.get_size()[0],
                                                                                     window.get_size()[1] / cls.initial_image.get_size()[1]))
+        
+class Timer:
+    start_time = datetime.datetime(1950, 12, 30, 12, 0, 0)
+    current_time = start_time
+    frame = 1
+
+    @classmethod
+    def update(cls, window):
+        cls.update_timer()
+        cls.display_timer(window)
+    
+    @classmethod
+    def display_timer(cls, window):
+        time = cls.get_time()
+                
+        font = pygame.font.Font("images/font/evil-empire.ttf", 48)
+        text = font.render(time, True, (0,0,0))
+        text_rect = text.get_rect()
+        text_rect.center = (1100, 50)
+        window.blit(text, text_rect)
+
+    @classmethod
+    def get_time(cls):
+        return f"{cls.current_time.day}/{cls.current_time.month}/{cls.current_time.year}"
+
+    @classmethod
+    def update_timer(cls):
+        if cls.frame >= 60:
+            cls.frame = 1
+            cls.current_time += datetime.timedelta(weeks=1)
+        else:
+            cls.frame += 1
+class News:
+    buttons = [
+        Button("okay", image_path=None, position=(600, 750))
+    ]
+
+    stored_notifications = []
+    current_notification = None
+
+    @classmethod
+    def update(cls, window):
+        cls.check_data()
+        cls.display_notification()
+        cls.store_notification()
+
+    @classmethod
+    def check_data(cls):
+        '''
+        Method wich will look at countries data,
+        and notify about presetted events
+        '''
+        pass
+
+    @classmethod
+    def display_notification(cls):
+        '''
+        Method wich will display current_notification on window
+        '''
+        pass
+
+    @classmethod
+    def store_notification(cls):
+        if cls.current_notification is not None:
+            cls.store_notification.append(cls.current_notification)
+            cls.current_notification = None
+            if len(cls.store_notification) > 10:
+                cls.store_notification = cls.store_notification[-10:]
+    
+
 pygame.quit()
