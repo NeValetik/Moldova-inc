@@ -3,22 +3,26 @@ import numpy as np
 
 pygame.init()
 
+import pygame
+import os
+
 class Button(pygame.sprite.Sprite):
-    def __init__(self, name, image_path, position, rescale=None):
+    def __init__(self, name, image_path=None, position=None, rescale=None):
         super().__init__()
         self.name = name
-        if type(image_path) is str:
-            if rescale == None:
-                self.image = pygame.image.load(os.path.join(os.getcwd(),image_path))
+        if image_path:
+            if rescale is None:
+                self.image = pygame.image.load(image_path)
             else:
-                self.image = pygame.transform.scale(pygame.image.load(os.path.join(os.getcwd(),image_path)), rescale)
+                self.image = pygame.transform.scale(pygame.image.load(image_path), rescale)
             self.have_icon = True
         else:
-            self.image = Button.make_surface()
+            self.image = pygame.image.load("images/ButtonsAsset/png/Rect-Dark-Default.png")
             self.have_icon = False
         self.rect = self.image.get_rect()
-        self.rect.center = position
-    
+        if position:
+            self.rect.center = position
+
     @classmethod
     def make_surface(cls, size=(70,40), color=(70,70,70)):
         box = pygame.Surface(size)
@@ -34,6 +38,7 @@ class Button(pygame.sprite.Sprite):
                 text_rect = text.get_rect()
                 text_rect.center = button.rect.center
                 window.blit(text, text_rect)
+
 
 class ToSellButton(pygame.sprite.Sprite):
     buttons = []
