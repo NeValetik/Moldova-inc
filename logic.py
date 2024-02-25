@@ -23,6 +23,7 @@ graph = Graph()
 
 
 class BarsGetters:
-    def get_world_progress(self):
-        return 69
 
+    @staticmethod
+    def get_world_progress():
+        return 69

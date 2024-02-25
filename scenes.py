@@ -6,7 +6,7 @@ from logic import *
 pygame.init()
 
 # Progress bars
-progress_bar_world = ProgressBar(0, 100, 400, 30, Wine.wine_color, (255, 255, 255), (30, 700), BarsGetters.get_world_progress())
+progress_bar_world = ProgressBar(0, 100, 400, 30, Wine.wine_color, (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress)
 
 class GameState:
     main_menu = True
