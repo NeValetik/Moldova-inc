@@ -157,9 +157,7 @@ class Plane(pygame.sprite.Sprite):
         y = np.array(y_values)
         coefficients = np.polyfit(x, y, 2)  # Fit a quadratic polynomial (degree 2)
         curve_x = np.linspace(int(min(x)), int(max(x)), int(max(x)-min(x)+1))
-        print(curve_x)
         curve_y = np.polyval(coefficients, curve_x)
-        print(curve_y)
         coordinates = [(x_val, y_val) for x_val, y_val in zip(curve_x, curve_y)]
 
         if c1[0] > c2[0]:
@@ -184,7 +182,6 @@ class Plane(pygame.sprite.Sprite):
             dx = math.sqrt((point2[0]-point1[0])**2+(point2[1]-dy-point1[1])**2)
         c = math.sqrt((point2[0]-point1[0])**2+(point2[1]-point1[1])**2)
         angle = math.degrees(math.acos((dy**2 +c**2 - dx**2)/(2*dy*c)))
-        print(angle)
         return angle
                 
 
