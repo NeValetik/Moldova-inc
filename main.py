@@ -2,13 +2,21 @@ import pygame, sys
 from pygame.locals import *
 from scenes import *
 pygame.init()
+from pygame import mixer
 
-WINDOW_WIDTH  = 1200
+mixer.init()
+mixer.music.load('images/theme.ogg')
+mixer.music.play(loops=-1)
+pygame.mixer.music.set_volume(0.5)
+
+WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 800
 
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), HWSURFACE|DOUBLEBUF|RESIZABLE)
-pygame.display.set_caption("MoldovaInc")
+pygame.display.set_caption("Moldova Inc")
 clock = pygame.time.Clock()
+
+
 
 while True:
 	for event in pygame.event.get():

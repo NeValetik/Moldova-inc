@@ -1,12 +1,15 @@
 import pygame, os, sys, datetime
 import matplotlib.pyplot as plt
 import numpy as np
+
 from objects import *
 from logic import *
 pygame.init()
 
+click_sound = pygame.mixer.Sound("images/menu_click_08.ogg")
+
 # Progress bars
-progress_bar_world = ProgressBar(0, 100, 400, 30, Wine.wine_color, (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress)
+progress_bar_world = ProgressBar(0, 1_000, 400, 30, Wine.wine_color, (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress)
 
 class GameState:
     main_menu = True
@@ -75,6 +78,7 @@ class MainMenu:
     def check_collisions(cls):
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+                click_sound.play()
                 if button.name == "start":
                     GameState.main_menu = False
                     GameState.play = True
@@ -149,6 +153,7 @@ class Statistic:
     _one_plot = True
 
     @classmethod
+
     def update(cls, window):
         cls.display_plot(window)
 
@@ -225,6 +230,7 @@ class UpgradeMenu:
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 if pygame.mouse.get_pressed()[0]:
+                    click_sound.play()
                     if not cls.pressed_1:
                         cls.pressed_1 = True
                         if button.name == "world-icon":
@@ -236,6 +242,7 @@ class UpgradeMenu:
         for button in cls.upgrade_buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 if pygame.mouse.get_pressed()[0]:
+                    click_sound.play()
                     if not cls.pressed_2:
                         cls.pressed_2 = True
                         if pygame.mouse.get_pressed()[0]:
@@ -292,6 +299,7 @@ class CountryStatistic:
     def check_collisions(cls):
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+                click_sound.play()
                 if button.name == "back":
                     GameState.country_statistic = False
                     GameState.play = True
@@ -324,6 +332,7 @@ class Settings:
     def check_collisions(cls):
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+                click_sound.play()
                 if button.name == "back":
                     GameState.settings = False
                     if Settings.back_is == "main_menu":
@@ -431,6 +440,7 @@ class Map:
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 if pygame.mouse.get_pressed()[0]:
+                    click_sound.play()
                     if not cls.pressed_icon:
                         cls.pressed_icon = True
                         if button.name == "upgrade_menu":
