@@ -5,6 +5,12 @@ from objects import *
 from logic import *
 pygame.init()
 
+def world_progress_getter():
+    return 55
+
+# Progress bars
+progress_bar_world = ProgressBar(0, 100, 400, 30, Wine.wine_color, (255, 255, 255), (30, 700), world_progress_getter)
+
 class GameState:
     main_menu = True
     play = False
@@ -28,7 +34,8 @@ class GameState:
             graph.check_new_contracts()
             Map.update(window)
             Timer.update(window)
-            ProgressBar.update(window)
+            progress_bar_world.update(window)
+
             News.update(window)
         if GameState.statistic:
             Statistic.update(window)
@@ -49,6 +56,8 @@ class MainMenu:
 
     panel_surface = pygame.Surface((300, 400), pygame.SRCALPHA)
     panel_for_buttons = pygame.draw.rect(panel_surface, (55, 55, 55) + (120,), panel_surface.get_rect(), border_radius=10)
+
+    # def __init__(self, start_value, max_value, bar_width, bar_height, bar_color, background_color, position):
 
 
     @classmethod
