@@ -108,7 +108,7 @@ class ToSellButton(pygame.sprite.Sprite):
         for button in cls.buttons:
             if button.country.name == "Moldova":
                 pass
-            elif random.randint(1, 100) == 1:
+            elif random.randint(1, 200) == 1:
                 button.is_available = True
 
 
@@ -128,7 +128,7 @@ class Plane(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.origin = (685,316)  # Moldova
+        self.origin = Country.moldova.pos
         self.destination = destination
         self.rect.center = self.origin
 
@@ -247,19 +247,7 @@ class Ship(pygame.sprite.Sprite):
 
 
 class Country(pygame.sprite.Sprite):
-    countries = []
-    contracts = []  # after selling, the deal between two counties will be added here, after which logic part will handle this list entirely
-    moldova = None
-
-    activated = False
-    old_map_scale = 1
-    initial_scale_factor = 1
-
     initiation = {
-        # "USA" : ["images/countries/usa.png", (250,250)],
-        # "Moldova" : ["images/countries/moldova-8k.png", (800, 250)],
-        # "Russia" : ["images/countries/russia-8k.png", (850, 550)],
-
         "Australia" : ["assets/countries/australia.png", (3444, 1800)],
         "Brazil" : ["assets/countries/brazil.png", (1353, 1544)],
         "Great Britain" : ["assets/countries/british-isles.png", (1927.5, 661)],
@@ -277,7 +265,7 @@ class Country(pygame.sprite.Sprite):
         "Italy" : ["assets/countries/italy.png", (2108.5, 855)],
         "Japan" : ["assets/countries/japan.png", (3453, 783)],
         "Mexico" : ["assets/countries/mexico.png", (985.5, 1090)],
-        "Moldova" : ["assets/countries/moldova.png", (2249, 746)],
+        "Moldova" : ["assets/countries/moldova.png", (2262, 764)],
         "New Zealand" : ["assets/countries/new-zealand.png", (3790, 2056)],
         "North Africa" : ["assets/countries/north-africa.png", (2093.5, 1079)],
         "Oceania" : ["assets/countries/oceania.png", (3483, 1520)],
@@ -294,16 +282,27 @@ class Country(pygame.sprite.Sprite):
         "South America West Coast" : ["assets/countries/west-coast.png", (1160, 1667)],
     }
 
+    countries = []  
+    contracts = []  # The deal will be added here, after which logic part will handle this list entirely
+    moldova = None
+
+    activated = False  # First initiation
+    old_map_scale = 1  # To rescale the map only after Map.scale modification (optimization goal)
+    initial_scale_factor  = 0.325  # Optimal scale for countries
 
     def __init__(self, name, image_path, pos):
-        self.scaled_width = Country.initial_scale_factor * Image.open(os.path.join(image_path)).size[0]
-        self.scaled_height = Country.initial_scale_factor * Image.open(os.path.join(image_path)).size[1]
+        self.scaled_width = Country.initial_scale_factor * Image.open(image_path).size[0]
+        self.scaled_height = Country.initial_scale_factor * Image.open(image_path).size[1]
         self.scaled_size = (self.scaled_width, self.scaled_height)
-        self.image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), (self.scaled_width, self.scaled_height))
-        self.initial_image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), (self.scaled_width, self.scaled_height))
+
+        self.image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), self.scaled_size)
+        # self.initial_image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), self.scaled_size)
+        self.initial_image = self.image
 
         self.rect = self.image.get_rect()
-        self.pos = pos
+        self.scaled_x_pos = Country.initial_scale_factor * pos[0]
+        self.scaled_y_pos = Country.initial_scale_factor * pos[1]
+        self.pos = (self.scaled_x_pos, self.scaled_y_pos)
         self.rect.center = self.pos
         self.mask = pygame.mask.from_surface(self.image)
 
@@ -327,30 +326,36 @@ class Country(pygame.sprite.Sprite):
     @classmethod
     def display_countries(cls, window, Map):
         for country in Country.countries:
-            if cls.old_map_scale != Map.scale:  # for optimization
+            if cls.old_map_scale != Map.scale:  # To avoid inifinte scaling
                 cls.old_map_scale = Map.scale
-                country.image = pygame.transform.scale(country.initial_image, (Map.scale * country.rect.width, 
-                                                                               Map.scale * country.rect.height))
+                # Scaling the size of country
+                country.image = pygame.transform.scale(country.initial_image, (Map.scale * country.scaled_width,
+                                                                               Map.scale * country.scaled_height))
                 country.rect = country.image.get_rect()
-
+            # Changing the coordinates of the country
             country.rect.center = (Map.rect.topleft[0] + Map.scale*country.pos[0], Map.rect.topleft[1] + Map.scale*country.pos[1])
             window.blit(country.image, country.rect)
 
-    
+
     @classmethod
     def check_collisions(cls, GameState, CountryStatistic):
         for country in cls. countries:
+            # Checking collisions with rectangle of the country
             if country.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+                #Checking collisions with rectangle of the sell button
                 if country.to_sell_button.rect.collidepoint(pygame.mouse.get_pos()):
                     relative_x = pygame.mouse.get_pos()[0] - country.to_sell_button.rect.x
                     relative_y = pygame.mouse.get_pos()[1] - country.to_sell_button.rect.y
+                    # Checking cllisions with mask of the sell button
                     if country.to_sell_button.mask.get_at((relative_x, relative_y)) and country.to_sell_button.is_available :
                         country.to_sell_button.is_available = False
-                        if country != Country.moldova:
-                            Plane(country.to_sell_button.pos)
+                        if country != Country.moldova:  # Do not send plane from Moldova to Moldova
+                            Plane(country.to_sell_button.pos)  # Generate a plane
+                            # Logistic stuff:
                             cls.contracts.append([Country.moldova, country])
                             Country.moldova.sell_to.append(country)
                             country.buy_from.append(Country.moldova)
+                # Checking collisions with mask of the country
                 else:
                     relative_x = pygame.mouse.get_pos()[0] - country.rect.x
                     relative_y = pygame.mouse.get_pos()[1] - country.rect.y
@@ -402,5 +407,17 @@ class Woman:
         self.social_rating = wash_dishes_speed
         self.rights = random.choice(["No rights", "No rights"])
         self.can_cook = random.choice(["Hopefully", "Let Her Cook"])
+
+    def get_size(self):
+        return '\u2620'
+    
+    def start_cook(self):
+        return "mby we'll order smth?"
+    
+    def get_mood(self):
+        return (1 - self.her_owner.get_mood())
+    
+    def get_cause_of_sadness(self):
+        return None
 
 pygame.quit()

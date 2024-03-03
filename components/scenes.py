@@ -2,15 +2,14 @@ import pygame, os, sys, datetime
 import matplotlib.pyplot as plt
 import numpy as np
 
-sys.path.append(os.path.dirname(__file__))
-
+sys.path.append(os.path.dirname(__file__))  # to avoid the error of neighbour files
 from objects import *
 from logic import *
+
 pygame.init()
+pygame.mixer.init()
 
 click_sound = pygame.mixer.Sound("assets/sound/click-menu.ogg")
-
-# Progress bars
 progress_bar_world = ProgressBar(0, 10, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress)
 
 class GameState:
@@ -381,7 +380,7 @@ class Map:
     # mainly for to_scale() method
     scale = 1
     old_scale = 1
-    scroll = 0  # 1 for up, -1 for down, 0 for ne
+    scroll = 0  # 1 for up, -1 for down, 0 for neutral
 
     # for to_drag() method
     initial_map_center = rect.center
@@ -494,14 +493,10 @@ class Timer:
         time = cls.get_time()
                 
         font = pygame.font.Font("assets/font/evil-empire.ttf", 48)
-        text = font.render(time, True, (0,0,0))
+        text = font.render(time, True, (255, 255, 255))
         text_rect = text.get_rect()
         text_rect.center = (1100, 50)
         window.blit(text, text_rect)
-
-    @classmethod
-    def get_time(cls):
-        return f"{cls.current_time.day}/{cls.current_time.month}/{cls.current_time.year}"
 
     @classmethod
     def update_timer(cls):
@@ -510,6 +505,10 @@ class Timer:
             cls.current_time += datetime.timedelta(weeks=1)
         else:
             cls.frame += 1
+
+    @classmethod
+    def get_time(cls):
+        return f"{cls.current_time.day}/{cls.current_time.month}/{cls.current_time.year}"
 
 class News:
     buttons = [
