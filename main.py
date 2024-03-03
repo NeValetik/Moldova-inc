@@ -1,12 +1,11 @@
 import pygame, sys
 from pygame.locals import *
-from scenes import *
+from components.scenes import *
 pygame.init()
-from pygame import mixer
 
-mixer.init()
-mixer.music.load('sound/theme.ogg')
-mixer.music.play(loops=-1)
+pygame.mixer.init()
+pygame.mixer.music.load('assets/sound/theme.ogg')
+pygame.mixer.music.play(loops=-1)
 pygame.mixer.music.set_volume(0.5)
 
 WINDOW_WIDTH = 1200
