@@ -319,6 +319,8 @@ class Settings:
     image.set_alpha(50)
     rect = image.get_rect()
 
+    back_is = None
+
     @classmethod
     def display_background(cls, window):
         window.fill((0, 0, 0))
@@ -334,7 +336,7 @@ class Settings:
             window.blit(button.image, button.rect)
         Button.dislpay_text_on_buttons(window, cls.buttons)
 
-    back_is = None
+    
 
     @classmethod
     def update(cls, window):
@@ -407,19 +409,42 @@ class Map:
         
         cls.display_buttons(window)
         cls.to_scale()
-        cls.to_drag()
+        cls.to_drag(window)
+        # cls.scale_map()
         cls.check_collisions()
 
     @classmethod
-    def to_drag(cls):
+    def to_drag(cls, window):
         if cls.scale == 1:
             return
         mouse_pos = pygame.mouse.get_pos()
         if cls.pressed and cls.motion:
             if cls.initial_click is None:
                 cls.initial_click = mouse_pos
+
             offset_x = mouse_pos[0] - cls.initial_click[0]
             offset_y = mouse_pos[1] - cls.initial_click[1]
+
+            # Bounding the map
+            if cls.rect.topleft >= (0, 0) and offset_x > 0 and offset_y > 0:
+                offset_x = 0
+                offset_y = 0
+            if cls.rect.top > 0 and offset_y > 0:
+                offset_y = 0
+            if cls.rect.left > 0 and offset_x > 0:
+                offset_x = 0
+            
+            if cls.rect.bottomright <= window.get_size() and offset_x < 0 and offset_y < 0:
+                offset_x = 0
+                offset_y = 0
+            if cls.rect.bottom < window.get_size()[1] and offset_y < 0:
+                offset_y = 0
+            if cls.rect.right < window.get_size()[0] and offset_x < 0:
+                offset_x = 0
+
+            # For no boundaries, just use:
+            # offset_x = mouse_pos[0] - cls.initial_click[0]
+            # offset_y = mouse_pos[1] - cls.initial_click[1]
             cls.rect.center = cls.rect.centerx + offset_x, cls.rect.centery + offset_y
             cls.initial_click = mouse_pos
         elif not cls.pressed:
@@ -473,10 +498,11 @@ class Map:
                 else:
                     cls.pressed_icon = False
 
-    @classmethod
-    def set_window(cls, window):
-        cls.window = pygame.transform.scale(pygame.image.load("assets/background/ocean-8k.png"), (window.get_size()[0] / cls.initial_image.get_size()[0],
-                                                                                    window.get_size()[1] / cls.initial_image.get_size()[1]))
+    # @classmethod
+    # def scale_map(cls):
+    #     if cls.old_scale != cls.scale:
+    #         cls.old_scale = cls.scale
+    #         cls.image = pygame.transform.scale(cls.initial_image, (Map.scale*1200, Map.scale*800))
         
 class Timer:
     start_time = datetime.datetime(1950, 12, 30, 12, 0, 0)

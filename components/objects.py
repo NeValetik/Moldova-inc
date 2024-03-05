@@ -128,7 +128,7 @@ class Plane(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.origin = Country.moldova.pos
+        self.origin = Country.moldova.rect.center
         self.destination = destination
         self.rect.center = self.origin
 
@@ -287,20 +287,24 @@ class Country(pygame.sprite.Sprite):
     moldova = None
 
     activated = False  # First initiation
-    old_map_scale = 1  # To rescale the map only after Map.scale modification (optimization goal)
+    old_map_scale = 1  # To rescale the map only after Map.scale modification
     initial_scale_factor  = 0.325  # Optimal scale for countries
 
     def __init__(self, name, image_path, pos):
+        self.not_scaled_width = Image.open(image_path).size[0]
+        self.not_scaled_height = Image.open(image_path).size[1]
+        self.not_scaled_size = (self.not_scaled_width, self.not_scaled_height)
+
         self.scaled_width = Country.initial_scale_factor * Image.open(image_path).size[0]
         self.scaled_height = Country.initial_scale_factor * Image.open(image_path).size[1]
         self.scaled_size = (self.scaled_width, self.scaled_height)
 
         self.image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), self.scaled_size)
-        # self.initial_image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), self.scaled_size)
-        self.initial_image = self.image
+        self.initial_image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), self.scaled_size)
+        self.initial_not_scaled_image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), self.not_scaled_size)
 
         self.rect = self.image.get_rect()
-        self.scaled_x_pos = Country.initial_scale_factor * pos[0]
+        self.scaled_x_pos = Country.initial_scale_factor * (pos[0] - 230)
         self.scaled_y_pos = Country.initial_scale_factor * pos[1]
         self.pos = (self.scaled_x_pos, self.scaled_y_pos)
         self.rect.center = self.pos
@@ -311,6 +315,7 @@ class Country(pygame.sprite.Sprite):
         self.buy_from = []
         self.sell_to = []
         self.to_sell_button = ToSellButton(self)
+        self.old_map_scale = 1
 
         Country.countries.append(self)
         if name == "Moldova":
@@ -321,24 +326,27 @@ class Country(pygame.sprite.Sprite):
         cls.one_time_activation()
         cls.display_countries(window, Map)
         ToSellButton.display_buttons(window, Map)
-        cls.check_collisions(GameState, CountryStatistic)
+        cls.check_collisions(Map, GameState, CountryStatistic)
 
     @classmethod
     def display_countries(cls, window, Map):
         for country in Country.countries:
-            if cls.old_map_scale != Map.scale:  # To avoid inifinte scaling
-                cls.old_map_scale = Map.scale
+            if country.old_map_scale != Map.scale:  # To avoid inifinte scaling
+                country.old_map_scale = Map.scale
                 # Scaling the size of country
-                country.image = pygame.transform.scale(country.initial_image, (Map.scale * country.scaled_width,
-                                                                               Map.scale * country.scaled_height))
+                country.image = pygame.transform.scale(country.initial_not_scaled_image, (Map.scale * country.not_scaled_width * cls.initial_scale_factor,
+                                                                                          Map.scale * country.not_scaled_height * cls.initial_scale_factor))
                 country.rect = country.image.get_rect()
+                country.mask = pygame.mask.from_surface(country.image)
             # Changing the coordinates of the country
             country.rect.center = (Map.rect.topleft[0] + Map.scale*country.pos[0], Map.rect.topleft[1] + Map.scale*country.pos[1])
             window.blit(country.image, country.rect)
 
 
     @classmethod
-    def check_collisions(cls, GameState, CountryStatistic):
+    def check_collisions(cls, Map, GameState, CountryStatistic):
+        if Map.pressed and Map.motion:
+            return
         for country in cls. countries:
             # Checking collisions with rectangle of the country
             if country.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
@@ -370,9 +378,6 @@ class Country(pygame.sprite.Sprite):
             cls.activated = True
             for key, value in cls.initiation.items():
                 Country(key, value[0], value[1])
-    
-    def get_size(self):
-        return (self.rect.width, self.rect.height)
 
     def __repr__(self):
         return self.name
