@@ -1,4 +1,4 @@
-import pygame, os, sys, datetime
+import pygame, os, sys, datetime, copy
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -11,7 +11,6 @@ pygame.mixer.init()
 
 click_sound = pygame.mixer.Sound("assets/sound/click-menu.ogg")
 progress_bar_world = ProgressBar(0, 10, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress)
-
 class GameState:
     main_menu = True
     play = False
@@ -275,15 +274,17 @@ class UpgradeMenu:
             window.blit(button.image, button.rect)
 class CountryStatistic:
     buttons = [
-        Button("back", image_path=None, position=(500,500))
+        Button("back", image_path=None, position=(990,700))
     ]
 
     focus_country = None
 
     @classmethod
     def update(cls, window):
-        cls.display_country_statistics(window)
+        cls.display_country(window)
+        cls.display_statistics(window)
         cls.display_buttons(window)
+        cls.display_title(window)
         cls.check_collisions()
 
     @classmethod
@@ -302,11 +303,36 @@ class CountryStatistic:
                     GameState.play = True
 
     @classmethod
-    def display_country_statistics(cls, window):
+    def display_country(cls, window):
         if cls.focus_country != None:
-            window.blit(cls.focus_country.image, cls.focus_country.rect)
+            country = copy.copy(cls.focus_country)
 
+            # This scaling should be adjusted more
+            scale_factor = min([country.scaled_width // 200, country.scaled_height // 200])
+            if scale_factor == 0:
+                scale_factor = 2
+            scale_factor *= country.initial_scale_factor
+            country.image = pygame.transform.scale(country.initial_not_scaled_image, (country.not_scaled_width * scale_factor,
+                                                                                    country.not_scaled_height * scale_factor))
+            country.rect = country.image.get_rect()
+            country.rect.topleft = (100, 100)
+            window.blit(country.image, country.rect)
+            del country
 
+    @classmethod
+    def display_statistics(cls, window):
+        transparent_gray = (55, 55, 55) + (120,)
+        transparent_surface = pygame.Surface((400, 780), pygame.SRCALPHA)
+        pygame.draw.rect(transparent_surface, transparent_gray, transparent_surface.get_rect(), border_radius=10)
+        window.blit(transparent_surface, (790, 10))
+
+    @classmethod
+    def display_title(cls, window):
+        font = pygame.font.Font("assets/font/evil-empire.ttf", 36)
+        text = font.render(cls.focus_country.name, True, (0, 0, 0))
+        text_rect = text.get_rect()
+        text_rect.center = (990, 40)
+        window.blit(text, text_rect)
 class Settings:
     buttons = [
         Button("back", image_path=None, position=(500,100))
@@ -322,6 +348,12 @@ class Settings:
     back_is = None
 
     @classmethod
+    def update(cls, window):
+        cls.display_background(window)
+        cls.display_buttons(window)
+        cls.check_collisions()
+
+    @classmethod
     def display_background(cls, window):
         window.fill((0, 0, 0))
         window.blit(cls.image, cls.rect)
@@ -335,14 +367,6 @@ class Settings:
         for button in UpgradeMenu.buttons:
             window.blit(button.image, button.rect)
         Button.dislpay_text_on_buttons(window, cls.buttons)
-
-    
-
-    @classmethod
-    def update(cls, window):
-        cls.display_background(window)
-        cls.display_buttons(window)
-        cls.check_collisions()
 
     @classmethod
     def display_buttons(cls, window):

@@ -291,6 +291,7 @@ class Country(pygame.sprite.Sprite):
     initial_scale_factor  = 0.325  # Optimal scale for countries
 
     def __init__(self, name, image_path, pos):
+        self.initial_scale_factor = 0.325
         self.not_scaled_width = Image.open(image_path).size[0]
         self.not_scaled_height = Image.open(image_path).size[1]
         self.not_scaled_size = (self.not_scaled_width, self.not_scaled_height)

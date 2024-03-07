@@ -24,3 +24,4 @@ class BarsGetters:
     @staticmethod
     def get_world_progress():
         return 69
+    
