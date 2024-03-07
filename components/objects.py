@@ -78,6 +78,9 @@ class ToSellButton(pygame.sprite.Sprite):
     def __init__(self, country):
         super().__init__()
         self.is_available = False
+        self.have_coordinates = False
+        self.is_positioned = False
+
         self.country = country
         self.image = pygame.transform.scale(pygame.image.load("assets/icons/Circle.png"), (20, 30))
         self.rect = self.image.get_rect()
@@ -95,13 +98,28 @@ class ToSellButton(pygame.sprite.Sprite):
     @classmethod
     def display_buttons(cls, window, Map):
         cls.random_availability()
-
         for button in [button for button  in cls.buttons if button.is_available]:
-            button.rect.center = (Map.rect.topleft[0] + Map.scale*button.pos[0],
-                                Map.rect.topleft[1] + Map.scale*button.pos[1])
-
-            if button.is_available:
+            if button.have_coordinates:
+                if button.is_positioned:
+                    # button.rect.center = (Map.rect.topleft[0] + button.rect.center[0],
+                                        #   Map.rect.topleft[1] + button.rect.center[1])
+                    window.blit(button.image, button.rect)
+                    continue
+                button.is_positioned = True
+                button.rect.center = (Map.rect.topleft[0] + Map.scale*button.rect.center[0],
+                                      Map.rect.topleft[1] + Map.scale*button.rect.center[1])
                 window.blit(button.image, button.rect)
+                continue
+            country_width = button.country.rect.topright[0] - button.country.rect.topleft[0]
+            country_height = button.country.rect.bottomright[1] - button.country.rect.topright[1]
+            random_point = (random.randint(1, country_width-2), random.randint(1, country_height-2))
+
+            while not button.country.mask.get_at(random_point):
+                random_point = (random.randint(1, country_width-2), random.randint(1, country_height-2))
+            button.rect.center = button.country.rect.topleft[0] + random_point[0], -15 + button.country.rect.topleft[1] + random_point[1]
+            window.blit(button.image, button.rect)
+            button.have_coordinates = True
+            button.is_positioned = False
 
     @classmethod
     def random_availability(cls):
@@ -358,6 +376,8 @@ class Country(pygame.sprite.Sprite):
                     # Checking cllisions with mask of the sell button
                     if country.to_sell_button.mask.get_at((relative_x, relative_y)) and country.to_sell_button.is_available :
                         country.to_sell_button.is_available = False
+                        country.to_sell_button.have_coordinates = False
+                        country.to_sell_button.is_positioned = False
                         if country != Country.moldova:  # Do not send plane from Moldova to Moldova
                             Plane(country.to_sell_button.pos)  # Generate a plane
                             # Logistic stuff:
@@ -413,6 +433,7 @@ class Woman:
         self.social_rating = wash_dishes_speed
         self.rights = random.choice(["No rights", "No rights"])
         self.can_cook = random.choice(["Hopefully", "Let Her Cook"])
+        self.have_driving_license = False
 
     def get_size(self):
         return '\u2620'
@@ -425,5 +446,8 @@ class Woman:
     
     def get_cause_of_sadness(self):
         return None
+    
+    def get_driving_license(self):
+        return False
 
 pygame.quit()
