@@ -255,8 +255,8 @@ class UpgradeMenu:
                             elif button.name == "advertisement-up":
                                 Wine.advertisement += 1
                             elif button.name == "advertisement-down":
-                                if Wine.naturality > 0:
-                                    Wine.naturality -= 1
+                                if Wine.advertisement > 0:
+                                    Wine.advertisement -= 1
                 else:
                     cls.pressed_2 = False
 
@@ -308,14 +308,14 @@ class CountryStatistic:
             country = copy.copy(cls.focus_country)
 
             # This scaling should be adjusted more
-            scale_factor = min([country.scaled_width // 200, country.scaled_height // 200])
-            if scale_factor == 0:
-                scale_factor = 2
+            scale_factor = max([country.scaled_width // 200, country.scaled_height // 200])
+            scale_factor = 3 - scale_factor
+
             scale_factor *= country.initial_scale_factor
             country.image = pygame.transform.scale(country.initial_not_scaled_image, (country.not_scaled_width * scale_factor,
                                                                                     country.not_scaled_height * scale_factor))
             country.rect = country.image.get_rect()
-            country.rect.topleft = (100, 100)
+            country.rect.center = (395, 380)  # center of remain space
             window.blit(country.image, country.rect)
             del country
 

@@ -11,7 +11,10 @@ pygame.mixer.music.set_volume(0.5)
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 800
 
-window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), HWSURFACE|DOUBLEBUF|RESIZABLE)
+# No scalling (for now)
+# window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), HWSURFACE|DOUBLEBUF|RESIZABLE)
+window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
 pygame.display.set_caption("Moldova Inc")
 clock = pygame.time.Clock()
 
