@@ -3,10 +3,7 @@ from pygame.locals import *
 from components.scenes import *
 pygame.init()
 
-pygame.mixer.init()
-pygame.mixer.music.load('assets/sound/theme.ogg')
-pygame.mixer.music.play(loops=-1)
-pygame.mixer.music.set_volume(0.5)
+
 
 WINDOW_WIDTH = 1200
 WINDOW_HEIGHT = 800
@@ -14,7 +11,7 @@ WINDOW_HEIGHT = 800
 # No scalling (for now)
 # window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), HWSURFACE|DOUBLEBUF|RESIZABLE)
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-
+Music.initiate_background_music()
 pygame.display.set_caption("Moldova Inc")
 clock = pygame.time.Clock()
 
@@ -54,6 +51,9 @@ while True:
 
 		Map.pressed = pygame.mouse.get_pressed()[0]
 		Map.motion = event.type == pygame.MOUSEMOTION
+
+		GameState.mouse_button_pressed = pygame.mouse.get_pressed()[0]
+		GameState.mouse_position = pygame.MOUSEMOTION
 
 
 	window.fill((255,255,255))

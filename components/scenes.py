@@ -9,7 +9,6 @@ from logic import *
 pygame.init()
 pygame.mixer.init()
 
-click_sound = pygame.mixer.Sound("assets/sound/click-menu.ogg")
 progress_bar_world = ProgressBar(0, 10, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress)
 class GameState:
     main_menu = True
@@ -19,6 +18,9 @@ class GameState:
     statistic = False
     country_statistic = False
     upgrade_menu = False
+
+    mouse_button_pressed = None
+    mouse_position = None
 
     @classmethod
     def update(cls, window):
@@ -75,7 +77,7 @@ class MainMenu:
     def check_collisions(cls):
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
-                click_sound.play()
+                Music.play_click_sound()
                 if button.name == "start":
                     GameState.main_menu = False
                     GameState.play = True
@@ -85,6 +87,8 @@ class MainMenu:
                     GameState.settings = True
                 elif button.name == "exit":
                     sys.exit()
+            else:
+                Music.is_clicked = False
     
     @classmethod
     def display_background(cls, window):
@@ -144,6 +148,7 @@ class Pause:
                     GameState.settings = True
                 elif button.name == "exit":
                     sys.exit()
+
 
 class Statistic:
     # don't touch (to generate one plot per space button, not each frame)
@@ -226,7 +231,7 @@ class UpgradeMenu:
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 if pygame.mouse.get_pressed()[0]:
-                    click_sound.play()
+                    Music.play_click_sound()
                     if not cls.pressed_1:
                         cls.pressed_1 = True
                         if button.name == "world-icon":
@@ -234,11 +239,12 @@ class UpgradeMenu:
                             GameState.play = True
                 else:
                     cls.pressed_1 = False
+                    Music.is_clicked = False
         
         for button in cls.upgrade_buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 if pygame.mouse.get_pressed()[0]:
-                    click_sound.play()
+                    Music.play_click_sound()
                     if not cls.pressed_2:
                         cls.pressed_2 = True
                         if pygame.mouse.get_pressed()[0]:
@@ -259,6 +265,7 @@ class UpgradeMenu:
                                     Wine.advertisement -= 1
                 else:
                     cls.pressed_2 = False
+                    Music.is_clicked = False
 
     @classmethod
     def display_wine_data(cls, window):
@@ -297,10 +304,12 @@ class CountryStatistic:
     def check_collisions(cls):
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
-                click_sound.play()
+                Music.play_click_sound()
                 if button.name == "back":
                     GameState.country_statistic = False
                     GameState.play = True
+            else:
+                Music.is_clicked = False
 
     @classmethod
     def display_country(cls, window):
@@ -378,7 +387,7 @@ class Settings:
     def check_collisions(cls):
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
-                click_sound.play()
+                Music.play_click_sound()
                 if button.name == "back":
                     GameState.settings = False
                     if Settings.back_is == "main_menu":
@@ -430,11 +439,9 @@ class Map:
 
     @classmethod
     def personal_update(cls, window):
-        
         cls.display_buttons(window)
         cls.to_scale()
         cls.to_drag(window)
-        # cls.scale_map()
         cls.check_collisions()
 
     @classmethod
@@ -510,7 +517,7 @@ class Map:
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 if pygame.mouse.get_pressed()[0]:
-                    click_sound.play()
+                    Music.play_click_sound()
                     if not cls.pressed_icon:
                         cls.pressed_icon = True
                         if button.name == "upgrade_menu":
@@ -521,12 +528,7 @@ class Map:
                             GameState.statistic = True
                 else:
                     cls.pressed_icon = False
-
-    # @classmethod
-    # def scale_map(cls):
-    #     if cls.old_scale != cls.scale:
-    #         cls.old_scale = cls.scale
-    #         cls.image = pygame.transform.scale(cls.initial_image, (Map.scale*1200, Map.scale*800))
+                    Music.is_clicked = False
         
 class Timer:
     start_time = datetime.datetime(1950, 12, 30, 12, 0, 0)
@@ -597,6 +599,22 @@ class News:
             if len(cls.store_notification) > 10:
                 cls.store_notification = cls.store_notification[-10:]
     
+class Music:
+    click_sound = pygame.mixer.Sound("assets/sound/click-menu.ogg")
+    is_clicked = False
 
+    @classmethod
+    def initiate_background_music(cls):
+        pygame.mixer.init()
+        pygame.mixer.music.load('assets/sound/theme.ogg')
+        pygame.mixer.music.play(loops=-1)
+        pygame.mixer.music.set_volume(0.5)
+
+    @classmethod
+    def play_click_sound(cls):
+        if not cls.is_clicked:
+            cls.click_sound.play()
+            cls.is_clicked = True
+        
 
 pygame.quit()
