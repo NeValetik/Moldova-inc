@@ -1,4 +1,4 @@
-import pygame, random, math, os, datetime, csv
+import pygame, random, math, os, datetime, csv, sqlite3
 from PIL import Image
 import numpy as np
 pygame.init()
@@ -270,6 +270,8 @@ class Country(pygame.sprite.Sprite):
     moldova = None
 
     activated = False  # First initiation
+    # initiate_from = 'csv'
+    initiate_from = 'sqlite3'
     old_map_scale = 1  # To rescale the map only after Map.scale modification
     initial_scale_factor  = 0.325  # Optimal scale for countries
 
@@ -363,10 +365,19 @@ class Country(pygame.sprite.Sprite):
     def one_time_activation(cls):
         if not cls.activated:
             cls.activated = True
-            with open('components/countries_data.csv', mode='r') as file:
-                csv_reader = csv.DictReader(file)
-                for row in csv_reader:
-                    Country(row['country'], row['image_path'], (float(row['x_position']), float(row['y_position'])), str(row['continent']))
+            if cls.initiate_from == 'csv':
+                with open('components/countries_data/countries_data.csv', mode='r') as file:
+                    csv_reader = csv.DictReader(file)
+                    for row in csv_reader:
+                        Country(row['country'], row['image_path'], (float(row['x_position']), float(row['y_position'])), str(row['continent']))
+            elif cls.initiate_from == 'sqlite3':
+                db_file = 'components/countries_data/countries_data.db'
+                conn = sqlite3.connect(db_file)
+                cursor = conn.cursor()
+                cursor.execute("SELECT * FROM countries")
+                for row in cursor.fetchall():
+                    Country(row[0], row[1], (row[2], row[3]), row[4])
+
 
     def __repr__(self):
         return self.name
