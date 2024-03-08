@@ -421,7 +421,8 @@ class Map:
     scale = 1
     old_scale = 1
     min_scale = 1
-    max_scale = 3
+    max_scale = 2
+    scale_step = 0.2
     scroll = 0  # 1 for up, -1 for down, 0 for neutral
 
 
@@ -463,10 +464,8 @@ class Map:
         if cls.pressed and cls.motion:
             if cls.initial_click is None:
                 cls.initial_click = mouse_pos
-
             offset_x = mouse_pos[0] - cls.initial_click[0]
             offset_y = mouse_pos[1] - cls.initial_click[1]
-
             # Bounding the map
             if cls.rect.topleft >= (0, 0) and offset_x > 0 and offset_y > 0:
                 offset_x = 0
@@ -475,7 +474,6 @@ class Map:
                 offset_y = 0
             if cls.rect.left > 0 and offset_x > 0:
                 offset_x = 0
-            
             if cls.rect.bottomright <= window.get_size() and offset_x < 0 and offset_y < 0:
                 offset_x = 0
                 offset_y = 0
@@ -483,10 +481,6 @@ class Map:
                 offset_y = 0
             if cls.rect.right < window.get_size()[0] and offset_x < 0:
                 offset_x = 0
-
-            # For no boundaries, just use:
-            # offset_x = mouse_pos[0] - cls.initial_click[0]
-            # offset_y = mouse_pos[1] - cls.initial_click[1]
             cls.rect.center = cls.rect.centerx + offset_x, cls.rect.centery + offset_y
             cls.initial_click = mouse_pos
         elif not cls.pressed:
@@ -501,12 +495,12 @@ class Map:
             if cls.scale >= cls.max_scale-0.1:
                 cls.scale = cls.max_scale
             else:
-                cls.scale += 0.2
+                cls.scale += cls.scale_step
         elif cls.scroll == -1:  
             if cls.scale <= cls.min_scale+0.1:
                 cls.scale = cls.min_scale
             else:  
-                cls.scale -= 0.2
+                cls.scale -= cls.scale_step
         cls.scroll = 0
 
         cls.image = pygame.transform.scale(cls.initial_image, (cls.scale*cls.width, cls.scale*cls.height))
@@ -530,6 +524,8 @@ class Map:
 
     @classmethod
     def check_collisions(cls):
+        if Map.pressed and Map.motion:
+            return
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 if pygame.mouse.get_pressed()[0]:

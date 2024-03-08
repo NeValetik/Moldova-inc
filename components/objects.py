@@ -79,15 +79,14 @@ class ToSellButton(pygame.sprite.Sprite):
         super().__init__()
         self.is_available = False
         self.have_coordinates = False
-        self.is_positioned = False
 
         self.country = country
         self.image = pygame.transform.scale(pygame.image.load("assets/icons/Circle.png"), (20, 30))
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.pos = country.rect.center
-        self.rect.center = self.pos
+        self.pos = None
+        self.rect.center = (-100, -100)
 
         ToSellButton.buttons.append(self)
 
@@ -99,27 +98,21 @@ class ToSellButton(pygame.sprite.Sprite):
     def display_buttons(cls, window, Map):
         cls.random_availability()
         for button in [button for button  in cls.buttons if button.is_available]:
-            if button.have_coordinates:
-                if button.is_positioned:
-                    # button.rect.center = (Map.rect.topleft[0] + button.rect.center[0],
-                                        #   Map.rect.topleft[1] + button.rect.center[1])
-                    window.blit(button.image, button.rect)
-                    continue
-                button.is_positioned = True
-                button.rect.center = (Map.rect.topleft[0] + Map.scale*button.rect.center[0],
-                                      Map.rect.topleft[1] + Map.scale*button.rect.center[1])
-                window.blit(button.image, button.rect)
-                continue
-            country_width = button.country.rect.topright[0] - button.country.rect.topleft[0]
-            country_height = button.country.rect.bottomright[1] - button.country.rect.topright[1]
-            random_point = (random.randint(1, country_width-2), random.randint(1, country_height-2))
+            if not button.have_coordinates:
+                country_width = button.country.rect.topright[0] - button.country.rect.topleft[0]
+                country_height = button.country.rect.bottomright[1] - button.country.rect.topright[1]
+                random_point = (random.randint(1, country_width-1), random.randint(1, country_height-1))
+                while not button.country.mask.get_at(random_point):
+                    random_point = (random.randint(1, country_width-1), random.randint(1, country_height-1))
+                button.pos = (button.country.rect.topleft[0] + random_point[0], button.country.rect.topleft[1] + random_point[1]-15)  # -15 for bottom to be at center
+                button.have_coordinates = True
 
-            while not button.country.mask.get_at(random_point):
-                random_point = (random.randint(1, country_width-2), random.randint(1, country_height-2))
-            button.rect.center = button.country.rect.topleft[0] + random_point[0], -15 + button.country.rect.topleft[1] + random_point[1]
+            # Somewhere in the branch below we need to adjust scaling on zooming
+            elif button.have_coordinates:
+                button.rect.center = (Map.rect.topleft[0] + Map.scale*button.pos[0], Map.rect.topleft[1] + Map.scale*button.pos[1])
+
             window.blit(button.image, button.rect)
-            button.have_coordinates = True
-            button.is_positioned = False
+                
 
     @classmethod
     def random_availability(cls):
@@ -326,6 +319,7 @@ class Country(pygame.sprite.Sprite):
                                                                                           Map.scale * country.not_scaled_height * cls.initial_scale_factor))
                 country.rect = country.image.get_rect()
                 country.mask = pygame.mask.from_surface(country.image)
+
             # Changing the coordinates of the country
             country.rect.center = (Map.rect.topleft[0] + Map.scale*country.pos[0], Map.rect.topleft[1] + Map.scale*country.pos[1])
             window.blit(country.image, country.rect)
@@ -378,7 +372,7 @@ class Country(pygame.sprite.Sprite):
                 cursor.execute("SELECT * FROM countries")
                 for row in cursor.fetchall():
                     Country(row[0], row[1], (row[2], row[3]), row[4])
-
+                conn.close()
 
     def __repr__(self):
         return self.name
