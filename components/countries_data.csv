@@ -1,0 +1,33 @@
+country,image_path,x_position,y_position,continent
+Australia,assets/countries/australia.png,3444,1800,Australia
+Brazil,assets/countries/brazil.png,1353,1544,South America 
+Great Britain,assets/countries/british-isles.png,1927.5,661,Europe
+Canada and Alaska,assets/countries/canada-alaska.png,859,431,North America
+Central Africa,assets/countries/central-africa.png,2191.5,1332,Africa
+Central Asia,assets/countries/central-asia.png,2650,838.5,Asia
+Central Europe,assets/countries/central-europe.png,2150.5,680.5,Europe
+China and Mongolia,assets/countries/china-mongolia.png,3051,836.5,Asia
+East Africa,assets/countries/eastern-africa.png,2429,1413.5,Africa
+France,assets/countries/france.png,2002.5,782.5,Europe
+Germany,assets/countries/germany.png,2082.5,712,Europe
+Greenland,assets/countries/greenland.png,1669,335,North America
+Iceland,assets/countries/iceland.png,1802.5,491.5,Europe
+India,assets/countries/india.png,2927,1132.5,Asia
+Italy,assets/countries/italy.png,2108.5,855,Europe
+Japan,assets/countries/japan.png,3453,783,Asia
+Mexico,assets/countries/mexico.png,985.5,1090,North America
+Moldova,assets/countries/moldova.png,2262,764,Europe
+New Zealand,assets/countries/new-zealand.png,3790,2056,Australia
+North Africa,assets/countries/north-africa.png,2093.5,1079,Africa
+Oceania,assets/countries/oceania.png,3483,1520,Australia
+Romania and Balcans,assets/countries/romania-balcani.png,2199,845,Europe
+Russia,assets/countries/russia.png,2956.5,419.5,Asia
+Scandinavia,assets/countries/scandinavia.png,2144,416.5,Europe
+South Africa,assets/countries/south-africa.png,2225.5,1684.5,Africa
+North and South Korea,assets/countries/south-north-korea.png,3333.5,792,Asia
+Spain and Portugal,assets/countries/spain-portugal.png,1827.5,925,Europe
+Ukraine,assets/countries/ukraine.png,2295,733,Asia
+USA,assets/countries/usa.png,968,835,Europe
+West Africa,assets/countries/west-africa.png,1928,1181,Africa
+West Asia,assets/countries/west-asia.png,2444.5,1016,Asia
+South America West Coast,assets/countries/west-coast.png,1160,1667,South America

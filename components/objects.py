@@ -1,4 +1,4 @@
-import pygame, random, math, os, datetime
+import pygame, random, math, os, datetime, csv
 from PIL import Image
 import numpy as np
 pygame.init()
@@ -265,41 +265,6 @@ class Ship(pygame.sprite.Sprite):
 
 
 class Country(pygame.sprite.Sprite):
-    initiation = {
-        "Australia" : ["assets/countries/australia.png", (3444, 1800)],
-        "Brazil" : ["assets/countries/brazil.png", (1353, 1544)],
-        "Great Britain" : ["assets/countries/british-isles.png", (1927.5, 661)],
-        "Canada and Alaska" : ["assets/countries/canada-alaska.png", (859, 431)],
-        "Central Africa" : ["assets/countries/central-africa.png", (2191.5, 1332)],
-        "Central Asia" : ["assets/countries/central-asia.png", (2650, 838.5)],
-        "Central Europe" : ["assets/countries/central-europe.png", (2150.5, 680.5)],
-        "China and Mongolia" : ["assets/countries/china-mongolia.png", (3051, 836.5)],
-        "East Africa" : ["assets/countries/eastern-africa.png", (2429, 1413.5)],
-        "France" : ["assets/countries/france.png", (2002.5, 782.5)],
-        "Germany" : ["assets/countries/germany.png", (2082.5, 712)],
-        "Greenland" : ["assets/countries/greenland.png", (1669, 335)],
-        "Iceland" : ["assets/countries/iceland.png", (1802.5, 491.5)],
-        "India" : ["assets/countries/india.png", (2927, 1132.5)],
-        "Italy" : ["assets/countries/italy.png", (2108.5, 855)],
-        "Japan" : ["assets/countries/japan.png", (3453, 783)],
-        "Mexico" : ["assets/countries/mexico.png", (985.5, 1090)],
-        "Moldova" : ["assets/countries/moldova.png", (2262, 764)],
-        "New Zealand" : ["assets/countries/new-zealand.png", (3790, 2056)],
-        "North Africa" : ["assets/countries/north-africa.png", (2093.5, 1079)],
-        "Oceania" : ["assets/countries/oceania.png", (3483, 1520)],
-        "Romania and Balcans" : ["assets/countries/romania-balcani.png", (2199, 845)],
-        "Russia" : ["assets/countries/russia.png", (2956.5, 419.5)],
-        "Scandinavia" : ["assets/countries/scandinavia.png", (2144, 416.5)],
-        "South Africa" : ["assets/countries/south-africa.png", (2225.5, 1684.5)],
-        "North and South Korea" : ["assets/countries/south-north-korea.png", (3333.5, 792)],
-        "Spain and Portugal" : ["assets/countries/spain-portugal.png", (1827.5, 925)],
-        "Ukraine" : ["assets/countries/ukraine.png", (2295, 733.5)],
-        "USA" : ["assets/countries/usa.png", (968, 835)],
-        "West Africa" : ["assets/countries/west-africa.png", (1928, 1181)],
-        "West Asia" : ["assets/countries/west-asia.png", (2444.5, 1016)],
-        "South America West Coast" : ["assets/countries/west-coast.png", (1160, 1667)],
-    }
-
     countries = []  
     contracts = []  # The deal will be added here, after which logic part will handle this list entirely
     moldova = None
@@ -308,7 +273,7 @@ class Country(pygame.sprite.Sprite):
     old_map_scale = 1  # To rescale the map only after Map.scale modification
     initial_scale_factor  = 0.325  # Optimal scale for countries
 
-    def __init__(self, name, image_path, pos):
+    def __init__(self, name, image_path, pos, continent):
         self.initial_scale_factor = 0.325
         self.not_scaled_width = Image.open(image_path).size[0]
         self.not_scaled_height = Image.open(image_path).size[1]
@@ -330,6 +295,7 @@ class Country(pygame.sprite.Sprite):
         self.mask = pygame.mask.from_surface(self.image)
 
         self.name = name
+        self.continent = continent
         self.focused = False
         self.buy_from = []
         self.sell_to = []
@@ -397,8 +363,10 @@ class Country(pygame.sprite.Sprite):
     def one_time_activation(cls):
         if not cls.activated:
             cls.activated = True
-            for key, value in cls.initiation.items():
-                Country(key, value[0], value[1])
+            with open('components/countries_data.csv', mode='r') as file:
+                csv_reader = csv.DictReader(file)
+                for row in csv_reader:
+                    Country(row['country'], row['image_path'], (float(row['x_position']), float(row['y_position'])), str(row['continent']))
 
     def __repr__(self):
         return self.name
