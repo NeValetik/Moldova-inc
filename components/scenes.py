@@ -2,14 +2,13 @@ import pygame, os, sys, datetime, copy
 import matplotlib.pyplot as plt
 import numpy as np
 
-sys.path.append(os.path.dirname(__file__))  # to avoid the error of neighbour files
+sys.path.append(os.path.dirname(__file__))  # To avoid the error of neighbour files
 from objects import *
 from logic import *
 
 pygame.init()
 pygame.mixer.init()
 
-progress_bar_world = ProgressBar(0, 10, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress)
 class GameState:
     main_menu = True
     play = False
@@ -36,8 +35,6 @@ class GameState:
             graph.check_new_contracts()
             Map.update(window)
             Timer.update(window)
-            progress_bar_world.update(window)
-
             News.update(window)
         if GameState.statistic:
             Statistic.update(window)
@@ -403,8 +400,16 @@ class Map:
         Button("statistics", image_path=None, position=(900,700)),
     ]
 
+    stats_bars = [
+        ProgressBar(0, 10, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress),
+    ]
+
     image = pygame.transform.scale(pygame.image.load("assets/background/oceans-8k.png"), (1200, 800))
     initial_image = pygame.image.load("assets/background/oceans-8k.png")
+
+    background_image = pygame.image.load("assets/background/oceans-8k.png")
+    background_rect = background_image.get_rect()
+    background_rect.center = (600, 400)
     
     width = image.get_width()
     height = image.get_height()
@@ -415,7 +420,10 @@ class Map:
     # mainly for to_scale() method
     scale = 1
     old_scale = 1
+    min_scale = 1
+    max_scale = 3
     scroll = 0  # 1 for up, -1 for down, 0 for neutral
+
 
     # for to_drag() method
     initial_map_center = rect.center
@@ -432,6 +440,7 @@ class Map:
 
     @classmethod
     def update(cls, window):
+        window.blit(cls.background_image, cls.background_image.get_rect())
         window.blit(cls.image, cls.rect)
         Country.update(window, Map, GameState, CountryStatistic)
         Tranport.update(window, Map)
@@ -440,9 +449,11 @@ class Map:
     @classmethod
     def personal_update(cls, window):
         cls.display_buttons(window)
+        cls.dislpay_stats_bars(window)
         cls.to_scale()
         cls.to_drag(window)
         cls.check_collisions()
+
 
     @classmethod
     def to_drag(cls, window):
@@ -487,13 +498,13 @@ class Map:
         cls.last_pos = cls.rect.center
 
         if cls.scroll == 1:  
-            if cls.scale >= 1.9:
-                cls.scale = 2
+            if cls.scale >= cls.max_scale-0.1:
+                cls.scale = cls.max_scale
             else:
                 cls.scale += 0.2
         elif cls.scroll == -1:  
-            if cls.scale <= 1.1:
-                cls.scale = 1
+            if cls.scale <= cls.min_scale+0.1:
+                cls.scale = cls.min_scale
             else:  
                 cls.scale -= 0.2
         cls.scroll = 0
@@ -511,6 +522,11 @@ class Map:
         for button in cls.buttons:
             window.blit(button.image, button.rect)
         Button.dislpay_text_on_buttons(window, cls.buttons)
+
+    @classmethod
+    def dislpay_stats_bars(cls, window):
+        for bar in cls.stats_bars:
+            bar.update(window)
 
     @classmethod
     def check_collisions(cls):

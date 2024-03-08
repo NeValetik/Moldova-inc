@@ -274,6 +274,7 @@ class Country(pygame.sprite.Sprite):
     initiate_from = 'sqlite3'
     old_map_scale = 1  # To rescale the map only after Map.scale modification
     initial_scale_factor  = 0.325  # Optimal scale for countries
+    # initial_scale_factor  = 0.25  # Optimal scale for countries
 
     def __init__(self, name, image_path, pos, continent):
         self.initial_scale_factor = 0.325
@@ -287,11 +288,11 @@ class Country(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), self.scaled_size)
         self.initial_image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), self.scaled_size)
-        self.initial_not_scaled_image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), self.not_scaled_size)
+        self.initial_not_scaled_image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), self.not_scaled_size)  # I know that is same as not scaling at all, just let it be
 
         self.rect = self.image.get_rect()
-        self.scaled_x_pos = Country.initial_scale_factor * (pos[0] - 230)
-        self.scaled_y_pos = Country.initial_scale_factor * pos[1]
+        self.scaled_x_pos = Country.initial_scale_factor * (pos[0] - 230)  # Shifted countries to more accuracy (-230 is an optimal choice)
+        self.scaled_y_pos = Country.initial_scale_factor * (pos[1])
         self.pos = (self.scaled_x_pos, self.scaled_y_pos)
         self.rect.center = self.pos
         self.mask = pygame.mask.from_surface(self.image)
