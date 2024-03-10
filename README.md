@@ -1,4 +1,4 @@
-# Moldova-Inc :wine_glass:
+# Moldova Inc. :wine_glass:
 
 > [!NOTE]
 > PBL project developed by software engineering students of Technical University of Moldova.
