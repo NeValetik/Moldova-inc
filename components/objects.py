@@ -56,9 +56,16 @@ class ProgressBar:
         bar_x, bar_y = self.position
         progress_width = int((self.current_value / self.max_value) * self.bar_width)
 
-        pygame.draw.rect(window, (0, 0, 0), (bar_x - 1, bar_y - 1, self.bar_width + 2, self.bar_height + 2), 1)
-        pygame.draw.rect(window, self.background_color, (bar_x, bar_y, self.bar_width, self.bar_height))
-        pygame.draw.rect(window, self.bar_color, (bar_x, bar_y, progress_width, self.bar_height))
+        # Округленные углы
+        border_radius = self.bar_height // 2
+
+        # Нарисовать обводку белого цвета
+        border_rect = pygame.Rect(bar_x - 1, bar_y - 1, self.bar_width + 2, self.bar_height + 2)
+        pygame.draw.rect(window, (255, 255, 255), border_rect, border_radius=border_radius)
+
+        # Нарисовать прогресс с использованием альфа-канала
+        progress_rect = pygame.Rect(bar_x, bar_y, progress_width, self.bar_height)
+        pygame.draw.rect(window, (*self.bar_color, 128), progress_rect, border_radius=border_radius)
 
         font = pygame.font.Font("assets/font/evil-empire.ttf", 24)
         percent_text = f"{int((self.current_value / self.max_value) * 100)}%"
@@ -67,6 +74,7 @@ class ProgressBar:
 
         text_rect.center = (bar_x + self.bar_width // 2, bar_y + self.bar_height // 2)
         window.blit(text, text_rect)
+
 
     def update_progress_bar(self, getter):  # ?
         self.current_value = min(self.getter(), self.max_value)

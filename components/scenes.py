@@ -555,11 +555,14 @@ class Timer:
     @classmethod
     def display_timer(cls, window):
         time = cls.get_time()
-                
-        font = pygame.font.Font("assets/font/evil-empire.ttf", 48)
-        text = font.render(time, True, (255, 255, 255))
+
+        border_rect = pygame.Rect(990, 100, 140, 20)
+        pygame.draw.rect(window, (255, 255, 255), border_rect, border_radius=40)
+
+        font = pygame.font.Font("assets/font/evil-empire.ttf", 20)
+        text = font.render(time, True, (0, 0, 0))
         text_rect = text.get_rect()
-        text_rect.center = (1100, 50)
+        text_rect.center = (1080, 110)
         window.blit(text, text_rect)
 
     @classmethod
