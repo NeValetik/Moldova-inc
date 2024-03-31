@@ -401,7 +401,7 @@ class Map:
     ]
 
     stats_bars = [
-        ProgressBar(0, 100, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress),
+        ProgressBar(0, Profit.TARGET_PROFIT, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress),
     ]
 
     image = pygame.transform.scale(pygame.image.load("assets/background/oceans-8k.png"), (1200, 800))
