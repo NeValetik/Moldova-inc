@@ -8,11 +8,9 @@ pygame.init()
 pygame_icon = pygame.image.load('assets/icons/mainicon.jpg')
 pygame.display.set_icon(pygame_icon)
 
-WINDOW_WIDTH = 1200
-WINDOW_HEIGHT = 800
+WINDOW_WIDTH = 1920
+WINDOW_HEIGHT = 1080
 
-# No scalling (for now)
-# window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), HWSURFACE|DOUBLEBUF|RESIZABLE)
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
 Music.initiate_background_music()

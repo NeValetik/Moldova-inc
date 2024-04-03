@@ -7,37 +7,38 @@ pygame.init()
 
 
 class Button(pygame.sprite.Sprite):
-    def __init__(self, name, image_path=None, position=None, rescale=None):
+    frame = pygame.transform.scale(pygame.image.load("assets/buttons/button-frame.png"), (320, 100))
+    frame_rect = frame.get_rect()
+
+    def __init__(self, name, position, dimension=None):
         super().__init__()
         self.name = name
-        if image_path:
-            if rescale is None:
-                self.image = pygame.image.load(image_path)
-            else:
-                self.image = pygame.transform.scale(pygame.image.load(image_path), rescale)
-            self.have_icon = True
-        else:
-            self.image = pygame.image.load("assets/stuff/buttons/png/Rect-Dark-Default.png")
-            self.have_icon = False
+
+        self.text = Button.get_text_object(name)
+        self.text_rect = self.text.get_rect()
+
+        self.image = Button.make_surface()
         self.rect = self.image.get_rect()
-        if position:
-            self.rect.center = position
+        self.rect.center = position
 
     @classmethod
-    def make_surface(cls, size=(70, 40), color=(70, 70, 70)):
-        box = pygame.Surface(size)
+    def get_text_object(cls, name):
+        font = pygame.font.Font("assets/font/evil-empire.ttf", 36)
+        text = font.render(name, True, (0, 0, 0))
+        return text
+
+    @classmethod
+    def make_surface(cls, size=(300, 90), color=(255, 255, 255, 128)):
+        box = pygame.Surface(size, pygame.SRCALPHA)
         box.fill(color)
+        pygame.draw.rect(box, (255, 255, 255, 255), (0, 0, *size))
         return box
 
     @classmethod
     def dislpay_text_on_buttons(cls, window, buttons):
         for button in buttons:
-            if not button.have_icon:
-                font = pygame.font.Font("assets/font/evil-empire.ttf", 12)
-                text = font.render(button.name, True, (255, 255, 255))
-                text_rect = text.get_rect()
-                text_rect.center = button.rect.center
-                window.blit(text, text_rect)
+            button.text_rect.center = button.rect.center
+            window.blit(button.text, button.text_rect)
 
 
 class ProgressBar:
@@ -289,12 +290,13 @@ class Country(pygame.sprite.Sprite):
     # initiate_from = 'csv'
     initiate_from = 'sqlite3'
     old_map_scale = 1  # To rescale the map only after Map.scale modification
-    initial_scale_factor = 0.325  # Optimal scale for countries
+    # initial_scale_factor = 0.325  # Optimal scale for countries
+    initial_scale_factor = 0.46
 
     # initial_scale_factor  = 0.25  # Optimal scale for countries
 
     def __init__(self, name, image_path, pos, continent):
-        self.initial_scale_factor = 0.325
+        self.initial_scale_factor = 0.46
         self.not_scaled_width = Image.open(image_path).size[0]
         self.not_scaled_height = Image.open(image_path).size[1]
         self.not_scaled_size = (self.not_scaled_width, self.not_scaled_height)
@@ -309,9 +311,8 @@ class Country(pygame.sprite.Sprite):
                                                                self.not_scaled_size)  # I know that is same as not scaling at all, just let it be
 
         self.rect = self.image.get_rect()
-        self.scaled_x_pos = Country.initial_scale_factor * (
-                pos[0] - 230)  # Shifted countries to more accuracy (-230 is an optimal choice)
-        self.scaled_y_pos = Country.initial_scale_factor * (pos[1])
+        self.scaled_x_pos = Country.initial_scale_factor * pos[0]
+        self.scaled_y_pos = Country.initial_scale_factor * pos[1]
         self.pos = (self.scaled_x_pos, self.scaled_y_pos)
         self.rect.center = self.pos
         self.mask = pygame.mask.from_surface(self.image)
