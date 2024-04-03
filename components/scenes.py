@@ -401,7 +401,7 @@ class Map:
     ]
 
     stats_bars = [
-        ProgressBar(0, 100, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress),
+        ProgressBar(0, Profit.TARGET_PROFIT, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress),
     ]
 
     image = pygame.transform.scale(pygame.image.load("assets/background/oceans-8k.png"), (1200, 800))
@@ -555,11 +555,14 @@ class Timer:
     @classmethod
     def display_timer(cls, window):
         time = cls.get_time()
-                
-        font = pygame.font.Font("assets/font/evil-empire.ttf", 48)
-        text = font.render(time, True, (255, 255, 255))
+
+        border_rect = pygame.Rect(1040, 20, 100, 20)
+        pygame.draw.rect(window, (255, 255, 255), border_rect, border_radius=40)
+
+        font = pygame.font.Font("assets/font/evil-empire.ttf", 20)
+        text = font.render(time, True, (0, 0, 0))
         text_rect = text.get_rect()
-        text_rect.center = (1100, 50)
+        text_rect.center = (1090, 30)
         window.blit(text, text_rect)
 
     @classmethod

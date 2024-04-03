@@ -58,6 +58,7 @@ while True:
         GameState.mouse_button_pressed = pygame.mouse.get_pressed()[0]
         GameState.mouse_position = pygame.MOUSEMOTION
 
+
     window.fill((255, 255, 255))
     GameState.update(window)
 
