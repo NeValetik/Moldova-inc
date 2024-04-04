@@ -43,7 +43,6 @@ class GameState:
 
 
 class MainMenu:
-
     buttons = [
         Button("start", (400, 450)),
         Button("settings", (400, 550)),
@@ -62,7 +61,23 @@ class MainMenu:
         cls.display_title(window)
         cls.display_buttons(window)
         cls.check_collisions(window)
+
+    @classmethod
+    def display_background(cls, window):
+        window.blit(cls.background, cls.background.get_rect())
+        window.blit(cls.stripe, cls.stripe_rect)
     
+    @classmethod
+    def display_title(cls, window):
+        font_path = "assets/font/evil-empire.ttf"
+        font_size = 72
+        font_color = (0, 0, 0)
+        font = pygame.font.Font(font_path, font_size)
+
+        text = "Moldova Inc."
+        text_surface = font.render(text, True, font_color)
+        window.blit(text_surface, (230, 150))
+
     @classmethod
     def display_buttons(cls, window):
         for button in MainMenu.buttons:
@@ -89,24 +104,6 @@ class MainMenu:
             else:
                 Music.is_clicked = False
     
-    @classmethod
-    def display_background(cls, window):
-        window.blit(cls.background, cls.background.get_rect())
-        window.blit(cls.stripe, cls.stripe_rect)
-    
-    @classmethod
-    def display_title(cls, window):
-        font_path = "assets/font/evil-empire.ttf"
-        font_size = 72
-        font_color = (0, 0, 0)
-        font = pygame.font.Font(font_path, font_size)
-
-        text = "Moldova Inc."
-        text_surface = font.render(text, True, font_color)
-        window.blit(text_surface, (230, 150))
-    
-
-
 class Pause:
     buttons = [
         Button("resume", (400, 450)),
@@ -155,8 +152,7 @@ class Pause:
 
 
 class Statistic:
-    # don't touch (to generate one plot per space button, not each frame)
-    _one_plot = True
+    _one_plot = True  # (to generate one plot per space button, not each frame)
 
     @classmethod
     def update(cls, window):
@@ -200,7 +196,6 @@ class UpgradeMenu:
     ]
 
     image = pygame.transform.scale(pygame.image.load('assets/background/besi-background.png'),  (1920, 1080))
-    # image.set_alpha(50)
     rect = image.get_rect()
     pressed_1 = True
     pressed_2 = False
@@ -210,8 +205,6 @@ class UpgradeMenu:
         cls.display_background(window)
         cls.display_the_grape(window)
         cls.display_info_panel(window)
-
-
         cls.display_buttons(window)
         # cls.display_upgrade_buttons(window)
         # cls.display_wine_data(window)
@@ -229,7 +222,7 @@ class UpgradeMenu:
 
     @classmethod
     def display_the_grape(cls, window):
-        grape = pygame.transform.scale(pygame.image.load("assets/stuff/grape.png"), (1200, 900))
+        grape = pygame.image.load("assets/stuff/grape.png")
         grape_rect = grape.get_rect()
         grape_rect.center = (700, 600)
         window.blit(grape, grape_rect)
@@ -303,7 +296,7 @@ class UpgradeMenu:
 
 class CountryStatistic:
     buttons = [
-        Button("Back", (990,700))
+        Button("Back", (1700, 900))
     ]
 
     focus_country = None
@@ -312,9 +305,41 @@ class CountryStatistic:
     def update(cls, window):
         cls.display_country(window)
         cls.display_statistics(window)
-        cls.display_buttons(window)
         cls.display_title(window)
+        cls.display_buttons(window)
         cls.check_collisions()
+
+    @classmethod
+    def display_country(cls, window):
+        if cls.focus_country != None:
+            country = copy.copy(cls.focus_country)
+
+            # This scaling should be adjusted more
+            scale_factor = max([country.scaled_width // 200, country.scaled_height // 200])
+            scale_factor = 3 - scale_factor
+
+            scale_factor *= country.initial_scale_factor
+            country.image = pygame.transform.scale(country.initial_not_scaled_image, (country.not_scaled_width * scale_factor,
+                                                                                    country.not_scaled_height * scale_factor))
+            country.rect = country.image.get_rect()
+            country.rect.center = (500, 500)  # center of remain space
+            window.blit(country.image, country.rect)
+            del country
+    
+    @classmethod
+    def display_statistics(cls, window):
+        transparent_gray = (55, 55, 55, 120)
+        transparent_surface = pygame.Surface((400, 980), pygame.SRCALPHA)
+        pygame.draw.rect(transparent_surface, transparent_gray, transparent_surface.get_rect(), border_radius=10)
+        window.blit(transparent_surface, (1500, 10))
+
+    @classmethod
+    def display_title(cls, window):
+        font = pygame.font.Font("assets/font/evil-empire.ttf", 36)
+        text = font.render(cls.focus_country.name, True, (0, 0, 0))
+        text_rect = text.get_rect()
+        text_rect.center = (1700, 40)
+        window.blit(text, text_rect)
 
     @classmethod
     def display_buttons(cls, window):
@@ -333,49 +358,17 @@ class CountryStatistic:
             else:
                 Music.is_clicked = False
 
-    @classmethod
-    def display_country(cls, window):
-        if cls.focus_country != None:
-            country = copy.copy(cls.focus_country)
-
-            # This scaling should be adjusted more
-            scale_factor = max([country.scaled_width // 200, country.scaled_height // 200])
-            scale_factor = 3 - scale_factor
-
-            scale_factor *= country.initial_scale_factor
-            country.image = pygame.transform.scale(country.initial_not_scaled_image, (country.not_scaled_width * scale_factor,
-                                                                                    country.not_scaled_height * scale_factor))
-            country.rect = country.image.get_rect()
-            country.rect.center = (500, 500)  # center of remain space
-            window.blit(country.image, country.rect)
-            del country
-
-    @classmethod
-    def display_statistics(cls, window):
-        transparent_gray = (55, 55, 55, 120)
-        transparent_surface = pygame.Surface((400, 780), pygame.SRCALPHA)
-        pygame.draw.rect(transparent_surface, transparent_gray, transparent_surface.get_rect(), border_radius=10)
-        window.blit(transparent_surface, (1800, 10))
-
-    @classmethod
-    def display_title(cls, window):
-        font = pygame.font.Font("assets/font/evil-empire.ttf", 36)
-        text = font.render(cls.focus_country.name, True, (0, 0, 0))
-        text_rect = text.get_rect()
-        text_rect.center = (990, 40)
-        window.blit(text, text_rect)
-
 class Settings:
     buttons = [
-        Button("Back", (500,100))
+        Button("Back", (960,900))
     ]
 
-    image_path = "assets/background/settings.png"
+    image_path = "assets/background/pause-background.png"
     initial_image = pygame.image.load(image_path)
 
-    image = pygame.transform.scale(pygame.image.load(image_path), (1200, 800))
-    image.set_alpha(50)
-    rect = image.get_rect()
+    background = pygame.transform.scale(pygame.image.load(image_path), (1920, 1020))
+    background.set_alpha(50)
+    background_rect = background.get_rect()
 
     back_is = None
 
@@ -388,17 +381,11 @@ class Settings:
     @classmethod
     def display_background(cls, window):
         window.fill((0, 0, 0))
-        window.blit(cls.image, cls.rect)
-        transparent_gray = (55, 55, 55) + (120,)
-        transparent_surface = pygame.Surface((window.get_size()[0] - 60, window.get_size()[1] - 60), pygame.SRCALPHA)
-        pygame.draw.rect(transparent_surface, transparent_gray, transparent_surface.get_rect(), border_radius=10)
+        window.blit(cls.background, cls.background_rect)
+        color = (55, 55, 55, 120)
+        transparent_surface = pygame.Surface((window.get_size()[0] - 60, 950), pygame.SRCALPHA)
+        pygame.draw.rect(transparent_surface, color, transparent_surface.get_rect(), border_radius=10)
         window.blit(transparent_surface, (30, 30))
-
-    @classmethod
-    def display_buttons(cls, window):
-        for button in UpgradeMenu.buttons:
-            window.blit(button.image, button.rect)
-        Button.dislpay_text_on_buttons(window, cls.buttons)
 
     @classmethod
     def display_buttons(cls, window):
@@ -418,8 +405,6 @@ class Settings:
                     elif Settings.back_is == "pause":
                         GameState.pause = True
                     
-
-
 class Map:
     buttons = [
         Button("upgrade_menu", (1750,900), (100, 100)),
@@ -430,11 +415,11 @@ class Map:
         # ProgressBar(0, Profit.TARGET_PROFIT, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress),
     ]
 
-    image = pygame.transform.scale(pygame.image.load("assets/background/oceans-8k.png"), (1200, 800))
-    initial_image = pygame.image.load("assets/background/oceans-8k.png")
-
-    background_image = pygame.image.load("assets/background/oceans-8k.png")
-    background_rect = background_image.get_rect()
+    image = pygame.transform.scale(pygame.image.load("assets/background/oceans-8k.png"), (1920, 1080))
+    # initial_image = pygame.image.load("assets/background/oceans-8k.png")
+    initial_background = pygame.image.load("assets/background/oceans-8k.png")
+    # background_image = pygame.image.load("assets/background/oceans-8k.png")
+    background_rect = initial_background.get_rect()
     background_rect.center = (600, 400)
     
     width = image.get_width()
@@ -467,7 +452,7 @@ class Map:
 
     @classmethod
     def update(cls, window):
-        window.blit(cls.background_image, cls.background_image.get_rect())
+        window.blit(cls.initial_background, cls.background_rect)
         window.blit(cls.image, cls.rect)
         Country.update(window, Map, GameState, CountryStatistic)
         Tranport.update(window, Map)
@@ -529,7 +514,7 @@ class Map:
                 cls.scale -= cls.scale_step
         cls.scroll = 0
 
-        cls.image = pygame.transform.scale(cls.initial_image, (cls.scale*cls.width, cls.scale*cls.height))
+        cls.image = pygame.transform.scale(cls.initial_background, (cls.scale*cls.width, cls.scale*cls.height))
         cls.rect = cls.image.get_rect()
 
         if cls.scale == 1:
@@ -579,6 +564,14 @@ class Timer:
         cls.display_timer(window)
     
     @classmethod
+    def update_timer(cls):
+        if cls.frame >= 60:
+            cls.frame = 1
+            cls.current_time += datetime.timedelta(weeks=1)
+        else:
+            cls.frame += 1
+
+    @classmethod
     def display_timer(cls, window):
         time = cls.get_time()
 
@@ -590,14 +583,6 @@ class Timer:
         text_rect = text.get_rect()
         text_rect.center = (1090, 30)
         window.blit(text, text_rect)
-
-    @classmethod
-    def update_timer(cls):
-        if cls.frame >= 60:
-            cls.frame = 1
-            cls.current_time += datetime.timedelta(weeks=1)
-        else:
-            cls.frame += 1
 
     @classmethod
     def get_time(cls):

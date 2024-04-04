@@ -13,7 +13,7 @@ WINDOW_HEIGHT = 1080
 
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
-Music.initiate_background_music()
+# Music.initiate_background_music()
 pygame.display.set_caption("Moldova Inc")
 clock = pygame.time.Clock()
 
