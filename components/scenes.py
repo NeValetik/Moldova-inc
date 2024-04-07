@@ -80,9 +80,8 @@ class MainMenu:
 
     @classmethod
     def display_buttons(cls, window):
-        for button in MainMenu.buttons:
-            window.blit(button.image, button.rect)
-        Button.dislpay_text_on_buttons(window, cls.buttons)
+        Button.display_buttons(cls, window)
+        Button.display_text_on_buttons(cls, window)
     
     @classmethod
     def check_collisions(cls, window):
@@ -129,9 +128,8 @@ class Pause:
 
     @classmethod
     def display_buttons(cls, window):
-        for button in Pause.buttons:
-            window.blit(button.image, button.rect)
-        Button.dislpay_text_on_buttons(window, cls.buttons)
+        Button.display_buttons(cls, window)
+        Button.display_text_on_buttons(cls, window)
         
     @classmethod
     def check_collisions(cls, window):
@@ -182,50 +180,49 @@ class Statistic:
 
 class UpgradeMenu:
     buttons = [
-        Button("world-icon", (1750, 900), (100, 100))
+        Button("world-icon", (1750, 900), dimension=(100, 100))
     ]
 
     upgrade_buttons = [
-        Button("taste-up", (500, 500)),
-        Button("naturality-up", (500, 600)),
-        Button("advertisement-up", (500, 700)),
-
-        Button("taste-down", (400, 500)),
-        Button("naturality-down", (400, 600)),
-        Button("advertisement-down", (400, 700)), 
+        Button("naturality", (500, 600), image_path="assets/icons/grey-circle.png", dimension=(50,50)),
     ]
 
     image = pygame.transform.scale(pygame.image.load('assets/background/besi-background.png'),  (1920, 1080))
     rect = image.get_rect()
+
+    grape = pygame.image.load("assets/stuff/grape.png")
+    grape = pygame.transform.scale(grape, (grape.get_width()/3, grape.get_height()/3))
+    grape_rect = grape.get_rect()
+    grape_rect.center = (842, 487)
+
     pressed_1 = True
     pressed_2 = False
+
+    naturality = 0
 
     @classmethod
     def update(cls, window):
         cls.display_background(window)
         cls.display_the_grape(window)
+        cls.display_grape_bubbles(window)
         cls.display_info_panel(window)
         cls.display_buttons(window)
-        # cls.display_upgrade_buttons(window)
-        # cls.display_wine_data(window)
+        cls.display_upgrade_buttons(window)
+        cls.display_wine_data(window)
         cls.check_collisions()
 
     @classmethod
     def display_background(cls, window):
-        window.fill((0, 0, 0))
         window.blit(cls.image, cls.rect)
-
-        transparent_gray = (255, 255, 255, 50)
-        transparent_surface = pygame.Surface((1860, 1020), pygame.SRCALPHA)
-        pygame.draw.rect(transparent_surface, transparent_gray, transparent_surface.get_rect(), border_radius=10)
-        window.blit(transparent_surface, (30, 30))
 
     @classmethod
     def display_the_grape(cls, window):
-        grape = pygame.image.load("assets/stuff/grape.png")
-        grape_rect = grape.get_rect()
-        grape_rect.center = (700, 600)
-        window.blit(grape, grape_rect)
+        window.blit(cls.grape, cls.grape_rect)
+
+    @classmethod
+    def display_grape_bubbles(cls, window):
+        for bubble in cls.upgrade_buttons:
+            window.blit(bubble.image, bubble.rect)
 
     @classmethod
     def display_info_panel(cls, window):
@@ -236,9 +233,17 @@ class UpgradeMenu:
 
     @classmethod
     def display_buttons(cls, window):
-        for button in UpgradeMenu.buttons:
+        Button.display_buttons(cls, window)
+        Button.display_text_on_buttons(cls, window)
+
+    @classmethod
+    def display_wine_data(cls, window):
+        pass
+
+    @classmethod
+    def display_upgrade_buttons(cls, window):
+        for button in cls.upgrade_buttons:
             window.blit(button.image, button.rect)
-        Button.dislpay_text_on_buttons(window, cls.buttons)
 
     @classmethod
     def check_collisions(cls):
@@ -262,37 +267,11 @@ class UpgradeMenu:
                     if not cls.pressed_2:
                         cls.pressed_2 = True
                         if pygame.mouse.get_pressed()[0]:
-                            if button.name == "taste-up":
-                                Wine.taste += 1
-                            elif button.name == "taste-down":
-                                if Wine.taste > 0:
-                                    Wine.taste -= 1
-                            elif button.name == "naturality-up":
-                                Wine.naturality += 1
-                            elif button.name == "naturality-down":
-                                if Wine.naturality > 0:
-                                    Wine.naturality -= 1
-                            elif button.name == "advertisement-up":
-                                Wine.advertisement += 1
-                            elif button.name == "advertisement-down":
-                                if Wine.advertisement > 0:
-                                    Wine.advertisement -= 1
+                            if button.name == "naturality":
+                                cls.naturality += 1
                 else:
                     cls.pressed_2 = False
                     Music.is_clicked = False
-
-    @classmethod
-    def display_wine_data(cls, window):
-        font = pygame.font.Font("assets/font/evil-empire.ttf", 18)
-        text = f"Taste: {Wine.taste}, Naturality: {Wine.naturality}, Advertisement: {Wine.advertisement}"
-        text_render = font.render(text, True, (255, 255, 255))
-        window.blit(text_render, (100, 100))
-
-
-    @classmethod
-    def display_upgrade_buttons(cls, window):
-        for button in cls.upgrade_buttons:
-            window.blit(button.image, button.rect)
 
 class CountryStatistic:
     buttons = [
@@ -343,9 +322,8 @@ class CountryStatistic:
 
     @classmethod
     def display_buttons(cls, window):
-        for button in cls.buttons:
-            window.blit(button.image, button.rect)
-        Button.dislpay_text_on_buttons(window, cls.buttons)
+        Button.display_buttons(cls, window)
+        Button.display_text_on_buttons(cls, window)
 
     @classmethod
     def check_collisions(cls):
@@ -389,9 +367,8 @@ class Settings:
 
     @classmethod
     def display_buttons(cls, window):
-        for button in cls.buttons:
-            window.blit(button.image, button.rect)
-        Button.dislpay_text_on_buttons(window, cls.buttons)
+        Button.display_buttons(cls, window)
+        Button.display_text_on_buttons(cls, window)
     
     @classmethod
     def check_collisions(cls):
@@ -407,7 +384,7 @@ class Settings:
                     
 class Map:
     buttons = [
-        Button("upgrade_menu", (1750,900), (100, 100)),
+        Button("upgrade_menu", (1750,900), dimension=(100, 100)),
         Button("statistics", (170, 900),),
     ]
 
@@ -415,12 +392,10 @@ class Map:
         # ProgressBar(0, Profit.TARGET_PROFIT, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress),
     ]
 
-    image = pygame.transform.scale(pygame.image.load("assets/background/oceans-8k.png"), (1920, 1080))
-    # initial_image = pygame.image.load("assets/background/oceans-8k.png")
-    initial_background = pygame.image.load("assets/background/oceans-8k.png")
-    # background_image = pygame.image.load("assets/background/oceans-8k.png")
+    image = pygame.transform.scale(pygame.image.load("assets/background/oceans-4k.png"), (1920, 1080))
+    initial_background = pygame.image.load("assets/background/oceans-4k.png")
     background_rect = initial_background.get_rect()
-    background_rect.center = (600, 400)
+    background_rect.center = (960, 540)
     
     width = image.get_width()
     height = image.get_height()
@@ -461,7 +436,7 @@ class Map:
     @classmethod
     def personal_update(cls, window):
         cls.display_buttons(window)
-        cls.dislpay_stats_bars(window)
+        cls.display_stats_bars(window)
         cls.to_scale()
         cls.to_drag(window)
         cls.check_collisions()
@@ -524,12 +499,11 @@ class Map:
 
     @classmethod
     def display_buttons(cls, window):
-        for button in cls.buttons:
-            window.blit(button.image, button.rect)
-        Button.dislpay_text_on_buttons(window, cls.buttons)
+        Button.display_buttons(cls, window)
+        Button.display_text_on_buttons(cls, window)
 
     @classmethod
-    def dislpay_stats_bars(cls, window):
+    def display_stats_bars(cls, window):
         for bar in cls.stats_bars:
             bar.update(window)
 

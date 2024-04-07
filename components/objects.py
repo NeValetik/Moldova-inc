@@ -10,14 +10,20 @@ class Button(pygame.sprite.Sprite):
     frame = pygame.transform.scale(pygame.image.load("assets/buttons/button-frame.png"), (320, 100))
     frame_rect = frame.get_rect()
 
-    def __init__(self, name, position, dimension=None):
+    def __init__(self, name, position, image_path=None, dimension=None):
         super().__init__()
         self.name = name
 
         self.text = Button.get_text_object(name)
         self.text_rect = self.text.get_rect()
 
-        self.image = Button.make_surface()
+        if image_path == None:
+            self.image = Button.make_surface()
+        elif dimension == None:
+            self.image = pygame.image.load(image_path)
+        else:
+            self.image = pygame.transform.scale(pygame.image.load(image_path), dimension)
+
         self.rect = self.image.get_rect()
         self.rect.center = position
 
@@ -35,10 +41,16 @@ class Button(pygame.sprite.Sprite):
         return box
 
     @classmethod
-    def dislpay_text_on_buttons(cls, window, buttons):
-        for button in buttons:
+    def display_text_on_buttons(cls, from_class, window):
+        for button in from_class.buttons:
             button.text_rect.center = button.rect.center
             window.blit(button.text, button.text_rect)
+    
+    @classmethod
+    def display_buttons(cls, from_class, window):
+        for button in from_class.buttons:
+            window.blit(button.image, button.rect)
+        
 
 
 class ProgressBar:
@@ -290,13 +302,12 @@ class Country(pygame.sprite.Sprite):
     # initiate_from = 'csv'
     initiate_from = 'sqlite3'
     old_map_scale = 1  # To rescale the map only after Map.scale modification
-    # initial_scale_factor = 0.325  # Optimal scale for countries
-    initial_scale_factor = 0.46
-
-    # initial_scale_factor  = 0.25  # Optimal scale for countries
+    # initial_scale_factor = 0.325  
+    initial_scale_factor = 0.46  # Optimal scale for countries for 1980x1020
 
     def __init__(self, name, image_path, pos, continent):
-        self.initial_scale_factor = 0.46
+        # self.initial_scale_factor = 0.325  # Optimal scale for countries for 1200x800
+        self.initial_scale_factor = 0.46  # Optimal scale for countries for 1980x1020
         self.not_scaled_width = Image.open(image_path).size[0]
         self.not_scaled_height = Image.open(image_path).size[1]
         self.not_scaled_size = (self.not_scaled_width, self.not_scaled_height)
@@ -307,8 +318,7 @@ class Country(pygame.sprite.Sprite):
 
         self.image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), self.scaled_size)
         self.initial_image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(), self.scaled_size)
-        self.initial_not_scaled_image = pygame.transform.scale(pygame.image.load(image_path).convert_alpha(),
-                                                               self.not_scaled_size)  # I know that is same as not scaling at all, just let it be
+        self.initial_not_scaled_image = pygame.image.load(image_path).convert_alpha()
 
         self.rect = self.image.get_rect()
         self.scaled_x_pos = Country.initial_scale_factor * pos[0]
