@@ -289,13 +289,13 @@ class Country(pygame.sprite.Sprite):
     moldova = None
 
     activated = False  # First initiation
-    # initiate_from = 'csv'
-    initiate_from = 'sqlite3'
+    initiate_from = 'csv'
+    # initiate_from = 'sqlite3'
     old_map_scale = 1  # To rescale the map only after Map.scale modification
     # initial_scale_factor = 0.325  
     initial_scale_factor = 0.46  # Optimal scale for countries for 1980x1020
 
-    def __init__(self, name, image_path, pos, continent):
+    def __init__(self, name, image_path, pos, continent,naturality,advertisment,taste):
         # self.initial_scale_factor = 0.325  # Optimal scale for countries for 1200x800
         self.initial_scale_factor = 0.46  # Optimal scale for countries for 1980x1020
         self.not_scaled_width = Image.open(image_path).size[0]
@@ -324,6 +324,10 @@ class Country(pygame.sprite.Sprite):
         self.sell_to = []
         self.to_sell_button = ToSellButton(self)
         self.old_map_scale = 1
+
+        self.naturality_coef = naturality
+        self.advertisment_coef = advertisment
+        self.taste_coef = taste
 
         Country.countries.append(self)
         if name == "Moldova":
@@ -394,7 +398,7 @@ class Country(pygame.sprite.Sprite):
                     csv_reader = csv.DictReader(file)
                     for row in csv_reader:
                         Country(row['country'], row['image_path'], (float(row['x_position']), float(row['y_position'])),
-                                str(row['continent']))
+                                str(row['continent']),float(row["naturality"]),float(row["advertisment"]),float(row["taste"]))
             elif cls.initiate_from == 'sqlite3':
                 db_file = 'components/countries_data/countries_data.db'
                 conn = sqlite3.connect(db_file)
@@ -405,7 +409,7 @@ class Country(pygame.sprite.Sprite):
                 conn.close()
 
     def __repr__(self):
-        return self.name
+        return (str(self.name), self.naturality_coef, self.advertisment_coef, self.taste_coef)
 
 
 class Wine:

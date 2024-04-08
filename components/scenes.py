@@ -199,6 +199,9 @@ class UpgradeMenu:
     pressed_2 = False
 
     naturality = 0
+    advertisment = 0
+    taste = 0
+
 
     @classmethod
     def update(cls, window):
