@@ -416,9 +416,9 @@ class Wine:
     wine_color = (89, 16, 56)
     trandmarks = []
 
-    taste = 0
-    naturality = 0
-    advertisement = 0
+    naturality = 1000
+    advertisment = 5
+    taste = 100
 
     def __init__(self, name, taste=0, naturality=0, advertisement=0):
         self.name = name

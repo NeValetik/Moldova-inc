@@ -198,9 +198,6 @@ class UpgradeMenu:
     pressed_1 = True
     pressed_2 = False
 
-    naturality = 1000
-    advertisment = 5
-    taste = 100
 
 
     @classmethod
@@ -283,8 +280,9 @@ class UpgradeMenu:
                         cls.pressed_2 = True
                         if pygame.mouse.get_pressed()[0]:
                             if button.name == "naturality":
-                                cls.naturality += 1000
-                                print(cls.naturality)
+                                Wine.naturality += 1000
+                                # cls.naturality += 1000
+                                # print(cls.naturality)
                 else:
                     cls.pressed_2 = False
                     Music.is_clicked = False
