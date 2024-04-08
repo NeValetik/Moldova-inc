@@ -16,8 +16,12 @@ class Graph(nx.Graph):
     def check_new_contracts(self):
         while len(Country.contracts) != 0:
             contract = Country.contracts[0]
-            self.add_edge(contract[0], contract[1])
+            self.add_weighted_edges_from((contract[0], contract[1],self.formula(contract[1])))
             del Country.contracts[0]
+    
+    
+    def formula(self,contract):
+        return Market.w1.naturality * Market.w1.taste
 
 
 graph = Graph()
