@@ -182,63 +182,53 @@ class Plane(pygame.sprite.Sprite):
             if len(plane.path) <= 1:
                 del plane
             else:
-                plane.rect.center = (Map.rect.topleft[0] + Map.scale * plane.path[0][0],
-                                     Map.rect.topleft[1] + Map.scale * plane.path[0][1])
+                plane.rect.center = (Map.rect.topleft[0] + Map.scale*plane.path[0][0],
+                                    Map.rect.topleft[1] + Map.scale*plane.path[0][1])
 
                 # Look at middle point (before middle point), look at destination (after middle point)
-                if plane.before_middle_point and plane.path[0] != plane.middle_point:
+                # if plane.before_middle_point and plane.path[0] != plane.middle_point:
+                if plane.before_middle_point:
+
                     # Look to which side should be made additional rotation
                     plane.before_middle_point = False
-                    if plane.origin[1] - plane.destination[1] > 0:
-                        if plane.origin[0] - plane.destination[0] > 0:
-                            plane.image = pygame.transform.rotate(plane.image, Plane.angle_between_points(plane.origin,
-                                                                                                          plane.middle_point))
-                        elif plane.origin[0] - plane.destination[0] <= 0:
-                            plane.image = pygame.transform.rotate(plane.image, -Plane.angle_between_points(plane.origin,
-                                                                                                           plane.middle_point))
-                    elif plane.origin[1] - plane.destination[1] <= 0:
-                        if plane.origin[0] - plane.destination[0] > 0:
-                            plane.image = pygame.transform.rotate(plane.image,
-                                                                  180 - Plane.angle_between_points(plane.origin,
-                                                                                                   plane.middle_point))
-                        elif plane.origin[0] - plane.destination[0] <= 0:
-                            plane.image = pygame.transform.rotate(plane.image,
-                                                                  180 + Plane.angle_between_points(plane.origin,
-                                                                                                   plane.middle_point))
-                elif plane.path[0] == plane.middle_point:
-                    if plane.origin[1] - plane.destination[1] > 0:
-                        plane.image = pygame.transform.rotate(plane.image,
-                                                              Plane.angle_between_points(plane.middle_point,
-                                                                                         plane.destination))
-                    else:
-                        plane.image = pygame.transform.rotate(plane.image, 90 - Plane.angle_between_points(plane.origin,
-                                                                                                           plane.middle_point) + Plane.angle_between_points(
-                            plane.middle_point, plane.destination))
+                    if plane.origin[1] - plane.destination[1]>0:
+                        if plane.origin[0] - plane.destination[0]>0:
+                            plane.image = pygame.transform.rotate(plane.image, Plane.angle_between_points(plane.origin, plane.middle_point))
+                        elif plane.origin[0] - plane.destination[0]<=0:
+                            plane.image = pygame.transform.rotate(plane.image, -Plane.angle_between_points(plane.origin, plane.middle_point))
+                    elif plane.origin[1] - plane.destination[1]<=0:
+                        if plane.origin[0] - plane.destination[0]>0:
+                            plane.image = pygame.transform.rotate(plane.image,180 - Plane.angle_between_points(plane.origin, plane.middle_point))
+                        elif plane.origin[0] - plane.destination[0]<=0:
+                            plane.image = pygame.transform.rotate(plane.image,180 + Plane.angle_between_points(plane.origin, plane.middle_point))
+                # elif plane.path[0] == plane.middle_point:
+                #         if plane.origin[1] - plane.destination[1]>0:
+                #             plane.image = pygame.transform.rotate(plane.image,  Plane.angle_between_points(plane.middle_point, plane.destination))
+                #         else:
+                #             plane.image = pygame.transform.rotate(plane.image,  90 - Plane.angle_between_points(plane.origin, plane.middle_point) + Plane.angle_between_points(plane.middle_point, plane.destination))
 
                 window.blit(plane.image, plane.rect)
                 del plane.path[0]
 
     @classmethod
     def get_path(cls, c1, c2):
-        middle_point = (min([c1[0], c2[0]]) + (abs(c1[0] - c2[0]) / 2), min([c1[1], c2[1]]) + (abs(c1[1] - c2[1]) / 2))
+        # middle_point = (min([c1[0], c2[0]]) + (abs(c1[0] - c2[0]) / 2), min([c1[1], c2[1]]) + (abs(c1[1] - c2[1]) / 2))
+        
+        # direction_vector = (c2[0] - c1[0], c2[1] - c1[1])
+        # perp_vect = (-direction_vector[1], direction_vector[0])
+        # magnitude = math.sqrt(sum(component**2 for component in perp_vect))
+        # normalized_perp_vector = (perp_vect[0] / magnitude, perp_vect[1] / magnitude)
 
-        direction_vector = (c2[0] - c1[0], c2[1] - c1[1])
-        perp_vect = (-direction_vector[1], direction_vector[0])
-        magnitude = math.sqrt(sum(component ** 2 for component in perp_vect))
-        normalized_perp_vector = (perp_vect[0] / magnitude, perp_vect[1] / magnitude)
-
-        distance = 100
-        third_point = (
-            middle_point[0] + normalized_perp_vector[0] * distance,
-            middle_point[1] + normalized_perp_vector[1] * distance)
-
-        x_values = [c1[0], third_point[0], c2[0]]
-        y_values = [c1[1], third_point[1], c2[1]]
-
+        # distance = 20
+        # third_point = (middle_point[0] + normalized_perp_vector[0]*distance, middle_point[1] + normalized_perp_vector[1]*distance)
+        
+        x_values = [c1[0], c2[0]]
+        y_values = [c1[1], c2[1]]
+            
         x = np.array(x_values)
         y = np.array(y_values)
-        coefficients = np.polyfit(x, y, 2)  # Fit a quadratic polynomial (degree 2)
-        curve_x = np.linspace(int(min(x)), int(max(x)), int(max(x) - min(x) + 1))
+        coefficients = np.polyfit(x, y, 1)  # Fit a quadratic polynomial (degree 2)
+        curve_x = np.linspace(int(min(x)), int(max(x)), int(max(x)-min(x)+1))
         curve_y = np.polyval(coefficients, curve_x)
         coordinates = [(x_val, y_val) for x_val, y_val in zip(curve_x, curve_y)]
 
@@ -249,21 +239,21 @@ class Plane(pygame.sprite.Sprite):
     @classmethod
     def angle_between_points(cls, point1, point2):
         direction_vector = (point2[0] - point1[0], point2[1] - point1[1])
-        if point2[1] - point1[1] > 0:
+        if point2[1]-point1[1] > 0:    
             perp_vect = (-direction_vector[1], direction_vector[0])
         else:
             perp_vect = (direction_vector[1], direction_vector[0])
-        magnitude = math.sqrt(sum(component ** 2 for component in perp_vect))
+        magnitude = math.sqrt(sum(component**2 for component in perp_vect))
         normalized_perp_vector = (perp_vect[0] / magnitude, perp_vect[1] / magnitude)
-        distance = 100
+        distance = 20
 
-        dy = math.sqrt((normalized_perp_vector[0] * distance) ** 2 + (normalized_perp_vector[1] * distance) ** 2)
-        if point2[1] - point1[1] < 0:
-            dx = math.sqrt((point2[0] - point1[0]) ** 2 + (point2[1] + dy - point1[1]) ** 2)
+        dy = math.sqrt((normalized_perp_vector[0]*distance)**2+(normalized_perp_vector[1]*distance)**2)
+        if point2[1]-point1[1]<0:
+            dx = math.sqrt((point2[0]-point1[0])**2+(point2[1]+dy-point1[1])**2)
         else:
-            dx = math.sqrt((point2[0] - point1[0]) ** 2 + (point2[1] - dy - point1[1]) ** 2)
-        c = math.sqrt((point2[0] - point1[0]) ** 2 + (point2[1] - point1[1]) ** 2)
-        angle = math.degrees(math.acos((dy ** 2 + c ** 2 - dx ** 2) / (2 * dy * c)))
+            dx = math.sqrt((point2[0]-point1[0])**2+(point2[1]-dy-point1[1])**2)
+        c = math.sqrt((point2[0]-point1[0])**2+(point2[1]-point1[1])**2)
+        angle = math.degrees(math.acos((dy**2 +c**2 - dx**2)/(2*dy*c)))
         return angle
 
 
