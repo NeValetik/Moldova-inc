@@ -198,9 +198,9 @@ class UpgradeMenu:
     pressed_1 = True
     pressed_2 = False
 
-    naturality = 0
-    advertisment = 0
-    taste = 0
+    naturality = 1000
+    advertisment = 5
+    taste = 100
 
 
     @classmethod
@@ -249,6 +249,18 @@ class UpgradeMenu:
             window.blit(button.image, button.rect)
 
     @classmethod
+    def get_naturality(cls):
+        return cls.naturality
+    
+    @classmethod
+    def get_taste(cls):
+        return cls.taste
+    
+    @classmethod
+    def get_advertisment(cls):
+        return cls.advertisment
+
+    @classmethod
     def check_collisions(cls):
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
@@ -271,7 +283,8 @@ class UpgradeMenu:
                         cls.pressed_2 = True
                         if pygame.mouse.get_pressed()[0]:
                             if button.name == "naturality":
-                                cls.naturality += 1
+                                cls.naturality += 1000
+                                print(cls.naturality)
                 else:
                     cls.pressed_2 = False
                     Music.is_clicked = False
