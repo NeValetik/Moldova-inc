@@ -1,16 +1,15 @@
 import pygame, random, math, os, datetime, csv, sqlite3
 from PIL import Image
-# import logic
 import numpy as np
 
 pygame.init()
 
 
 class Button(pygame.sprite.Sprite):
-    frame = pygame.transform.scale(pygame.image.load("assets/buttons/button-frame.png"), (320, 100))
+    frame = pygame.transform.scale(pygame.image.load("assets/stuff/button-frame.png"), (230, 80))
     frame_rect = frame.get_rect()
 
-    def __init__(self, name, position, image_path=None, dimension=None):
+    def __init__(self, name, position, image_path=None, dimension=(230, 80)):
         super().__init__()
         self.name = name
 
@@ -34,7 +33,7 @@ class Button(pygame.sprite.Sprite):
         return text
 
     @classmethod
-    def make_surface(cls, size=(300, 90), color=(255, 255, 255, 128)):
+    def make_surface(cls, size=(200, 80), color=(255, 255, 255, 128)):
         box = pygame.Surface(size, pygame.SRCALPHA)
         box.fill(color)
         pygame.draw.rect(box, (255, 255, 255, 255), (0, 0, *size))
@@ -292,12 +291,10 @@ class Country(pygame.sprite.Sprite):
     initiate_from = 'csv'
     # initiate_from = 'sqlite3'
     old_map_scale = 1  # To rescale the map only after Map.scale modification
-    # initial_scale_factor = 0.325  
-    initial_scale_factor = 0.46  # Optimal scale for countries for 1980x1020
+    initial_scale_factor = 0.325    # Optimal scale for countries for 1200x800
 
     def __init__(self, name, image_path, pos, continent,naturality,advertisment,taste):
-        # self.initial_scale_factor = 0.325  # Optimal scale for countries for 1200x800
-        self.initial_scale_factor = 0.46  # Optimal scale for countries for 1980x1020
+        self.initial_scale_factor = 0.325  # Optimal scale for countries for 1200x800
         self.not_scaled_width = Image.open(image_path).size[0]
         self.not_scaled_height = Image.open(image_path).size[1]
         self.not_scaled_size = (self.not_scaled_width, self.not_scaled_height)

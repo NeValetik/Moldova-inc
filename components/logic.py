@@ -26,8 +26,6 @@ class Graph(nx.Graph):
     
 
     def check_new_value_formula(self):
-        print(Wine.naturality)
-
         for u,v,d in self.edges(data=True):
             d['weight'] = self.formula(v)
             print("Nodes: ",u.name," ", v.name ,"Weightened edges: ",d)

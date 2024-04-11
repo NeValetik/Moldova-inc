@@ -3,13 +3,11 @@ from pygame.locals import *
 from components.scenes import *
 
 pygame.init()
-
-
 pygame_icon = pygame.image.load('assets/icons/mainicon.jpg')
 pygame.display.set_icon(pygame_icon)
 
-WINDOW_WIDTH = 1920
-WINDOW_HEIGHT = 1080
+WINDOW_WIDTH = 1280
+WINDOW_HEIGHT = 720
 
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 
@@ -40,6 +38,9 @@ while True:
                 elif GameState.upgrade_menu:
                     GameState.upgrade_menu = False
                     GameState.play = True
+                elif GameState.country_statistic:
+                    GameState.country_statistic = False
+                    GameState.play = True
             elif event.key == pygame.K_SPACE and (GameState.play or GameState.statistic):
                 if GameState.play:
                     GameState.play = False
@@ -62,5 +63,4 @@ while True:
 
     pygame.display.update()
     clock.tick(60)
-    # print(UpgradeMenu.naturality)
-    # print(clock.get_fps())
+    print(clock.get_fps())
