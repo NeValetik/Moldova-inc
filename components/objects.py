@@ -92,6 +92,21 @@ class ProgressBar:
         self.current_value = min(self.getter(), self.max_value)
 
 
+class Contract: 
+    def __init__(self, position):
+        self.position = position
+        self.buttons = [
+        Button("accept", (self.position[0], self.position[1]),),
+        Button("decline", (self.position[0]+50, self.position[1]+50),),
+        ]
+
+    def display_buttons(self, window):
+        Button.display_buttons(self, window)
+        Button.display_text_on_buttons(self, window)
+
+   
+
+
 class ToSellButton(pygame.sprite.Sprite):
     buttons = []
 
@@ -377,6 +392,9 @@ class Country(pygame.sprite.Sprite):
                     # Logistic stuff:
                     if to_sell_button.country != Country.moldova:  # Do not send plane from Moldova to Moldova
                         Plane(to_sell_button.pos)  # Generate a plane
+                        to_sell_button.country.start_time = Timer.get_time_in_years() # Gives the time of the contract activation
+                        # Contract(to_sell_button.pos).update()
+                        
                         cls.contracts.append([Country.moldova, to_sell_button.country])
                         Country.moldova.sell_to.append(to_sell_button.country)
                         to_sell_button.country.buy_from.append(Country.moldova)

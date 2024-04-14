@@ -489,7 +489,7 @@ class Map:
     ]
 
     stats_bars = [
-        ProgressBar(0, 1000, 200, 30, (100, 10, 10), (255, 255, 255), (30, 500), getter=BarsGetters.get_world_progress),
+        ProgressBar(0, 1000, 200, 30, (100, 10, 10), (255, 255, 255), (71, 500), getter=BarsGetters.get_world_progress),
     ]
 
     image = pygame.transform.scale(pygame.image.load("assets/background/oceans-4k.png"), (1280, 720))
@@ -533,6 +533,7 @@ class Map:
         # Look like a mess because I avoided in this way double click/missclick of Button and Country
         Country.update(window, Map, GameState, CountryStatistic)
         Country.display_countries(window, Map)
+        
         ToSellButton.display_buttons(window, Map)
         Map.display_buttons(window)
         Tranport.update(window, Map)

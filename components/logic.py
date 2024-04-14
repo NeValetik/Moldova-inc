@@ -17,13 +17,15 @@ class Graph(nx.Graph):
         self.check_new_value_formula()    
         while len(Country.contracts) != 0:
             contract = Country.contracts[0]
+            # print(contract[1].start_time)
             weight = self.income(contract[1])
             self.add_weighted_edges_from([(contract[0], contract[1], weight)])
             del Country.contracts[0]
     
     def check_new_value_formula(self):
         for u,v,d in self.edges(data=True):
-            d['weight'] = self.income(v)
+            # if Timer.get_time_in_years()>v.start_time+1:#+1 stands from 1 year of making the contract(should be changed to the contract duration in future)
+            d['weight'] = self.income(v)    
             print("Nodes: ",u.name," ", v.name ,"Weightened edges: ",d)
 
     def income(self,contract):
