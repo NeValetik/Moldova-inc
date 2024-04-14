@@ -180,24 +180,38 @@ class Statistic:
 
 class UpgradeMenu:
     buttons = [
-        Button("map", (1100, 650), image_path="assets/upgrade-elements/besi-button.png", dimension=None),
-        # Button("world-icon", (1100, 650), image_path="assets/upgrade-elements/besi-button.png", dimension=None),
+        Button("map", (976, 609), image_path="assets/upgrade-elements/besi-button.png", dimension=None),
+        Button("world-icon", (1120, 609), image_path="assets/upgrade-elements/besi-button.png", dimension=None),
     ]   
 
     upgrade_buttons = [
-        Button("naturality", (274.38, 198.69), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("naturality", (319, 249), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("naturality", (425, 249), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("naturality", (267, 340), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("advertisment", (371.50, 340), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("taste", (477, 340), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("naturality", (213, 432), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("naturality", (319, 432), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("naturality", (425, 432), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("naturality", (162, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("naturality", (267, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("naturality", (372, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("naturality", (477, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
     ]
 
     skills_icons = [
-        ["assets/upgrade-elements/quality-skill.png", (289, 216)],
-        ["assets/upgrade-elements/am-skill.png", (289, 216)],
-        ["assets/upgrade-elements/heart-skill.png", (289, 216)],
-        ["assets/upgrade-elements/money-skill.png", (289, 216)],
-        ["assets/upgrade-elements/time-skill.png", (289, 216)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (289, 216)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (289, 216)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (289, 216)],
-
+        ["assets/upgrade-elements/quality-skill.png", (320, 247.5)],
+        ["assets/upgrade-elements/heart-skill.png", (425.5, 251)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (267, 340)],
+        ["assets/upgrade-elements/money-skill.png", (372, 337)],
+        ["assets/upgrade-elements/am-skill.png", (479.50, 337)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (215, 432)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (322, 432)],
+        ["assets/upgrade-elements/time-skill.png", (422, 429.5)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (162, 524)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (267, 524)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (372, 524)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (480, 524)],
     ]
 
 
@@ -219,7 +233,7 @@ class UpgradeMenu:
         cls.display_icon_skills(window)
         cls.display_info_panel(window)
         cls.display_buttons(window)
-        cls.display_upgrade_buttons(window)
+        # cls.display_upgrade_buttons(window)
         cls.display_wine_data(window)
         cls.check_collisions()
 
@@ -248,7 +262,7 @@ class UpgradeMenu:
     def display_info_panel(cls, window):
         panel = pygame.image.load("assets/upgrade-elements/info-panel.png")
         panel_rect = panel.get_rect()
-        panel_rect.center = (1000, 360)
+        panel_rect.center = (1046.50, 360)
         window.blit(panel, panel_rect)
 
     @classmethod
@@ -260,10 +274,10 @@ class UpgradeMenu:
     def display_wine_data(cls, window):
         pass
 
-    @classmethod
-    def display_upgrade_buttons(cls, window):
-        for button in cls.upgrade_buttons:
-            window.blit(button.image, button.rect)
+    # @classmethod
+    # def display_upgrade_buttons(cls, window):
+    #     for button in cls.upgrade_buttons:
+    #         window.blit(button.image, button.rect)
 
     @classmethod
     def get_naturality(cls):
