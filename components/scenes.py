@@ -477,7 +477,7 @@ class Map:
     ]
 
     stats_bars = [
-        ProgressBar(0, 1000, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress),
+        ProgressBar(0, 1000, 200, 30, (100, 10, 10), (255, 255, 255), (30, 500), getter=BarsGetters.get_world_progress),
     ]
 
     image = pygame.transform.scale(pygame.image.load("assets/background/oceans-4k.png"), (1280, 720))
@@ -624,47 +624,6 @@ class Map:
                     cls.pressed_icon = False
                     Music.is_clicked = False
         
-class Timer:
-    start_time = datetime.datetime(1950, 12, 30, 12, 0, 0)
-    current_time = start_time
-    frame = 1
-    
-    #Counts years from the start of the game
-    years_from_start = current_time.year-start_time.year
-
-    @classmethod
-    def update(cls, window):
-        cls.update_timer()
-        cls.display_timer(window)
-        cls.update_time_difference()
-    @classmethod
-    def update_timer(cls):
-        if cls.frame >= 60:
-            cls.frame = 1
-            cls.current_time += datetime.timedelta(weeks=1)
-        else:
-            cls.frame += 1
-
-    @classmethod
-    def display_timer(cls, window):
-        time = cls.get_time()
-
-        border_rect = pygame.Rect(1040, 20, 100, 20)
-        pygame.draw.rect(window, (255, 255, 255), border_rect, border_radius=40)
-
-        font = pygame.font.Font("assets/font/evil-empire.ttf", 20)
-        text = font.render(time, True, (0, 0, 0))
-        text_rect = text.get_rect()
-        text_rect.center = (1090, 30)
-        window.blit(text, text_rect)
-
-    @classmethod
-    def get_time(cls):
-        return f"{cls.current_time.day}/{cls.current_time.month}/{cls.current_time.year}"
-    
-    @classmethod
-    def update_time_difference(cls):
-        cls.years_from_start = cls.current_time.year-cls.start_time.year
 
 class News:
     buttons = [

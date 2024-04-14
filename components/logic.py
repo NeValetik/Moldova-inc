@@ -5,7 +5,6 @@ from objects import *
 class Graph(nx.Graph):
     initiated = False
 
-
     def __init__(self):
         super().__init__()
         self.initialization()
@@ -15,12 +14,12 @@ class Graph(nx.Graph):
             self.add_node(country.name)
 
     def check_new_contracts(self):
+        self.check_new_value_formula()    
         while len(Country.contracts) != 0:
             contract = Country.contracts[0]
             weight = self.income(contract[1])
             self.add_weighted_edges_from([(contract[0], contract[1], weight)])
             del Country.contracts[0]
-        self.check_new_value_formula()    
     
     def check_new_value_formula(self):
         for u,v,d in self.edges(data=True):
@@ -34,7 +33,9 @@ class Graph(nx.Graph):
         temp_sum = 0
         for u,v,d in self.edges(data=True):
             temp_sum += d['weight']
+        # print(temp_sum)    
         return temp_sum    
+
 
 graph = Graph()
 
