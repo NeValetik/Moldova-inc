@@ -183,38 +183,42 @@ class Statistic:
 class UpgradeMenu:
     buttons = [
         Button("map", (976, 609), image_path="assets/upgrade-elements/besi-button.png", dimension=None),
-        Button("world-icon", (1120, 609), image_path="assets/upgrade-elements/besi-button.png", dimension=None),
+        Button("idk", (1120, 609), image_path="assets/upgrade-elements/besi-button.png", dimension=None),
     ]   
 
     upgrade_buttons = [
-        Button("naturality", (319, 249), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("naturality", (425, 249), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("naturality", (267, 340), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("advertisment", (371.50, 340), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("taste", (477, 340), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("naturality", (213, 432), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("naturality", (319, 432), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("naturality", (425, 432), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("naturality", (162, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("naturality", (267, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("naturality", (372, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("naturality", (477, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("naturality", (316, 249), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("heart", (420, 249), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("Coming Soon", (265, 340), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("advertisment", (368, 340), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("taste", (474, 340), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("Coming Soon", (210, 432), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("Coming Soon", (316, 432), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("time", (423, 432), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("Coming Soon", (159, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("Coming Soon", (264, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("Coming Soon", (369, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button("Coming Soon", (474, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
     ]
 
     skills_icons = [
-        ["assets/upgrade-elements/quality-skill.png", (320, 247.5)],
-        ["assets/upgrade-elements/heart-skill.png", (425.5, 251)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (267, 340)],
-        ["assets/upgrade-elements/money-skill.png", (372, 337)],
-        ["assets/upgrade-elements/am-skill.png", (479.50, 337)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (215, 432)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (322, 432)],
-        ["assets/upgrade-elements/time-skill.png", (422, 429.5)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (162, 524)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (267, 524)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (372, 524)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (480, 524)],
+        ["assets/upgrade-elements/quality-skill.png", (316, 247.5)],
+        ["assets/upgrade-elements/heart-skill.png", (420, 251)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (264, 340)],
+        ["assets/upgrade-elements/money-skill.png", (369, 337)],
+        ["assets/upgrade-elements/am-skill.png", (476, 337)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (212, 432)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (319, 432)],
+        ["assets/upgrade-elements/time-skill.png", (419, 429.5)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (160, 524)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (264, 524)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (369, 524)],
+        ["assets/upgrade-elements/coming-soon-skill.png", (477, 524)],
     ]
+
+    skill_description = {
+        'naturality' : 'Add naturality +1000',
+    }
 
 
     image = pygame.transform.scale(pygame.image.load('assets/background/besi-background.png'),  (1280, 720))
@@ -235,9 +239,8 @@ class UpgradeMenu:
         cls.display_icon_skills(window)
         cls.display_info_panel(window)
         cls.display_buttons(window)
-        # cls.display_upgrade_buttons(window)
         cls.display_wine_data(window)
-        cls.check_collisions()
+        cls.check_collisions(window)  # window for dislaying info panel
 
     @classmethod
     def display_background(cls, window):
@@ -276,25 +279,8 @@ class UpgradeMenu:
     def display_wine_data(cls, window):
         pass
 
-    # @classmethod
-    # def display_upgrade_buttons(cls, window):
-    #     for button in cls.upgrade_buttons:
-    #         window.blit(button.image, button.rect)
-
     @classmethod
-    def get_naturality(cls):
-        return cls.naturality
-    
-    @classmethod
-    def get_taste(cls):
-        return cls.taste
-    
-    @classmethod
-    def get_advertisment(cls):
-        return cls.advertisment
-
-    @classmethod
-    def check_collisions(cls):
+    def check_collisions(cls , window):
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 if not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
@@ -310,16 +296,75 @@ class UpgradeMenu:
         
         for button in cls.upgrade_buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
+                cls.display_info_about_skill(window, button)
                 if pygame.mouse.get_pressed()[0]:
                     Music.play_click_sound()
                     if not cls.pressed_2:
                         cls.pressed_2 = True
                         if pygame.mouse.get_pressed()[0]:
-                            if button.name == "naturality":
+                            if button.name == 'naturality':
                                 Wine.naturality += 1000
+                            elif button.name == 'advertisment':
+                                Wine.advertisment += 5
+                            elif button.name == 'taste':
+                                Wine.taste += 100
+                            button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
+
                 else:
                     cls.pressed_2 = False
                     Music.is_clicked = False
+    
+    # @classmethod
+    # def display_info_about_skill(cls, window, button):
+    #     font = pygame.font.SysFont(None, 40)
+    #     try:
+    #         text_surface = font.render(cls.skill_description[button.name], True, (0, 0, 0))
+    #     except:
+    #         text_surface = font.render("Not yet", True, (0, 0, 0, 0))
+
+    #     rect = pygame.Rect(830, 100, 270, 450)  # info panel (1046.50, 360) 330x508
+    #     text_rect = text_surface.get_rect(center=rect.center)       
+
+    #     # Set the opacity of the rectangle to 0 (completely transparent)
+    #     rect_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+    #     rect_surface.fill((255, 255, 255, 0))
+
+    #     # Draw the rectangle
+    #     pygame.draw.rect(rect_surface, (0, 0, 0), rect, 2)
+
+    #     # Blit the rectangle onto the screen
+    #     window.blit(rect_surface, rect)
+
+    #     # Blit the text onto the screen
+    #     window.blit(text_surface, text_rect)
+
+    @classmethod
+    def display_info_about_skill(cls, window, button):
+        font = pygame.font.SysFont(None, 40)
+        try:
+            text = cls.skill_description[button.name]
+        except:
+            text = "Not yet"
+
+        # Render the text
+        text_surface = font.render(text, True, (0, 0, 0))
+        
+        rect = pygame.Rect(830, 100, 270, 450)  # info panel (1046.50, 360) 330x508
+        text_rect = text_surface.get_rect(center=rect.center)       
+
+        # Set the opacity of the rectangle to 0 (completely transparent)
+        rect_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+        rect_surface.fill((255, 255, 255, 0))
+
+        # Draw the rectangle
+        pygame.draw.rect(rect_surface, (0, 0, 0), rect, 2)
+
+        # Blit the rectangle onto the screen
+        window.blit(rect_surface, rect)
+
+        # Render the text within the rectangle boundaries
+        text_rect.clamp_ip(rect)
+        window.blit(text_surface, text_rect)
 
 class CountryStatistic:
     buttons = [
@@ -480,7 +525,7 @@ class Map:
         Map.display_buttons(window)
         Tranport.update(window, Map)
 
-        if Map.personal_update(window) != 'changed':
+        if Map.personal_update(window) != 'changed':  # Checking the Country collision only if map Button were not pressed
             Country.check_collisions(Map, GameState, CountryStatistic)
 
     @classmethod
