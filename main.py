@@ -63,4 +63,4 @@ while True:
 
     pygame.display.update()
     clock.tick(60)
-    print(clock.get_fps())
+    print(int(clock.get_fps()))

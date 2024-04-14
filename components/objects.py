@@ -358,33 +358,32 @@ class Country(pygame.sprite.Sprite):
     def check_collisions(cls, Map, GameState, CountryStatistic):
         if Map.pressed and Map.motion:
             return
+        # Checking only to sell buttons 
+        for to_sell_button in [country.to_sell_button for country in cls.countries if country.to_sell_button.is_available]:
+            if to_sell_button.rect.collidepoint(pygame.mouse.get_pos())  and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
+                relative_x = pygame.mouse.get_pos()[0] - to_sell_button.rect.x
+                relative_y = pygame.mouse.get_pos()[1] - to_sell_button.rect.y
+                if to_sell_button.mask.get_at((relative_x, relative_y)):
+                    to_sell_button.is_available = False
+                    to_sell_button.have_coordinates = False
+                    to_sell_button.is_positioned = False
+                    # Logistic stuff:
+                    if to_sell_button.country != Country.moldova:  # Do not send plane from Moldova to Moldova
+                        Plane(to_sell_button.pos)  # Generate a plane
+                        cls.contracts.append([Country.moldova, to_sell_button.country])
+                        Country.moldova.sell_to.append(to_sell_button.country)
+                        to_sell_button.country.buy_from.append(Country.moldova)
+                    return
+        # Checking only countries
         for country in cls.countries:
-            # Checking collisions with rectangle of the country
-            if country.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
-                # Checking collisions with rectangle of the sell button
-                if country.to_sell_button.rect.collidepoint(pygame.mouse.get_pos()):
-                    relative_x = pygame.mouse.get_pos()[0] - country.to_sell_button.rect.x
-                    relative_y = pygame.mouse.get_pos()[1] - country.to_sell_button.rect.y
-                    # Checking cllisions with mask of the sell button
-                    if country.to_sell_button.mask.get_at(
-                            (relative_x, relative_y)) and country.to_sell_button.is_available:
-                        country.to_sell_button.is_available = False
-                        country.to_sell_button.have_coordinates = False
-                        country.to_sell_button.is_positioned = False
-                        if country != Country.moldova:  # Do not send plane from Moldova to Moldova
-                            Plane(country.to_sell_button.pos)  # Generate a plane
-                            # Logistic stuff:
-                            cls.contracts.append([Country.moldova, country])
-                            Country.moldova.sell_to.append(country)
-                            country.buy_from.append(Country.moldova)
-                # Checking collisions with mask of the country
-                else:
-                    relative_x = pygame.mouse.get_pos()[0] - country.rect.x
-                    relative_y = pygame.mouse.get_pos()[1] - country.rect.y
-                    if country.mask.get_at((relative_x, relative_y)):
-                        GameState.country_statistic = True
-                        GameState.play = False
-                        CountryStatistic.focus_country = country
+            if country.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
+                relative_x = pygame.mouse.get_pos()[0] - country.rect.x
+                relative_y = pygame.mouse.get_pos()[1] - country.rect.y
+                if country.mask.get_at((relative_x, relative_y)):
+                    GameState.country_statistic = True
+                    GameState.play = False
+                    CountryStatistic.focus_country = country
+                    return
 
     @classmethod
     def one_time_activation(cls):

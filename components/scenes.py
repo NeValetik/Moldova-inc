@@ -18,7 +18,7 @@ class GameState:
     country_statistic = False
     upgrade_menu = False
 
-    mouse_button_pressed = None
+    mouse_button_was_pressed = None
     mouse_position = None
 
     @classmethod
@@ -40,6 +40,8 @@ class GameState:
             Statistic.update(window)
         if GameState.settings:
             Settings.update(window)
+        
+        cls.mouse_button_was_pressed = pygame.mouse.get_pressed()[0]
 
 
 class MainMenu:
@@ -89,7 +91,7 @@ class MainMenu:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 Button.frame_rect.center = button.rect.center
                 window.blit(Button.frame, Button.frame_rect)
-            if button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+            if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                 Music.play_click_sound()
                 if button.name == "start":
                     GameState.main_menu = False
@@ -137,7 +139,7 @@ class Pause:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 Button.frame_rect.center = button.rect.center
                 window.blit(Button.frame, Button.frame_rect)
-            if button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+            if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                 if button.name == "resume":
                     GameState.pause = False
                     GameState.play = True
@@ -295,7 +297,7 @@ class UpgradeMenu:
     def check_collisions(cls):
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
-                if pygame.mouse.get_pressed()[0]:
+                if not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                     Music.play_click_sound()
                     if not cls.pressed_1:
                         cls.pressed_1 = True
@@ -374,7 +376,7 @@ class CountryStatistic:
     @classmethod
     def check_collisions(cls):
         for button in cls.buttons:
-            if button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+            if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                 Music.play_click_sound()
                 if button.name == "Back":
                     GameState.country_statistic = False
@@ -414,7 +416,7 @@ class Settings:
     @classmethod
     def check_collisions(cls):
         for button in cls.buttons:
-            if button.rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+            if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                 Music.play_click_sound()
                 if button.name == "Back":
                     GameState.settings = False
@@ -554,7 +556,7 @@ class Map:
             return
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
-                if pygame.mouse.get_pressed()[0]:
+                if not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                     Music.play_click_sound()
                     if not cls.pressed_icon:
                         cls.pressed_icon = True
