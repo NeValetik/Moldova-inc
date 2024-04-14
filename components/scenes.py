@@ -470,19 +470,27 @@ class Map:
 
     @classmethod
     def update(cls, window):
-        window.fill((140,171,193))
-        window.blit(cls.image, cls.rect)
+        window.fill((140,171,193))  # Same color as ocean, to optimize performance and avoid some bugs
+        window.blit(cls.image, cls.rect)  # Ocean
+
+        # Look like a mess because I avoided in this way double click/missclick of Button and Country
         Country.update(window, Map, GameState, CountryStatistic)
+        Country.display_countries(window, Map)
+        ToSellButton.display_buttons(window, Map)
+        Map.display_buttons(window)
         Tranport.update(window, Map)
-        Map.personal_update(window)
+
+        if Map.personal_update(window) != 'changed':
+            Country.check_collisions(Map, GameState, CountryStatistic)
 
     @classmethod
     def personal_update(cls, window):
-        cls.display_buttons(window)
+        # cls.display_buttons(window)
         cls.display_stats_bars(window)
         cls.to_scale()
         cls.to_drag(window)
-        cls.check_collisions()
+        if cls.check_collisions() == 'changed':
+            return 'changed'
 
 
     @classmethod
@@ -566,6 +574,7 @@ class Map:
                         elif button.name == "statistics":
                             GameState.play = False
                             GameState.statistic = True
+                        return 'changed'
                 else:
                     cls.pressed_icon = False
                     Music.is_clicked = False
