@@ -333,7 +333,7 @@ class Country(pygame.sprite.Sprite):
     @classmethod
     def update(cls, window, Map, GameState, CountryStatistic):
         cls.one_time_activation()
-        # All this stuff now is in Map.update()
+        # All this stuff now is in Map.update()upgrade-elements/quality-skill.png"
         # cls.display_countries(window, Map)
         # ToSellButton.display_buttons(window, Map)
         # cls.check_collisions(Map, GameState, CountryStatistic)
