@@ -477,7 +477,7 @@ class Map:
     ]
 
     stats_bars = [
-        # ProgressBar(0, Profit.TARGET_PROFIT, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress),
+        ProgressBar(0, 1000, 200, 30, (100, 10, 10), (255, 255, 255), (30, 700), getter=BarsGetters.get_world_progress),
     ]
 
     image = pygame.transform.scale(pygame.image.load("assets/background/oceans-4k.png"), (1280, 720))
@@ -628,12 +628,15 @@ class Timer:
     start_time = datetime.datetime(1950, 12, 30, 12, 0, 0)
     current_time = start_time
     frame = 1
+    
+    #Counts years from the start of the game
+    years_from_start = current_time.year-start_time.year
 
     @classmethod
     def update(cls, window):
         cls.update_timer()
         cls.display_timer(window)
-    
+        cls.update_time_difference()
     @classmethod
     def update_timer(cls):
         if cls.frame >= 60:
@@ -658,6 +661,10 @@ class Timer:
     @classmethod
     def get_time(cls):
         return f"{cls.current_time.day}/{cls.current_time.month}/{cls.current_time.year}"
+    
+    @classmethod
+    def update_time_difference(cls):
+        cls.years_from_start = cls.current_time.year-cls.start_time.year
 
 class News:
     buttons = [

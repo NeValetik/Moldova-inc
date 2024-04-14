@@ -293,7 +293,7 @@ class Country(pygame.sprite.Sprite):
     old_map_scale = 1  # To rescale the map only after Map.scale modification
     initial_scale_factor = 0.325    # Optimal scale for countries for 1200x800
 
-    def __init__(self, name, image_path, pos, continent,naturality,advertisment,taste):
+    def __init__(self, name, image_path, pos, continent,naturality,advertisment,taste,contract_condition_naturality,contract_condition_advertisment,contract_condition_taste):
         self.initial_scale_factor = 0.325  # Optimal scale for countries for 1200x800
         self.not_scaled_width = Image.open(image_path).size[0]
         self.not_scaled_height = Image.open(image_path).size[1]
@@ -322,9 +322,15 @@ class Country(pygame.sprite.Sprite):
         self.to_sell_button = ToSellButton(self)
         self.old_map_scale = 1
 
+        #Here is read from database base the initial data for each country which states the effect of each characteristic on the income
         self.naturality_coef = naturality
         self.advertisment_coef = advertisment
         self.taste_coef = taste
+        
+        #Here is read from database base the initial data for each country which states the needed amount of progress to make the contract
+        self.contract_condition_naturality = contract_condition_naturality
+        self.contract_condition_advertisment = contract_condition_advertisment
+        self.contract_condition_taste = contract_condition_taste
 
         Country.countries.append(self)
         if name == "Moldova":
@@ -395,7 +401,7 @@ class Country(pygame.sprite.Sprite):
                     csv_reader = csv.DictReader(file)
                     for row in csv_reader:
                         Country(row['country'], row['image_path'], (float(row['x_position']), float(row['y_position'])),
-                                str(row['continent']),float(row["naturality"]),float(row["advertisment"]),float(row["taste"]))
+                                str(row['continent']),float(row["naturality"]),float(row["advertisment"]),float(row["taste"]),float(row["contract_condition_naturality"]),float(row["contract_condition_advertisment"]),float(row["contract_condition_taste"]))
             elif cls.initiate_from == 'sqlite3':
                 db_file = 'components/countries_data/countries_data.db'
                 conn = sqlite3.connect(db_file)
@@ -433,10 +439,6 @@ class Wine:
 
     def set_advertisement(self, advertisement):
         self.advertisement = advertisement
-
-    def calculate_cost(self):
-        return self.taste * self.naturality**1/2 * self.advertisement
-
 
 class Woman:
     def __init__(self, id, wash_dishes_speed, her_owner):
