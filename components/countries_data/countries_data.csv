@@ -1,33 +1,33 @@
-country,image_path,x_position,y_position,continent,naturality,advertisment,taste
-Australia,assets/countries/australia.png,3444,1800,Australia,0.2,0.4,0.4
-Brazil,assets/countries/brazil.png,1353,1544,South America,0.2,0.4,0.4
-Great Britain,assets/countries/british-isles.png,1927.5,661,Europe,0.2,0.4,0.4
-Canada and Alaska,assets/countries/canada-alaska.png,859,431,North America,0.2,0.4,0.4
-Central Africa,assets/countries/central-africa.png,2191.5,1332,Africa,0.2,0.4,0.4
-Central Asia,assets/countries/central-asia.png,2650,838.5,Asia,0.2,0.4,0.4
-Central Europe,assets/countries/central-europe.png,2150.5,680.5,Europe,0.2,0.4,0.4
-China and Mongolia,assets/countries/china-mongolia.png,3051,836.5,Asia,0.2,0.4,0.4
-East Africa,assets/countries/eastern-africa.png,2429,1413.5,Africa,0.2,0.4,0.4
-France,assets/countries/france.png,2002.5,782.5,Europe,0.2,0.4,0.4
-Germany,assets/countries/germany.png,2082.5,712,Europe,0.2,0.4,0.4
-Greenland,assets/countries/greenland.png,1669,335,North America,0.2,0.4,0.4
-Iceland,assets/countries/iceland.png,1802.5,491.5,Europe,0.2,0.4,0.4
-India,assets/countries/india.png,2927,1132.5,Asia,0.2,0.4,0.4
-Italy,assets/countries/italy.png,2108.5,855,Europe,0.2,0.4,0.4
-Japan,assets/countries/japan.png,3453,783,Asia,0.2,0.4,0.4
-Mexico,assets/countries/mexico.png,985.5,1090,North America,0.2,0.4,0.4
-Moldova,assets/countries/moldova.png,2262,764,Europe,0.2,0.4,0.4
-New Zealand,assets/countries/new-zealand.png,3790,2056,Australia,0.2,0.4,0.4
-North Africa,assets/countries/north-africa.png,2093.5,1079,Africa,0.2,0.4,0.4
-Oceania,assets/countries/oceania.png,3483,1520,Australia,0.2,0.4,0.4
-Romania and Balcans,assets/countries/romania-balcani.png,2199,845,Europe,0.2,0.4,0.4
-Russia,assets/countries/russia.png,2956.5,419.5,Asia,0.2,0.4,0.4
-Scandinavia,assets/countries/scandinavia.png,2144,416.5,Europe,0.2,0.4,0.4
-South Africa,assets/countries/south-africa.png,2225.5,1684.5,Africa,0.2,0.4,0.4
-North and South Korea,assets/countries/south-north-korea.png,3333.5,792,Asia,0.2,0.4,0.4
-Spain and Portugal,assets/countries/spain-portugal.png,1827.5,925,Europe,0.2,0.4,0.4
-Ukraine,assets/countries/ukraine.png,2295,733,Asia,0.3,0.3,0.4
-USA,assets/countries/usa.png,968,835,Europe,0.05,0.8,0.15
-West Africa,assets/countries/west-africa.png,1928,1181,Africa,0.8,0.1,0.1
-West Asia,assets/countries/west-asia.png,2444.5,1016,Asia,0.15,0.35,0.5
-South America West Coast,assets/countries/west-coast.png,1160,1667,South America,0.5,0.4,0.1
+country,image_path,x_position,y_position,continent,naturality,advertisment,taste,contract_condition_naturality,contract_condition_advertisment,contract_condition_taste
+Australia,assets/countries/australia.png,3444,1800,Australia,0.2,0.4,0.4,1000,100,1000
+Brazil,assets/countries/brazil.png,1353,1544,South America,0.2,0.4,0.4,1000,100,1000
+Great Britain,assets/countries/british-isles.png,1927.5,661,Europe,0.2,0.4,0.4,1000,100,1000
+Canada and Alaska,assets/countries/canada-alaska.png,859,431,North America,0.2,0.4,0.4,1000,100,1000
+Central Africa,assets/countries/central-africa.png,2191.5,1332,Africa,0.2,0.4,0.4,1000,100,1000
+Central Asia,assets/countries/central-asia.png,2650,838.5,Asia,0.2,0.4,0.4,1000,100,1000
+Central Europe,assets/countries/central-europe.png,2150.5,680.5,Europe,0.2,0.4,0.4,1000,100,1000
+China and Mongolia,assets/countries/china-mongolia.png,3051,836.5,Asia,0.2,0.4,0.4,1000,100,1000
+East Africa,assets/countries/eastern-africa.png,2429,1413.5,Africa,0.2,0.4,0.4,1000,100,1000
+France,assets/countries/france.png,2002.5,782.5,Europe,0.2,0.4,0.4,1000,100,1000
+Germany,assets/countries/germany.png,2082.5,712,Europe,0.2,0.4,0.4,1000,100,1000
+Greenland,assets/countries/greenland.png,1669,335,North America,0.2,0.4,0.4,1000,100,1000
+Iceland,assets/countries/iceland.png,1802.5,491.5,Europe,0.2,0.4,0.4,1000,100,1000
+India,assets/countries/india.png,2927,1132.5,Asia,0.2,0.4,0.4,1000,100,1000
+Italy,assets/countries/italy.png,2108.5,855,Europe,0.2,0.4,0.4,1000,100,1000
+Japan,assets/countries/japan.png,3453,783,Asia,0.2,0.4,0.4,1000,100,1000
+Mexico,assets/countries/mexico.png,985.5,1090,North America,0.2,0.4,0.4,1000,100,1000
+Moldova,assets/countries/moldova.png,2262,764,Europe,0.2,0.4,0.4,1000,100,1000
+New Zealand,assets/countries/new-zealand.png,3790,2056,Australia,0.2,0.4,0.4,1000,100,1000
+North Africa,assets/countries/north-africa.png,2093.5,1079,Africa,0.2,0.4,0.4,1000,100,1000
+Oceania,assets/countries/oceania.png,3483,1520,Australia,0.2,0.4,0.4,1000,100,1000
+Romania and Balcans,assets/countries/romania-balcani.png,2199,845,Europe,0.2,0.4,0.4,1000,100,1000
+Russia,assets/countries/russia.png,2956.5,419.5,Asia,0.2,0.4,0.4,1000,100,1000
+Scandinavia,assets/countries/scandinavia.png,2144,416.5,Europe,0.2,0.4,0.4,1000,100,1000
+South Africa,assets/countries/south-africa.png,2225.5,1684.5,Africa,0.2,0.4,0.4,1000,100,1000
+North and South Korea,assets/countries/south-north-korea.png,3333.5,792,Asia,0.2,0.4,0.4,1000,100,1000
+Spain and Portugal,assets/countries/spain-portugal.png,1827.5,925,Europe,0.2,0.4,0.4,1000,100,1000
+Ukraine,assets/countries/ukraine.png,2295,733,Asia,0.3,0.3,0.4,1000,100,1000
+USA,assets/countries/usa.png,968,835,Europe,0.05,0.8,0.15,1000,100,1000
+West Africa,assets/countries/west-africa.png,1928,1181,Africa,0.8,0.1,0.1,1000,100,1000
+West Asia,assets/countries/west-asia.png,2444.5,1016,Asia,0.15,0.35,0.5,1000,100,1000
+South America West Coast,assets/countries/west-coast.png,1160,1667,South America,0.5,0.4,0.1,1000,100,1000
