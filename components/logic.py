@@ -60,3 +60,12 @@ class BarsGetters:
     @staticmethod
     def get_world_progress():
         return graph.get_total_income()
+    @staticmethod
+    def get_wine_naturality():
+        return Wine.naturality
+    @staticmethod
+    def get_wine_advertisment():
+        return Wine.advertisment
+    @staticmethod
+    def get_wine_taste():
+        return Wine.taste

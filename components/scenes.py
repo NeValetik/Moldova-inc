@@ -220,6 +220,12 @@ class UpgradeMenu:
         'naturality' : 'Add naturality +1000',
     }
 
+    stats_bars = [
+        ProgressBar(0, 10000, 200, 30, (100, 10, 10), (255, 255, 255), (30, 650), getter=BarsGetters.get_wine_naturality),
+        ProgressBar(0, 10000, 200, 30, (100, 10, 10), (255, 255, 255), (330, 650), getter=BarsGetters.get_wine_advertisment),
+        ProgressBar(0, 10000, 200, 30, (100, 10, 10), (255, 255, 255), (630, 650), getter=BarsGetters.get_wine_taste),
+    ]
+
 
     image = pygame.transform.scale(pygame.image.load('assets/background/besi-background.png'),  (1280, 720))
     rect = image.get_rect()
@@ -240,6 +246,7 @@ class UpgradeMenu:
         cls.display_info_panel(window)
         cls.display_buttons(window)
         cls.display_wine_data(window)
+        cls.display_stats_bars(window)
         cls.check_collisions(window)  # window for dislaying info panel
 
     @classmethod
@@ -278,6 +285,11 @@ class UpgradeMenu:
     @classmethod
     def display_wine_data(cls, window):
         pass
+    
+    @classmethod
+    def display_stats_bars(cls, window):
+        for bar in cls.stats_bars:
+            bar.update(window)
 
     @classmethod
     def check_collisions(cls , window):

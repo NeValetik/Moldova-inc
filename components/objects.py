@@ -439,6 +439,15 @@ class Wine:
 
     def set_advertisement(self, advertisement):
         self.advertisement = advertisement
+    
+    def return_taste(self, taste):
+        return self.taste
+
+    def return_naturality(self, naturality):
+        return self.naturality
+
+    def return_advertisement(self, advertisement):
+        return self.advertisement    
 
 class Woman:
     def __init__(self, id, wash_dishes_speed, her_owner):
@@ -507,6 +516,10 @@ class Timer:
     @classmethod
     def get_time(cls):
         return f"{cls.current_time.day}/{cls.current_time.month}/{cls.current_time.year}"
+    
+    @classmethod
+    def get_time_in_years(cls):
+        return cls.current_time.day/31+cls.current_time.month/12 + cls.current_time.year
     
     @classmethod
     def update_time_difference(cls):
