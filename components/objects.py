@@ -9,15 +9,15 @@ class Button(pygame.sprite.Sprite):
     frame = pygame.transform.scale(pygame.image.load("assets/stuff/button-frame.png"), (230, 80))
     frame_rect = frame.get_rect()
 
-    def __init__(self, name, position, image_path=None, dimension=(230, 80)):
+    def __init__(self, name, position, image_path=None, dimension=(230, 80), size = (200, 80), font_size=36):
         super().__init__()
         self.name = name
 
-        self.text = Button.get_text_object(name)
+        self.text = Button.get_text_object(name,font_size)
         self.text_rect = self.text.get_rect()
 
         if image_path == None:
-            self.image = Button.make_surface()
+            self.image = Button.make_surface(size = size)
         elif dimension == None:
             self.image = pygame.image.load(image_path)
         else:
@@ -27,8 +27,8 @@ class Button(pygame.sprite.Sprite):
         self.rect.center = position
 
     @classmethod
-    def get_text_object(cls, name):
-        font = pygame.font.Font("assets/font/evil-empire.ttf", 36)
+    def get_text_object(cls, name, font_size):
+        font = pygame.font.Font("assets/font/evil-empire.ttf", font_size)
         text = font.render(name, True, (0, 0, 0))
         return text
 
@@ -93,18 +93,17 @@ class ProgressBar:
 
 
 class Contract: 
+    buttons = []
+
     def __init__(self, position):
         self.position = position
-        self.buttons = [
-        Button("accept", (self.position[0], self.position[1]),),
-        Button("decline", (self.position[0]+50, self.position[1]+50),),
-        ]
+        Contract.buttons.append(Button("accept", (self.position[0]-30, self.position[1]),size=(40,20),font_size=13))
+        Contract.buttons.append(Button("decline", (self.position[0]+30, self.position[1]),size=(40,20),font_size=13))
 
-    def display_buttons(self, window):
-        Button.display_buttons(self, window)
-        Button.display_text_on_buttons(self, window)
-
-   
+    @classmethod
+    def display_buttons(cls, window):
+        Button.display_buttons(cls, window)
+        Button.display_text_on_buttons(cls, window)
 
 
 class ToSellButton(pygame.sprite.Sprite):
@@ -354,6 +353,7 @@ class Country(pygame.sprite.Sprite):
     @classmethod
     def update(cls, window, Map, GameState, CountryStatistic):
         cls.one_time_activation()
+        # Contract.display_buttons(window)
         # All this stuff now is in Map.update()upgrade-elements/quality-skill.png"
         # cls.display_countries(window, Map)
         # ToSellButton.display_buttons(window, Map)
@@ -393,8 +393,7 @@ class Country(pygame.sprite.Sprite):
                     if to_sell_button.country != Country.moldova:  # Do not send plane from Moldova to Moldova
                         Plane(to_sell_button.pos)  # Generate a plane
                         to_sell_button.country.start_time = Timer.get_time_in_years() # Gives the time of the contract activation
-                        # Contract(to_sell_button.pos).update()
-                        
+                        Contract(to_sell_button.pos)
                         cls.contracts.append([Country.moldova, to_sell_button.country])
                         Country.moldova.sell_to.append(to_sell_button.country)
                         to_sell_button.country.buy_from.append(Country.moldova)

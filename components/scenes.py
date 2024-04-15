@@ -484,7 +484,7 @@ class Settings:
                     
 class Map:
     buttons = [
-        Button("upgrade_menu", (1200, 600), dimension=(100, 100)),
+        Button("upgrade_menu", (1200, 600), dimension = (100,100)),
         Button("statistics", (170, 600),),
     ]
 
@@ -534,6 +534,8 @@ class Map:
         Country.update(window, Map, GameState, CountryStatistic)
         Country.display_countries(window, Map)
         
+        Contract.display_buttons(window)
+
         ToSellButton.display_buttons(window, Map)
         Map.display_buttons(window)
         Tranport.update(window, Map)
