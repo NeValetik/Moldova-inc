@@ -94,16 +94,23 @@ class ProgressBar:
 
 class Contract: 
     buttons = []
+    positions = []
 
     def __init__(self, position):
         self.position = position
         Contract.buttons.append(Button("accept", (self.position[0]-30, self.position[1]),size=(40,20),font_size=13))
+        Contract.positions.append((self.position[0]-30, self.position[1]))
         Contract.buttons.append(Button("decline", (self.position[0]+30, self.position[1]),size=(40,20),font_size=13))
+        Contract.positions.append((self.position[0]+30, self.position[1]))
 
     @classmethod
-    def display_buttons(cls, window):
+    def display_buttons(cls, window, Map):
         Button.display_buttons(cls, window)
         Button.display_text_on_buttons(cls, window)
+        for iterator in range(len(cls.buttons)):#The buttons are driving away anyway(Will fix it later)
+            #NEEDS FIX
+            cls.buttons[iterator].rect.center = (
+            Map.rect.topleft[0] + Map.scale * cls.positions[iterator][0], Map.rect.topleft[1] + Map.scale * cls.positions[iterator][1])
 
 
 class ToSellButton(pygame.sprite.Sprite):
@@ -146,7 +153,7 @@ class ToSellButton(pygame.sprite.Sprite):
             elif button.have_coordinates:
                 button.rect.center = (
                     Map.rect.topleft[0] + Map.scale * button.pos[0], Map.rect.topleft[1] + Map.scale * button.pos[1])
-
+                
             window.blit(button.image, button.rect)
 
     @classmethod

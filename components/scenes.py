@@ -534,7 +534,7 @@ class Map:
         Country.update(window, Map, GameState, CountryStatistic)
         Country.display_countries(window, Map)
         
-        Contract.display_buttons(window)
+        Contract.display_buttons(window,Map)
 
         ToSellButton.display_buttons(window, Map)
         Map.display_buttons(window)
