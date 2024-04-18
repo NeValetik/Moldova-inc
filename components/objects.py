@@ -49,6 +49,9 @@ class Button(pygame.sprite.Sprite):
     def display_buttons(cls, from_class, window):
         for button in from_class.buttons:
             window.blit(button.image, button.rect)
+
+    def __repr__(self):
+        return str(self.rect.center)
         
 
 class ProgressBar:
@@ -98,9 +101,14 @@ class Contract(pygame.sprite.Sprite):
     def __init__(self,position):
         super().__init__()
         self.position = position
-        Contract.buttons.append(Button("accept", (self.position[0]-40, self.position[1]),size=(70,30),font_size=16))
+        temp = [
+            Button("accept", (self.position[0]-40, self.position[1]),size=(70,30),font_size=16),
+            Button("decline", (self.position[0]+40, self.position[1]),size=(70,30),font_size=16)
+        ]
+        self._buttons = temp        
+        Contract.buttons.append(temp[0])
         Contract.positions.append((self.position[0]-40, self.position[1]))
-        Contract.buttons.append(Button("decline", (self.position[0]+40, self.position[1]),size=(70,30),font_size=16))
+        Contract.buttons.append(temp[1])
         Contract.positions.append((self.position[0]+40, self.position[1]))
         # self.name = "Vladimir"
 
@@ -423,8 +431,10 @@ class Country(pygame.sprite.Sprite):
             return
         
         for open_contracts in cls.open_contracts:
-            for button in open_contracts[0].buttons:
+            for button in open_contracts[0]._buttons:
                 if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
+                    print("Here colided:",button)
+                    print(open_contracts[1])
                     if button.name == "accept":
                         cls.contracts.append(open_contracts[1])
                         Plane(open_contracts[0].position)  # Generate a plane
