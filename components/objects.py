@@ -399,6 +399,13 @@ class Country(pygame.sprite.Sprite):
                     if button.name == "accept":
                         cls.contracts.append(open_contract[1])
                         Plane(open_contract[0].position)
+                    for i in range(len(open_contract[0].buttons)):
+                        if open_contract[0].buttons[i] == open_contract[0]._buttons[0]:
+                            open_contract[0].buttons.pop(i+1)
+                            open_contract[0].buttons.pop(i)
+                            open_contract[0].positions.pop(i+1)
+                            open_contract[0].positions.pop(i)
+                            break   
                     cls.pop_open_contract(open_contract)
                     return
                     

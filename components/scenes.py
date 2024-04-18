@@ -484,7 +484,7 @@ class Settings:
                     
 class Map:
     buttons = [
-        Button("upgrade_menu", (1200, 600), dimension = (100,100)),
+        Button("upgrade_menu", (1100, 600), dimension = (100,100)),
         Button("statistics", (170, 600),),
     ]
 
