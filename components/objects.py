@@ -454,6 +454,7 @@ class Country(pygame.sprite.Sprite):
         for index, open_contract in enumerate(cls.open_contracts):
             if given_open_contract == open_contract:
                 cls.open_contracts.pop(index)
+                break
 
     def __repr__(self):
         return self.name
