@@ -26,7 +26,7 @@ class Graph(nx.Graph):
         for u,v,d in self.edges(data=True):
             # if Timer.get_time_in_years()>v.start_time+1:#+1 stands from 1 year of making the contract(should be changed to the contract duration in future)
             d['weight'] = self.income(v)    
-            print("Nodes: ",u.name," ", v.name ,"Weightened edges: ",d)
+            # print("Nodes: ",u.name," ", v.name ,"Weightened edges: ",d)
 
     def income(self,contract):
         return Wine.naturality * contract.naturality_coef + Wine.advertisment * contract.advertisment_coef + Wine.taste * contract.taste_coef

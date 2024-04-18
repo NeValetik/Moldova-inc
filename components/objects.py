@@ -120,7 +120,7 @@ class Contract(pygame.sprite.Sprite):
         Button.display_text_on_buttons(cls, window)
         # window.blit(cls.image, cls.rect)
         for iterator in range(len(cls.buttons)):#The buttons are driving away anyway(Will fix it later)
-            #NEEDS FIX
+            #NEEDS FIX   (FIXED)
             cls.buttons[iterator].rect.center = (
             Map.rect.topleft[0] + Map.scale * cls.positions[iterator][0], Map.rect.topleft[1] + Map.scale * cls.positions[iterator][1])
     
@@ -337,6 +337,9 @@ class Ship(pygame.sprite.Sprite):
 class Country(pygame.sprite.Sprite):
     countries = []
     contracts = []  # The deal will be added here, after which logic part will handle this list entirely
+    
+    open_contracts = [] # List which will store the contract windows that pop up on the to_sell button click
+
     moldova = None
 
     activated = False  # First initiation
@@ -418,7 +421,20 @@ class Country(pygame.sprite.Sprite):
     def check_collisions(cls, Map, GameState, CountryStatistic):
         if Map.pressed and Map.motion:
             return
-        # Checking only to sell buttons 
+        
+        for open_contracts in cls.open_contracts:
+            for button in open_contracts[0].buttons:
+                if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
+                    if button.name == "accept":
+                        cls.contracts.append(open_contracts[1])
+                        Plane(open_contracts[0].position)  # Generate a plane
+                        cls.open_contracts.pop(0)
+                        return
+                    elif button.name == "decline":
+                        cls.open_contracts.pop(0)
+                        return 
+                    
+        # Checking only to sell buttons             
         for to_sell_button in [country.to_sell_button for country in cls.countries if country.to_sell_button.is_available]:
             if to_sell_button.rect.collidepoint(pygame.mouse.get_pos())  and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                 relative_x = pygame.mouse.get_pos()[0] - to_sell_button.rect.x
@@ -429,13 +445,12 @@ class Country(pygame.sprite.Sprite):
                     to_sell_button.is_positioned = False
                     # Logistic stuff:
                     if to_sell_button.country != Country.moldova:  # Do not send plane from Moldova to Moldova
-                        Plane(to_sell_button.pos)  # Generate a plane
-                        to_sell_button.country.start_time = Timer.get_time_in_years() # Gives the time of the contract activation
-                        Contract(to_sell_button.pos)
-                        cls.contracts.append([Country.moldova, to_sell_button.country])
+                        to_sell_button.country.start_time = Timer.get_time_in_years() # Gives the time of the contract activation                       
+                        cls.open_contracts.append((Contract(to_sell_button.pos),[Country.moldova, to_sell_button.country])) #
                         Country.moldova.sell_to.append(to_sell_button.country)
                         to_sell_button.country.buy_from.append(Country.moldova)
                     return
+        
         # Checking only countries
         for country in cls.countries:
             if country.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
@@ -467,7 +482,7 @@ class Country(pygame.sprite.Sprite):
                 conn.close()
 
     def __repr__(self):
-        return (str(self.name), self.naturality_coef, self.advertisment_coef, self.taste_coef)
+        return self.name
 
 
 class Wine:
