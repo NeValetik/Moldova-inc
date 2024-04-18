@@ -68,4 +68,3 @@ while True:
     pygame.display.update()
     clock.tick(60)
     # print(int(clock.get_fps()))
-    # print(pygame.mouse.get_pos())

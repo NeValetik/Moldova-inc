@@ -1,6 +1,5 @@
 import networkx as nx
 from objects import *
-# from scenes import *
 
 class Graph(nx.Graph):
     initiated = False
@@ -24,7 +23,7 @@ class Graph(nx.Graph):
     
     def check_new_value_formula(self):
         for u,v,d in self.edges(data=True):
-            # if Timer.get_time_in_years()>v.start_time+1:#+1 stands from 1 year of making the contract(should be changed to the contract duration in future)
+            # if Timer.get_time_in_years() > v.start_time+1:  # +1 stands from 1 year of making the contract(should be changed to the contract duration in future)
             d['weight'] = self.income(v)    
             # print("Nodes: ",u.name," ", v.name ,"Weightened edges: ",d)
 
@@ -41,7 +40,7 @@ class Graph(nx.Graph):
 
 graph = Graph()
 
-#This class is unutilized, so I decided to comment it out
+# This class is unutilized, so I decided to comment it out
 '''
 class Market:
 
@@ -59,15 +58,19 @@ class Market:
 '''
 
 class BarsGetters:
+
     @staticmethod
     def get_world_progress():
         return graph.get_total_income()
+    
     @staticmethod
     def get_wine_naturality():
         return Wine.naturality
+    
     @staticmethod
     def get_wine_advertisment():
         return Wine.advertisment
+    
     @staticmethod
     def get_wine_taste():
         return Wine.taste

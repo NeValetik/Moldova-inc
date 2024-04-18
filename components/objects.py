@@ -101,56 +101,24 @@ class Contract(pygame.sprite.Sprite):
     def __init__(self,position):
         super().__init__()
         self.position = position
-        temp = [
+        self._buttons = [
             Button("accept", (self.position[0]-40, self.position[1]),size=(70,30),font_size=16),
             Button("decline", (self.position[0]+40, self.position[1]),size=(70,30),font_size=16)
         ]
-        self._buttons = temp        
-        Contract.buttons.append(temp[0])
+        Contract.buttons.append(self._buttons[0])
         Contract.positions.append((self.position[0]-40, self.position[1]))
-        Contract.buttons.append(temp[1])
+        Contract.buttons.append(self._buttons[1])
         Contract.positions.append((self.position[0]+40, self.position[1]))
-        # self.name = "Vladimir"
-
-        # self.text = Contract.get_text_object(self.name,36)
-        # self.text_rect = self.text.get_rect()
-
-        # self.position = (700,400)
-        # self.image = self.make_surface()
-        # self.rect = self.image.get_rect()
-        # self.rect.center = self.position
-        
-
 
     @classmethod
     def display_contracts(cls, window, Map):
         Button.display_buttons(cls, window)
         Button.display_text_on_buttons(cls, window)
         # window.blit(cls.image, cls.rect)
-        for iterator in range(len(cls.buttons)):#The buttons are driving away anyway(Will fix it later)
-            #NEEDS FIX   (FIXED)
+        for iterator in range(len(cls.buttons)):  # The buttons are driving away anyway (will fix it later)
             cls.buttons[iterator].rect.center = (
             Map.rect.topleft[0] + Map.scale * cls.positions[iterator][0], Map.rect.topleft[1] + Map.scale * cls.positions[iterator][1])
-    
 
-    # @classmethod
-    # def display_text_on_contracts(cls, from_class, window):
-    #     cls.text_rect.center = cls.rect.center
-    #     window.blit(cls.text, cls.text_rect)
-
-    # @classmethod
-    # def get_text_object(cls, name, font_size):
-    #     font = pygame.font.Font("assets/font/evil-empire.ttf", font_size)
-    #     text = font.render(name, True, (0, 0, 0))
-    #     return text
-
-
-    # @classmethod
-    # def make_surface(cls, size=(400, 200), color=(255, 255, 255, 128)):
-    #     box = pygame.Surface(size, pygame.SRCALPHA)
-    #     box.fill(color)
-    #     pygame.draw.rect(box, (255, 255, 255, 255), (0, 0, *size))
-    #     return box
 
 class ToSellButton(pygame.sprite.Sprite):
     buttons = []
@@ -402,11 +370,6 @@ class Country(pygame.sprite.Sprite):
     @classmethod
     def update(cls, window, Map, GameState, CountryStatistic):
         cls.one_time_activation()
-        # Contract.display_buttons(window)
-        # All this stuff now is in Map.update()upgrade-elements/quality-skill.png"
-        # cls.display_countries(window, Map)
-        # ToSellButton.display_buttons(window, Map)
-        # cls.check_collisions(Map, GameState, CountryStatistic)
 
     @classmethod
     def display_countries(cls, window, Map):
@@ -430,19 +393,14 @@ class Country(pygame.sprite.Sprite):
         if Map.pressed and Map.motion:
             return
         
-        for open_contracts in cls.open_contracts:
-            for button in open_contracts[0]._buttons:
+        for open_contract in cls.open_contracts:
+            for button in open_contract[0]._buttons:
                 if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
-                    print("Here colided:",button)
-                    print(open_contracts[1])
                     if button.name == "accept":
-                        cls.contracts.append(open_contracts[1])
-                        Plane(open_contracts[0].position)  # Generate a plane
-                        cls.open_contracts.pop(0)
-                        return
-                    elif button.name == "decline":
-                        cls.open_contracts.pop(0)
-                        return 
+                        cls.contracts.append(open_contract[1])
+                        Plane(open_contract[0].position)
+                    cls.pop_open_contract(open_contract)
+                    return
                     
         # Checking only to sell buttons             
         for to_sell_button in [country.to_sell_button for country in cls.countries if country.to_sell_button.is_available]:
@@ -490,6 +448,12 @@ class Country(pygame.sprite.Sprite):
                 for row in cursor.fetchall():
                     Country(row[0], row[1], (row[2], row[3]), row[4])
                 conn.close()
+
+    @classmethod
+    def pop_open_contract(cls, given_open_contract):
+        for index, open_contract in enumerate(cls.open_contracts):
+            if given_open_contract == open_contract:
+                cls.open_contracts.pop(index)
 
     def __repr__(self):
         return self.name
