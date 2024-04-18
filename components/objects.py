@@ -51,7 +51,6 @@ class Button(pygame.sprite.Sprite):
             window.blit(button.image, button.rect)
         
 
-
 class ProgressBar:
     def __init__(self, start_value, max_value, bar_width, bar_height, bar_color, background_color, position, getter):
         self.start_value = start_value
@@ -92,26 +91,58 @@ class ProgressBar:
         self.current_value = min(self.getter(), self.max_value)
 
 
-class Contract: 
+class Contract(pygame.sprite.Sprite): 
     buttons = []
     positions = []
 
-    def __init__(self, position):
+    def __init__(self,position):
+        super().__init__()
         self.position = position
-        Contract.buttons.append(Button("accept", (self.position[0]-30, self.position[1]),size=(40,20),font_size=13))
-        Contract.positions.append((self.position[0]-30, self.position[1]))
-        Contract.buttons.append(Button("decline", (self.position[0]+30, self.position[1]),size=(40,20),font_size=13))
-        Contract.positions.append((self.position[0]+30, self.position[1]))
+        Contract.buttons.append(Button("accept", (self.position[0]-40, self.position[1]),size=(70,30),font_size=16))
+        Contract.positions.append((self.position[0]-40, self.position[1]))
+        Contract.buttons.append(Button("decline", (self.position[0]+40, self.position[1]),size=(70,30),font_size=16))
+        Contract.positions.append((self.position[0]+40, self.position[1]))
+        # self.name = "Vladimir"
+
+        # self.text = Contract.get_text_object(self.name,36)
+        # self.text_rect = self.text.get_rect()
+
+        # self.position = (700,400)
+        # self.image = self.make_surface()
+        # self.rect = self.image.get_rect()
+        # self.rect.center = self.position
+        
+
 
     @classmethod
-    def display_buttons(cls, window, Map):
+    def display_contracts(cls, window, Map):
         Button.display_buttons(cls, window)
         Button.display_text_on_buttons(cls, window)
+        # window.blit(cls.image, cls.rect)
         for iterator in range(len(cls.buttons)):#The buttons are driving away anyway(Will fix it later)
             #NEEDS FIX
             cls.buttons[iterator].rect.center = (
             Map.rect.topleft[0] + Map.scale * cls.positions[iterator][0], Map.rect.topleft[1] + Map.scale * cls.positions[iterator][1])
+    
 
+    # @classmethod
+    # def display_text_on_contracts(cls, from_class, window):
+    #     cls.text_rect.center = cls.rect.center
+    #     window.blit(cls.text, cls.text_rect)
+
+    # @classmethod
+    # def get_text_object(cls, name, font_size):
+    #     font = pygame.font.Font("assets/font/evil-empire.ttf", font_size)
+    #     text = font.render(name, True, (0, 0, 0))
+    #     return text
+
+
+    # @classmethod
+    # def make_surface(cls, size=(400, 200), color=(255, 255, 255, 128)):
+    #     box = pygame.Surface(size, pygame.SRCALPHA)
+    #     box.fill(color)
+    #     pygame.draw.rect(box, (255, 255, 255, 255), (0, 0, *size))
+    #     return box
 
 class ToSellButton(pygame.sprite.Sprite):
     buttons = []

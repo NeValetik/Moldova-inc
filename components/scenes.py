@@ -489,7 +489,7 @@ class Map:
     ]
 
     stats_bars = [
-        ProgressBar(0, 1000, 200, 30, (100, 10, 10), (255, 255, 255), (71, 500), getter=BarsGetters.get_world_progress),
+        ProgressBar(0, 100000, 200, 30, (100, 10, 10), (255, 255, 255), (71, 500), getter=BarsGetters.get_world_progress),
     ]
 
     image = pygame.transform.scale(pygame.image.load("assets/background/oceans-4k.png"), (1280, 720))
@@ -534,7 +534,7 @@ class Map:
         Country.update(window, Map, GameState, CountryStatistic)
         Country.display_countries(window, Map)
         
-        Contract.display_buttons(window,Map)
+        Contract.display_contracts(window,Map)
 
         ToSellButton.display_buttons(window, Map)
         Map.display_buttons(window)
