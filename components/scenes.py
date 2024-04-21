@@ -175,8 +175,8 @@ class Statistic:
     @classmethod
     def display_plot(cls, window):
         if Statistic._one_plot:
-            x = np.linspace(0, 10, 100) 
-            y = np.sin(x)  
+            x = graph.x 
+            y = graph.y  
             plt.plot(x, y)
             plt.title('Wine Selled')
             plt.savefig('plot.png')

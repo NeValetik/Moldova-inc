@@ -15,6 +15,7 @@ class Graph(nx.Graph):
 
     def update(self):
         self.check_new_contracts()
+        self.collect_data_for_statistics_week()
 
     def check_new_contracts(self):
         self.check_remove_invalid_by_date_contract()
@@ -43,10 +44,14 @@ class Graph(nx.Graph):
         return temp_sum
 
     def collect_data_for_statistics_week(self):    
-        if len(self.x)<52:
-            self.x.append(Timer.get_time)
+        if len(self.x)<52 and Timer.get_time() not in self.x:
+            self.x.append(Timer.get_time())
             self.y.append(self.total_income)
-
+        elif Timer.get_time() not in self.x:
+            self.x.pop(0)
+            self.x.append(Timer.get_time())
+            self.y.pop(0)
+            self.y.append(self.total_income)
 
 graph = Graph()
 
