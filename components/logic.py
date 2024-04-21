@@ -3,39 +3,27 @@ from objects import *
 
 class Graph(nx.Graph):
     initiated = False
+    total_income = 90_000
 
     def __init__(self):
         super().__init__()
-        self.initialization()
-
-    def initialization(self):
+        
         for country in Country.countries:
             self.add_node(country.name)
 
+    def update(self):
+        self.check_new_contracts()
+
     def check_new_contracts(self):
-        self.check_new_value_formula()    
         while len(Country.contracts) != 0:
             contract = Country.contracts[0]
-            # print(contract[1].start_time)
             weight = self.income(contract[1])
+            Graph.total_income += weight
             self.add_weighted_edges_from([(contract[0], contract[1], weight)])
             del Country.contracts[0]
-    
-    def check_new_value_formula(self):
-        for u,v,d in self.edges(data=True):
-            # if Timer.get_time_in_years() > v.start_time+1:  # +1 stands from 1 year of making the contract(should be changed to the contract duration in future)
-            d['weight'] = self.income(v)    
-            # print("Nodes: ",u.name," ", v.name ,"Weightened edges: ",d)
 
     def income(self,contract):
         return Wine.naturality * contract.naturality_coef + Wine.advertisment * contract.advertisment_coef + Wine.taste * contract.taste_coef
-
-    def get_total_income(self):
-        temp_sum = 0
-        for u,v,d in self.edges(data=True):
-            temp_sum += d['weight']
-        # print(temp_sum)    
-        return temp_sum    
 
 
 graph = Graph()
@@ -61,7 +49,7 @@ class BarsGetters:
 
     @staticmethod
     def get_world_progress():
-        return graph.get_total_income()
+        return Graph.total_income
     
     @staticmethod
     def get_wine_naturality():

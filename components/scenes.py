@@ -32,7 +32,7 @@ class GameState:
         elif GameState.upgrade_menu:
             UpgradeMenu.update(window)
         elif GameState.play:
-            graph.check_new_contracts()
+            graph.update()
             Map.update(window)
             Timer.update(window)
             News.update(window)
@@ -221,7 +221,7 @@ class Statistic:
 class UpgradeMenu:
     buttons = [
         Button("map", (976, 609), image_path="assets/upgrade-elements/besi-button.png", dimension=None),
-        Button("idk", (1120, 609), image_path="assets/upgrade-elements/besi-button.png", dimension=None),
+        Button("soon", (1120, 609), image_path="assets/upgrade-elements/besi-button.png", dimension=None),
     ]   
 
     upgrade_buttons = [
@@ -254,14 +254,23 @@ class UpgradeMenu:
         ["assets/upgrade-elements/coming-soon-skill.png", (477, 524)],
     ]
 
+    naturality_prices = [10_000, 12_000, 15_000]
+    naturality_index = 0
+    taste_prices = [5_000, 6_000, 7_000]
+    taste_index = 0
+    advertisment_prices = [2_000, 3_000, 4_000]
+    advertisment_index = 0
+
     skill_description = {
-        'naturality' : 'Add naturality +1000',
+        'naturality' : ['Add naturality +1', f'Cost: {naturality_prices[naturality_index]}'],
+        'taste' : ['Add taste +1', f'Cost: {taste_prices[taste_index]}'],
+        'advertisment' : ['Add advertisment +1', f'Cost: {advertisment_prices[advertisment_index]}'],
     }
 
     stats_bars = [
-        ProgressBar(0, 10000, 200, 30, (100, 10, 10), (255, 255, 255), (30, 650), getter=BarsGetters.get_wine_naturality),
-        ProgressBar(0, 10000, 200, 30, (100, 10, 10), (255, 255, 255), (330, 650), getter=BarsGetters.get_wine_advertisment),
-        ProgressBar(0, 10000, 200, 30, (100, 10, 10), (255, 255, 255), (630, 650), getter=BarsGetters.get_wine_taste),
+        ProgressBar(0, 3000, 200, 30, (100, 10, 10), (255, 255, 255), (30, 650), getter=BarsGetters.get_wine_naturality),
+        ProgressBar(0, 15, 200, 30, (100, 10, 10), (255, 255, 255), (330, 650), getter=BarsGetters.get_wine_advertisment),
+        ProgressBar(0, 300, 200, 30, (100, 10, 10), (255, 255, 255), (630, 650), getter=BarsGetters.get_wine_taste),
     ]
 
 
@@ -283,7 +292,6 @@ class UpgradeMenu:
         cls.display_icon_skills(window)
         cls.display_info_panel(window)
         cls.display_buttons(window)
-        cls.display_wine_data(window)
         cls.display_stats_bars(window)
         cls.check_collisions(window)  # window for dislaying info panel
 
@@ -319,10 +327,6 @@ class UpgradeMenu:
     def display_buttons(cls, window):
         Button.display_buttons(cls, window)
         Button.display_text_on_buttons(cls, window)
-
-    @classmethod
-    def display_wine_data(cls, window):
-        pass
     
     @classmethod
     def display_stats_bars(cls, window):
@@ -353,68 +357,72 @@ class UpgradeMenu:
                         cls.pressed_2 = True
                         if pygame.mouse.get_pressed()[0]:
                             if button.name == 'naturality':
-                                Wine.naturality += 1000
-                            elif button.name == 'advertisment':
-                                Wine.advertisment += 5
-                            elif button.name == 'taste':
-                                Wine.taste += 100
-                            button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
+                                if cls.naturality_index == -1:  # If it's full marked, skip interaction with this button
+                                    return
+                                if Graph.total_income >= cls.naturality_prices[cls.naturality_index]:
+                                    Graph.total_income -= cls.naturality_prices[cls.naturality_index]
+                                    cls.naturality_index += 1
+                                    Wine.naturality += 1000
+                                    if cls.naturality_index == 3:
+                                        button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
+                                        cls.naturality_index = -1  # Mark full upgraded skill
 
+                            elif button.name == 'advertisment':
+                                if cls.advertisment_index == -1:  # If it's full marked, skip interaction with this button
+                                    return
+                                if Graph.total_income >= cls.advertisment_prices[cls.advertisment_index]:
+                                    Graph.total_income -= cls.advertisment_prices[cls.advertisment_index]
+                                    cls.advertisment_index += 1
+                                    Wine.advertisment += 5
+                                    if cls.advertisment_index == 2:
+                                        button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
+                                        cls.advertisment_index = -1  # Mark full upgraded skill
+
+                            elif button.name == 'taste':
+                                if cls.taste_index == -1:  # If it's full marked, skip interaction with this button
+                                    return
+                                if Graph.total_income >= cls.taste_prices[cls.taste_index]:
+                                    Graph.total_income -= cls.taste_prices[cls.taste_index]
+                                    cls.taste_index += 1
+                                    Wine.taste += 100
+                                    if cls.taste_index == 2:
+                                        button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
+                                        cls.taste_index = -1  # Mark full upgraded skill
                 else:
                     cls.pressed_2 = False
                     Music.is_clicked = False
-    
-    # @classmethod
-    # def display_info_about_skill(cls, window, button):
-    #     font = pygame.font.SysFont(None, 40)
-    #     try:
-    #         text_surface = font.render(cls.skill_description[button.name], True, (0, 0, 0))
-    #     except:
-    #         text_surface = font.render("Not yet", True, (0, 0, 0, 0))
-
-    #     rect = pygame.Rect(830, 100, 270, 450)  # info panel (1046.50, 360) 330x508
-    #     text_rect = text_surface.get_rect(center=rect.center)       
-
-    #     # Set the opacity of the rectangle to 0 (completely transparent)
-    #     rect_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-    #     rect_surface.fill((255, 255, 255, 0))
-
-    #     # Draw the rectangle
-    #     pygame.draw.rect(rect_surface, (0, 0, 0), rect, 2)
-
-    #     # Blit the rectangle onto the screen
-    #     window.blit(rect_surface, rect)
-
-    #     # Blit the text onto the screen
-    #     window.blit(text_surface, text_rect)
 
     @classmethod
     def display_info_about_skill(cls, window, button):
         font = pygame.font.SysFont(None, 40)
         try:
-            text = cls.skill_description[button.name]
+            first_text = cls.skill_description[button.name][0]
+            second_text = cls.skill_description[button.name][1]
         except:
-            text = "Not yet"
+            first_text = 'Soon'
+            second_text = ''
 
-        # Render the text
-        text_surface = font.render(text, True, (0, 0, 0))
-        
-        rect = pygame.Rect(830, 100, 270, 450)  # info panel (1046.50, 360) 330x508
-        text_rect = text_surface.get_rect(center=rect.center)       
+        first_text_surface = font.render(first_text, True, (0, 0, 0))
+        first_text_rect = first_text_surface.get_rect()       
+        first_text_rect.topleft = (1000, 200)
+
+        second_text_surface = font.render(second_text, True, (0, 0, 0))
+        second_text_rect = first_text_surface.get_rect()       
+        second_text_rect.topleft = (1000, 250)
+
+        rect = pygame.Rect(830, 100, 270, 450)  # info panel (830, 100) 330x508
 
         # Set the opacity of the rectangle to 0 (completely transparent)
         rect_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
         rect_surface.fill((255, 255, 255, 0))
 
-        # Draw the rectangle
         pygame.draw.rect(rect_surface, (0, 0, 0), rect, 2)
-
-        # Blit the rectangle onto the screen
         window.blit(rect_surface, rect)
 
-        # Render the text within the rectangle boundaries
-        text_rect.clamp_ip(rect)
-        window.blit(text_surface, text_rect)
+        first_text_rect.clamp_ip(rect)
+        second_text_rect.clamp_ip(rect)
+        window.blit(first_text_surface, first_text_rect)
+        window.blit(second_text_surface, second_text_rect)
 
 class CountryStatistic:
     buttons = [
