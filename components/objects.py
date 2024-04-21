@@ -253,7 +253,7 @@ class Plane(pygame.sprite.Sprite):
     @classmethod
     def random_activation(cls, graph):
         for n1, n2, edge in graph.edges(data=True):
-            if random.randint(1, 2_000) == 1:
+            if random.randint(1, 1_500) == 1:
                 Plane(n2.position)
 
     @classmethod
