@@ -15,6 +15,7 @@ class Graph(nx.Graph):
         self.check_new_contracts()
 
     def check_new_contracts(self):
+        self.check_remove_invalid_by_date_contract()
         while len(Country.contracts) != 0:
             contract = Country.contracts[0]
             weight = self.income(contract[1])
@@ -24,6 +25,20 @@ class Graph(nx.Graph):
 
     def income(self,contract):
         return Wine.naturality * contract.naturality_coef + Wine.advertisment * contract.advertisment_coef + Wine.taste * contract.taste_coef
+
+    def check_remove_invalid_by_date_contract(self):
+        for u,v in self.edges():
+            if v.end_year<Timer.get_time_in_years():
+                # print(v.contracted)
+                v.contracted = False
+                self.remove_edge(u,v)
+
+    def get_total_income(self):
+        temp_sum = 0
+        for u,v,d in self.edges(data=True):
+            temp_sum += d['weight']
+        # print(temp_sum)    
+        return temp_sum    
 
 
 graph = Graph()

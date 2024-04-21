@@ -90,13 +90,15 @@ class ProgressBar:
         text_rect.center = (bar_x + self.bar_width // 2, bar_y + self.bar_height // 2)
         window.blit(text, text_rect)
 
-    def update_progress_bar(self, getter):  # ?
+    def update_progress_bar(self, getter):
         self.current_value = min(self.getter(), self.max_value)
 
 
 class Contract(pygame.sprite.Sprite): 
     buttons = []
     positions = []
+
+
 
     def __init__(self,position):
         super().__init__()
@@ -105,6 +107,8 @@ class Contract(pygame.sprite.Sprite):
             Button("accept", (self.position[0]-40, self.position[1]),size=(70,30),font_size=16),
             Button("decline", (self.position[0]+40, self.position[1]),size=(70,30),font_size=16)
         ]
+        self.start_year = Timer.get_time_in_years()
+        self.end_year = self.start_year+1
         Contract.buttons.append(self._buttons[0])
         Contract.positions.append((self.position[0]-40, self.position[1]))
         Contract.buttons.append(self._buttons[1])
@@ -168,7 +172,7 @@ class ToSellButton(pygame.sprite.Sprite):
         for button in cls.buttons:
             if button.country.name == "Moldova":
                 pass
-            elif random.randint(1, 200) == 1:
+            elif random.randint(1, 200) == 1 and button.country.contracted == False:
                 button.is_available = True
 
 
@@ -363,6 +367,8 @@ class Country(pygame.sprite.Sprite):
         self.contract_condition_advertisment = contract_condition_advertisment
         self.contract_condition_taste = contract_condition_taste
 
+        self.contracted = False
+
         Country.countries.append(self)
         if name == "Moldova":
             Country.moldova = self
@@ -387,16 +393,21 @@ class Country(pygame.sprite.Sprite):
             country.rect.center = (
                 Map.rect.topleft[0] + Map.scale * country.pos[0], Map.rect.topleft[1] + Map.scale * country.pos[1])
             window.blit(country.image, country.rect)
+    @staticmethod
+    def add_deal_duration(self,end_year):
+        self.end_year = end_year
+
 
     @classmethod
     def check_collisions(cls, Map, GameState, CountryStatistic):
         if Map.pressed and Map.motion:
             return
-        
+        #checking only contracts
         for open_contract in cls.open_contracts:
             for button in open_contract[0]._buttons:
                 if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                     if button.name == "accept":
+                        cls.add_deal_duration(open_contract[1][1],open_contract[0].end_year)
                         cls.contracts.append(open_contract[1])
                         Plane(open_contract[0].position)
                     for i in range(len(open_contract[0].buttons)):
@@ -424,6 +435,7 @@ class Country(pygame.sprite.Sprite):
                         cls.open_contracts.append((Contract(to_sell_button.pos),[Country.moldova, to_sell_button.country])) #
                         Country.moldova.sell_to.append(to_sell_button.country)
                         to_sell_button.country.buy_from.append(Country.moldova)
+                        to_sell_button.country.contracted = True
                     return
         
         # Checking only countries
@@ -571,7 +583,10 @@ class Timer:
     
     @classmethod
     def get_time_in_years(cls):
-        return cls.current_time.day/31+cls.current_time.month/12 + cls.current_time.year
+        time_difference = cls.current_time - cls.start_time
+        total_seconds = time_difference.total_seconds()
+        total_years = total_seconds / (365.25 * 24 * 3600)  # Assuming 365.25 days in a year for leap years
+        return total_years
     
     @classmethod
     def update_time_difference(cls):
