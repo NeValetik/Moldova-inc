@@ -9,7 +9,7 @@ class Button(pygame.sprite.Sprite):
     frame = pygame.transform.scale(pygame.image.load("assets/stuff/button-frame.png"), (230, 80))
     frame_rect = frame.get_rect()
 
-    def __init__(self, name, position, image_path=None, dimension=(230, 80), size = (200, 80), font_size=36):
+    def __init__(self, name, position, image_path=None, dimension=(230, 80), size = (200, 80), font_size=30):
         super().__init__()
         self.name = name
 

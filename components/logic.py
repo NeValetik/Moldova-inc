@@ -40,25 +40,8 @@ class Graph(nx.Graph):
         # print(temp_sum)    
         return temp_sum    
 
-
 graph = Graph()
 
-# This class is unutilized, so I decided to comment it out
-'''
-class Market:
-
-    w1 = Wine("Freedom Blend")
-    w1.set_taste(5)
-    w1.set_naturality(10)
-    w1.set_naturality(100)
-    w2 = Wine("Castel Mimi", 1, 2,3)
-
-
-
-    @staticmethod
-    def get_total_profit(self):
-        return self.w1.calculate_total_profit()
-'''
 
 class BarsGetters:
 

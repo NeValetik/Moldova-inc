@@ -46,13 +46,13 @@ class GameState:
 
 class MainMenu:
     buttons = [
-        Button("start", (300, 270)),
-        Button("settings", (300, 360)),
-        Button("exit", (300, 450)),
+        Button('start', (300, 270)),
+        Button('settings', (300, 360)),
+        Button('exit', (300, 450)),
     ]
 
-    background = pygame.transform.scale(pygame.image.load("assets/background/main-background.png"), (1280, 720))
-    stripe = pygame.transform.scale(pygame.image.load("assets/background/stripe.png"), (400, 720))
+    background = pygame.transform.scale(pygame.image.load('assets/background/main-background.png'), (1280, 720))
+    stripe = pygame.transform.scale(pygame.image.load('assets/background/stripe.png'), (400, 720))
     stripe_rect = stripe.get_rect()
     stripe_rect.center = (300, 360)
 
@@ -71,12 +71,12 @@ class MainMenu:
     
     @classmethod
     def display_title(cls, window):
-        font_path = "assets/font/evil-empire.ttf"
+        font_path = 'assets/font/evil-empire.ttf'
         font_size = 56
         font_color = (0, 0, 0)
         font = pygame.font.Font(font_path, font_size)
 
-        text = "Moldova Inc."
+        text = 'Moldova Inc.'
         text_surface = font.render(text, True, font_color)
         window.blit(text_surface, (165, 100))
 
@@ -93,27 +93,27 @@ class MainMenu:
                 window.blit(Button.frame, Button.frame_rect)
             if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                 Music.play_click_sound()
-                if button.name == "start":
+                if button.name == 'start':
                     GameState.main_menu = False
                     GameState.play = True
-                elif button.name == "settings":
-                    Settings.back_is = "main_menu"
+                elif button.name == 'settings':
+                    Settings.back_is = 'main_menu'
                     GameState.main_menu = False
                     GameState.settings = True
-                elif button.name == "exit":
+                elif button.name == 'exit':
                     sys.exit()
             else:
                 Music.is_clicked = False
     
 class Pause:
     buttons = [
-        Button("resume", (300, 270)),
-        Button("settings", (300, 360)),
-        Button("exit", (300, 450)),
+        Button('resume', (300, 270)),
+        Button('settings', (300, 360)),
+        Button('exit', (300, 450)),
     ]
 
-    background = pygame.transform.scale(pygame.image.load("assets/background/pause-background.png"), (1280, 720))
-    stripe = pygame.transform.scale(pygame.image.load("assets/background/stripe.png"), (400, 720))
+    background = pygame.transform.scale(pygame.image.load('assets/background/pause-background.png'), (1280, 720))
+    stripe = pygame.transform.scale(pygame.image.load('assets/background/stripe.png'), (400, 720))
     stripe_rect = stripe.get_rect()
     stripe_rect.center = (300, 360)
 
@@ -121,7 +121,7 @@ class Pause:
     def update(cls, window):
         cls.display_background(window)
         cls.display_buttons(window)
-        cls.check_collisions(window)
+        cls.check_collisions()
 
     @classmethod
     def display_background(cls, window):
@@ -140,27 +140,26 @@ class Pause:
                 Button.frame_rect.center = button.rect.center
                 window.blit(Button.frame, Button.frame_rect)
             if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
-                if button.name == "resume":
+                if button.name == 'resume':
                     GameState.pause = False
                     GameState.play = True
-                elif button.name == "settings":
-                    Settings.back_is = "pause"
+                elif button.name == 'settings':
+                    Settings.back_is = 'pause'
                     GameState.pause = False
                     GameState.settings = True
-                elif button.name == "exit":
+                elif button.name == 'exit':
                     sys.exit()
 
 
 class Statistic:
-    _one_plot = True  # (to generate one plot per space button, not each frame)
+    _one_plot = True  # to generate one plot per space button, not each frame
 
     buttons = [
-        Button("Back", (640, 600))
+        Button('Back', (640, 600))
     ]
 
-    image_path = "assets/background/pause-background.png"
+    image_path = 'assets/background/pause-background.png'
     initial_image = pygame.image.load(image_path)
-    # rect = 
 
     background = pygame.transform.scale(pygame.image.load(image_path), (1280, 720))
     background.set_alpha(50)
@@ -171,7 +170,7 @@ class Statistic:
     def update(cls, window):
         cls.display_buttons(window)
         cls.display_plot(window)
-        # cls.check_collisions(window)
+        cls.check_collisions()
 
     @classmethod
     def display_plot(cls, window):
@@ -199,52 +198,49 @@ class Statistic:
         Button.display_buttons(cls, window)
         Button.display_text_on_buttons(cls, window)
     
-    # @classmethod
-    # def check_collisions(cls, window):
-    #     for button in cls.buttons:
-    #         if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
-    #             Music.play_click_sound()
-    #             if button.name == "Back":
-    #                 GameState.settings = False
-    #                 if Settings.back_is == "main_menu":
-    #                     GameState.main_menu = True
-    #                 elif Settings.back_is == "pause":
-    #                     GameState.pause = True
+    @classmethod
+    def check_collisions(cls):
+        for button in cls.buttons:
+            if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
+                Music.play_click_sound()
+                if button.name == 'Back':
+                    GameState.statistic = False
+                    GameState.play = True
 
 class UpgradeMenu:
     buttons = [
-        Button("map", (976, 609), image_path="assets/upgrade-elements/besi-button.png", dimension=None),
-        Button("soon", (1120, 609), image_path="assets/upgrade-elements/besi-button.png", dimension=None),
+        Button('map', (976, 609), image_path='assets/upgrade-elements/besi-button.png', dimension=None),
+        Button('soon', (1120, 609), image_path='assets/upgrade-elements/besi-button.png', dimension=None),
     ]   
 
     upgrade_buttons = [
-        Button("naturality", (316, 249), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("heart", (420, 249), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("Coming Soon", (265, 340), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("advertisment", (368, 340), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("taste", (474, 340), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("Coming Soon", (210, 432), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("Coming Soon", (316, 432), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("time", (423, 432), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("Coming Soon", (159, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("Coming Soon", (264, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("Coming Soon", (369, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
-        Button("Coming Soon", (474, 524), image_path="assets/upgrade-elements/grey-circle.png", dimension=None),
+        Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('heart', (420, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('advertisment', (368, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('taste', (474, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (210, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (316, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('time', (423, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (159, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
     ]
 
     skills_icons = [
-        ["assets/upgrade-elements/quality-skill.png", (316, 247.5)],
-        ["assets/upgrade-elements/heart-skill.png", (420, 251)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (264, 340)],
-        ["assets/upgrade-elements/money-skill.png", (369, 337)],
-        ["assets/upgrade-elements/am-skill.png", (476, 337)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (212, 432)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (319, 432)],
-        ["assets/upgrade-elements/time-skill.png", (419, 429.5)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (160, 524)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (264, 524)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (369, 524)],
-        ["assets/upgrade-elements/coming-soon-skill.png", (477, 524)],
+        ['assets/upgrade-elements/quality-skill.png', (316, 247.5)],
+        ['assets/upgrade-elements/coming-soon-skill.png', (420, 251)],
+        ['assets/upgrade-elements/coming-soon-skill.png', (264, 340)],
+        ['assets/upgrade-elements/money-skill.png', (369, 337)],
+        ['assets/upgrade-elements/am-skill.png', (476, 337)],
+        ['assets/upgrade-elements/coming-soon-skill.png', (212, 432)],
+        ['assets/upgrade-elements/coming-soon-skill.png', (319, 432)],
+        ['assets/upgrade-elements/coming-soon-skill.png', (419, 429.5)],
+        ['assets/upgrade-elements/coming-soon-skill.png', (160, 524)],
+        ['assets/upgrade-elements/coming-soon-skill.png', (264, 524)],
+        ['assets/upgrade-elements/coming-soon-skill.png', (369, 524)],
+        ['assets/upgrade-elements/coming-soon-skill.png', (477, 524)],
     ]
 
     naturality_prices = [10_000, 12_000, 15_000]
@@ -270,12 +266,13 @@ class UpgradeMenu:
     image = pygame.transform.scale(pygame.image.load('assets/background/besi-background.png'),  (1280, 720))
     rect = image.get_rect()
 
-    grape = pygame.image.load("assets/upgrade-elements/grape.png")
+    grape = pygame.image.load('assets/upgrade-elements/grape.png')
     grape_rect = grape.get_rect()
     grape_rect.center = (448, 352)
 
     pressed_1 = True
     pressed_2 = False
+    focus = None
 
     @classmethod
     def update(cls, window):
@@ -284,9 +281,10 @@ class UpgradeMenu:
         cls.display_grape_bubbles(window)
         cls.display_icon_skills(window)
         cls.display_info_panel(window)
+        cls.display_title(window)
         cls.display_buttons(window)
         cls.display_stats_bars(window)
-        cls.check_collisions(window)  # window for dislaying info panel
+        cls.check_collisions(window)
 
     @classmethod
     def display_background(cls, window):
@@ -311,7 +309,7 @@ class UpgradeMenu:
 
     @classmethod
     def display_info_panel(cls, window):
-        panel = pygame.image.load("assets/upgrade-elements/info-panel.png")
+        panel = pygame.image.load('assets/upgrade-elements/info-panel.png')
         panel_rect = panel.get_rect()
         panel_rect.center = (1046.50, 360)
         window.blit(panel, panel_rect)
@@ -325,6 +323,19 @@ class UpgradeMenu:
     def display_stats_bars(cls, window):
         for bar in cls.stats_bars:
             bar.update(window)
+    
+    @classmethod
+    def display_title(cls, window):
+        if cls.focus == None:
+            text = 'Skill'
+        else:
+            text = cls.focus.name
+
+        font = pygame.font.Font('assets/font/evil-empire.ttf', 36)
+        text = font.render(text, True, (0, 0, 0))
+        text_rect = text.get_rect()
+        text_rect.center = (1046.50, 140)
+        window.blit(text, text_rect)
 
     @classmethod
     def check_collisions(cls , window):
@@ -334,7 +345,7 @@ class UpgradeMenu:
                     Music.play_click_sound()
                     if not cls.pressed_1:
                         cls.pressed_1 = True
-                        if button.name == "map":
+                        if button.name == 'map':
                             GameState.upgrade_menu = False
                             GameState.play = True
                 else:
@@ -344,6 +355,7 @@ class UpgradeMenu:
         for button in cls.upgrade_buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 cls.display_info_about_skill(window, button)
+                cls.focus = button
                 if pygame.mouse.get_pressed()[0]:
                     Music.play_click_sound()
                     if not cls.pressed_2:
@@ -356,7 +368,7 @@ class UpgradeMenu:
                                     Graph.total_income -= cls.naturality_prices[cls.naturality_index]
                                     cls.naturality_index += 1
                                     Wine.naturality += 1000
-                                    if cls.naturality_index == 3:
+                                    if cls.naturality_index == 2:
                                         button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
                                         cls.naturality_index = -1  # Mark full upgraded skill
 
@@ -388,6 +400,7 @@ class UpgradeMenu:
     @classmethod
     def display_info_about_skill(cls, window, button):
         font = pygame.font.SysFont(None, 40)
+        cls.update_info_skills()
         try:
             first_text = cls.skill_description[button.name][0]
             second_text = cls.skill_description[button.name][1]
@@ -397,13 +410,13 @@ class UpgradeMenu:
 
         first_text_surface = font.render(first_text, True, (0, 0, 0))
         first_text_rect = first_text_surface.get_rect()       
-        first_text_rect.topleft = (1000, 200)
+        first_text_rect.topleft = (1100, 200)
 
         second_text_surface = font.render(second_text, True, (0, 0, 0))
         second_text_rect = first_text_surface.get_rect()       
-        second_text_rect.topleft = (1000, 250)
+        second_text_rect.topleft = (1100, 250)
 
-        rect = pygame.Rect(830, 100, 270, 450)  # info panel (830, 100) 330x508
+        rect = pygame.Rect(830, 100, 270, 450)  # info panel (830, 100) 270x450
 
         # Set the opacity of the rectangle to 0 (completely transparent)
         rect_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
@@ -417,9 +430,17 @@ class UpgradeMenu:
         window.blit(first_text_surface, first_text_rect)
         window.blit(second_text_surface, second_text_rect)
 
+    @classmethod
+    def update_info_skills(cls):
+        cls.skill_description = {
+        'naturality' : ['Add naturality +1', f'Cost: {cls.naturality_prices[cls.naturality_index]}'],
+        'taste' : ['Add taste +1', f'Cost: {cls.taste_prices[cls.taste_index]}'],
+        'advertisment' : ['Add advertisment +1', f'Cost: {cls.advertisment_prices[cls.advertisment_index]}'],
+    }
+
 class CountryStatistic:
     buttons = [
-        Button("Back", (1100, 600))
+        Button('back', (1046, 609), image_path='assets/stuff/button.png', dimension=None),
     ]
 
     focus_country = None
@@ -445,23 +466,23 @@ class CountryStatistic:
             country.image = pygame.transform.scale(country.initial_not_scaled_image, (country.not_scaled_width * scale_factor,
                                                                                     country.not_scaled_height * scale_factor))
             country.rect = country.image.get_rect()
-            country.rect.center = (500, 500)  # center of remain space
+            country.rect.center = (400, 360)  # center of remain space
             window.blit(country.image, country.rect)
             del country
     
     @classmethod
     def display_statistics(cls, window):
-        transparent_gray = (55, 55, 55, 120)
-        transparent_surface = pygame.Surface((400, 980), pygame.SRCALPHA)
-        pygame.draw.rect(transparent_surface, transparent_gray, transparent_surface.get_rect(), border_radius=10)
-        window.blit(transparent_surface, (1500, 10))
+        panel = pygame.image.load('assets/stuff/info-panel.png')
+        panel_rect = panel.get_rect()
+        panel_rect.center = (1046.50, 360)
+        window.blit(panel, panel_rect)
 
     @classmethod
     def display_title(cls, window):
-        font = pygame.font.Font("assets/font/evil-empire.ttf", 36)
+        font = pygame.font.Font('assets/font/evil-empire.ttf', 36)
         text = font.render(cls.focus_country.name, True, (0, 0, 0))
         text_rect = text.get_rect()
-        text_rect.center = (1700, 40)
+        text_rect.center = (1046.50, 140)
         window.blit(text, text_rect)
 
     @classmethod
@@ -474,7 +495,7 @@ class CountryStatistic:
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                 Music.play_click_sound()
-                if button.name == "Back":
+                if button.name == 'back':
                     GameState.country_statistic = False
                     GameState.play = True
             else:
@@ -482,10 +503,10 @@ class CountryStatistic:
 
 class Settings:
     buttons = [
-        Button("Back", (640, 600))
+        Button('back', (640, 600))
     ]
 
-    image_path = "assets/background/pause-background.png"
+    image_path = 'assets/background/pause-background.png'
     initial_image = pygame.image.load(image_path)
 
     background = pygame.transform.scale(pygame.image.load(image_path), (1280, 720))
@@ -514,25 +535,25 @@ class Settings:
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                 Music.play_click_sound()
-                if button.name == "Back":
+                if button.name == 'back':
                     GameState.settings = False
-                    if Settings.back_is == "main_menu":
+                    if Settings.back_is == 'main_menu':
                         GameState.main_menu = True
-                    elif Settings.back_is == "pause":
+                    elif Settings.back_is == 'pause':
                         GameState.pause = True
                     
 class Map:
     buttons = [
-        Button("upgrade_menu", (1100, 600), dimension = (100,100)),
-        Button("statistics", (170, 600),),
+        Button('upgrade_menu', (1100, 600), dimension = (100,100)),
+        Button('statistics', (170, 600),),
     ]
 
     stats_bars = [
         ProgressBar(0, 100000, 200, 30, (100, 10, 10), (255, 255, 255), (71, 500), getter=BarsGetters.get_world_progress),
     ]
 
-    image = pygame.transform.scale(pygame.image.load("assets/background/oceans-4k.png"), (1280, 720))
-    initial_background = pygame.image.load("assets/background/oceans-4k.png")
+    image = pygame.transform.scale(pygame.image.load('assets/background/oceans-4k.png'), (1280, 720))
+    initial_background = pygame.image.load('assets/background/oceans-4k.png')
     background_rect = initial_background.get_rect()
     background_rect.center = (640, 360)
     
@@ -667,10 +688,10 @@ class Map:
                     Music.play_click_sound()
                     if not cls.pressed_icon:
                         cls.pressed_icon = True
-                        if button.name == "upgrade_menu":
+                        if button.name == 'upgrade_menu':
                             GameState.play = False
                             GameState.upgrade_menu = True
-                        elif button.name == "statistics":
+                        elif button.name == 'statistics':
                             GameState.play = False
                             GameState.statistic = True
                         return 'changed'
@@ -681,7 +702,7 @@ class Map:
 
 class News:
     buttons = [
-        Button("okay", (600, 750))
+        Button('okay', (600, 750))
     ]
 
     stored_notifications = []
@@ -717,7 +738,7 @@ class News:
                 cls.store_notification = cls.store_notification[-10:]
     
 class Music:
-    click_sound = pygame.mixer.Sound("assets/sound/click-menu.ogg")
+    click_sound = pygame.mixer.Sound('assets/sound/click-menu.ogg')
     is_clicked = False
 
     @classmethod
