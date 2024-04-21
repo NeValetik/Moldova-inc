@@ -215,13 +215,13 @@ class UpgradeMenu:
 
     upgrade_buttons = [
         Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('heart', (420, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
         Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
         Button('advertisment', (368, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('taste', (474, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (474, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
         Button('Coming Soon', (210, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
         Button('Coming Soon', (316, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('time', (423, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (423, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
         Button('Coming Soon', (159, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
         Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
         Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
@@ -230,10 +230,10 @@ class UpgradeMenu:
 
     skills_icons = [
         ['assets/upgrade-elements/quality-skill.png', (316, 247.5)],
-        ['assets/upgrade-elements/coming-soon-skill.png', (420, 251)],
+        ['assets/upgrade-elements/coming-soon-skill.png', (476, 337)],
         ['assets/upgrade-elements/coming-soon-skill.png', (264, 340)],
         ['assets/upgrade-elements/money-skill.png', (369, 337)],
-        ['assets/upgrade-elements/am-skill.png', (476, 337)],
+        ['assets/upgrade-elements/am-skill.png', (420, 251)],
         ['assets/upgrade-elements/coming-soon-skill.png', (212, 432)],
         ['assets/upgrade-elements/coming-soon-skill.png', (319, 432)],
         ['assets/upgrade-elements/coming-soon-skill.png', (419, 429.5)],
@@ -243,25 +243,24 @@ class UpgradeMenu:
         ['assets/upgrade-elements/coming-soon-skill.png', (477, 524)],
     ]
 
-    naturality_prices = [10_000, 12_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000]
+    naturality_prices =     [10_000, 12_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000]
+    taste_prices =          [5_000, 6_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000]
+    advertisment_prices =   [2_000, 3_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000]
     naturality_index = 0
-    taste_prices = [5_000, 6_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000]
     taste_index = 0
-    advertisment_prices = [2_000, 3_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000]
     advertisment_index = 0
 
     skill_description = {
-        'naturality' : ['Add naturality +1', f'Cost: {naturality_prices[naturality_index]}'],
-        'taste' : ['Add taste +1', f'Cost: {taste_prices[taste_index]}'],
-        'advertisment' : ['Add advertisment +1', f'Cost: {advertisment_prices[advertisment_index]}'],
+        'naturality':   ['Add naturality +1', f'Cost: {naturality_prices[naturality_index]}'],
+        'taste':        ['Add taste +1', f'Cost: {taste_prices[taste_index]}'],
+        'advertisment': ['Add advertisment +1', f'Cost: {advertisment_prices[advertisment_index]}'],
     }
 
-    stats_bars = [
-        ProgressBar(0, 10000, 200, 30, (100, 10, 10), (255, 255, 255), (30, 650), getter=BarsGetters.get_wine_naturality),
-        ProgressBar(0, 10000, 200, 30, (100, 10, 10), (255, 255, 255), (330, 650), getter=BarsGetters.get_wine_advertisment),
-        ProgressBar(0, 10000, 200, 30, (100, 10, 10), (255, 255, 255), (630, 650), getter=BarsGetters.get_wine_taste),
-    ]
-
+    stats_bars = {
+        'naturality':      ProgressBar(0, 1_000, 200, 30, (100, 10, 10), (255, 255, 255), (955, 520), getter=BarsGetters.get_wine_naturality),
+        'advertisment':    ProgressBar(0, 1_000, 200, 30, (100, 10, 10), (255, 255, 255), (955, 520), getter=BarsGetters.get_wine_advertisment),
+        'taste':           ProgressBar(0, 1_000, 200, 30, (100, 10, 10), (255, 255, 255), (955, 520), getter=BarsGetters.get_wine_taste),
+    }
 
     image = pygame.transform.scale(pygame.image.load('assets/background/besi-background.png'),  (1280, 720))
     rect = image.get_rect()
@@ -272,7 +271,7 @@ class UpgradeMenu:
 
     pressed_1 = True
     pressed_2 = False
-    focus = None
+    focus =     None
 
     @classmethod
     def update(cls, window):
@@ -321,8 +320,11 @@ class UpgradeMenu:
     
     @classmethod
     def display_stats_bars(cls, window):
-        for bar in cls.stats_bars:
-            bar.update(window)
+        if cls.focus != None:
+            try:
+                cls.stats_bars[cls.focus.name].update(window)
+            except:
+                pass
     
     @classmethod
     def display_title(cls, window):
