@@ -13,7 +13,8 @@ class Graph(nx.Graph):
             self.add_node(country.name)
 
     def check_new_contracts(self):
-        self.check_new_value_formula()    
+        # self.check_new_value_formula()    
+        self.check_remove_invalid_by_date_contract()
         while len(Country.contracts) != 0:
             contract = Country.contracts[0]
             # print(contract[1].start_time)
@@ -21,14 +22,21 @@ class Graph(nx.Graph):
             self.add_weighted_edges_from([(contract[0], contract[1], weight)])
             del Country.contracts[0]
     
-    def check_new_value_formula(self):
-        for u,v,d in self.edges(data=True):
-            # if Timer.get_time_in_years() > v.start_time+1:  # +1 stands from 1 year of making the contract(should be changed to the contract duration in future)
-            d['weight'] = self.income(v)    
-            # print("Nodes: ",u.name," ", v.name ,"Weightened edges: ",d)
+    # def check_new_value_formula(self):
+    #     for u,v,d in self.edges(data=True):
+    #         # if Timer.get_time_in_years() > v.start_time+1:  # +1 stands from 1 year of making the contract(should be changed to the contract duration in future)
+    #         d['weight'] = self.income(v)    
+    #         # print("Nodes: ",u.name," ", v.name ,"Weightened edges: ",d)
 
     def income(self,contract):
         return Wine.naturality * contract.naturality_coef + Wine.advertisment * contract.advertisment_coef + Wine.taste * contract.taste_coef
+
+    def check_remove_invalid_by_date_contract(self):
+        for u,v in self.edges():
+            if v.end_year<Timer.get_time_in_years():
+                # print(v.contracted)
+                v.contracted = False
+                self.remove_edge(u,v)
 
     def get_total_income(self):
         temp_sum = 0
