@@ -544,16 +544,17 @@ class Settings:
                     
 class Map:
     buttons = [
-        Button('upgrade_menu', (1100, 600), dimension = (100,100)),
-        Button('statistics', (170, 600),),
+        Button('upgrade_menu', (1100, 600), dimension=(100,100)),
+        Button('statistics', (170, 600)),
     ]
 
     stats_bars = [
-        ProgressBar(0, 100000, 200, 30, (100, 10, 10), (255, 255, 255), (71, 500), getter=BarsGetters.get_world_progress),
+        ProgressBar(0, 100_000, 200, 30, (100, 10, 10), (255, 255, 255), (71, 500), getter=BarsGetters.get_world_progress),
     ]
 
     image = pygame.transform.scale(pygame.image.load('assets/background/oceans-4k.png'), (1280, 720))
-    initial_background = pygame.image.load('assets/background/oceans-4k.png')
+    initial_background = pygame.image.load('assets/background/new-ocean-full-hd.png')
+
     background_rect = initial_background.get_rect()
     background_rect.center = (640, 360)
     
@@ -587,8 +588,7 @@ class Map:
 
     @classmethod
     def update(cls, window):
-        window.fill((140,171,193))  # Same color as ocean, to optimize performance and avoid some bugs
-        window.blit(cls.image, cls.rect)  # Ocean
+        window.blit(cls.initial_background, cls.background_rect)
 
         # Look like a mess because I avoided in this way double click/missclick of Button and Country
         Country.update(window, Map, GameState, CountryStatistic)
@@ -605,7 +605,6 @@ class Map:
 
     @classmethod
     def personal_update(cls, window):
-        # cls.display_buttons(window)
         cls.display_stats_bars(window)
         cls.to_scale()
         cls.to_drag(window)
@@ -660,7 +659,8 @@ class Map:
                 cls.scale -= cls.scale_step
         cls.scroll = 0
 
-        cls.image = pygame.transform.scale(cls.initial_background, (cls.scale*cls.width, cls.scale*cls.height))
+        cls.image = pygame.transform.scale(cls.image, (cls.scale*cls.width, cls.scale*cls.height))
+        cls.image.set_alpha(255)
         cls.rect = cls.image.get_rect()
 
         if cls.scale == 1:
