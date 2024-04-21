@@ -452,9 +452,9 @@ class CountryStatistic:
         cls.country_description = {country.name: ["Naturality low" if country.naturality_coef < 0.4 else("Naturality middle" if 0.6>country.naturality_coef > 0.4 else "Naturality high"),
                                           "Advertisment low" if country.advertisment_coef < 0.4 else("Advertisment middle" if 0.6>country.advertisment_coef > 0.4 else "Advertisment high"),
                                           "Taste low" if country.taste_coef < 0.4 else("Taste middle" if 0.6>country.taste_coef > 0.4 else "Taste high"),
-                                          f"Naturality needed={country.contract_condition_naturality}",
-                                          f"Advertisment needed={country.contract_condition_advertisment}",
-                                          f"Taste needed={country.contract_condition_taste}"] for country in Country.countries}
+                                          f"Naturality needed {int(country.contract_condition_naturality)}",
+                                          f"Advertisment needed {int(country.contract_condition_advertisment)}",
+                                          f"Taste needed {int(country.contract_condition_taste)}"] for country in Country.countries}
 
     @classmethod
     def update(cls, window):
@@ -505,7 +505,7 @@ class CountryStatistic:
 
     @classmethod
     def display_info_about_country(cls, window, country):
-        font = pygame.font.SysFont(None, 40)
+        font = pygame.font.SysFont(None, 32)
         try:
             first_text = cls.country_description[country.name][0]
             second_text = cls.country_description[country.name][1]
@@ -757,7 +757,6 @@ class Map:
                     cls.pressed_icon = False
                     Music.is_clicked = False
         
-
 class News:
     buttons = [
         Button('okay', (600, 750))
@@ -810,7 +809,6 @@ class Music:
     def play_click_sound(cls):
         if not cls.is_clicked:
             cls.click_sound.play()
-            cls.is_clicked = True
-        
+            cls.is_clicked = True        
 
 pygame.quit()

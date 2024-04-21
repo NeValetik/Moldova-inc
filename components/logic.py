@@ -4,6 +4,8 @@ from objects import *
 class Graph(nx.Graph):
     initiated = False
     total_income = 90_000
+    x=[]
+    y=[]
 
     def __init__(self):
         super().__init__()
@@ -38,7 +40,13 @@ class Graph(nx.Graph):
         for u,v,d in self.edges(data=True):
             temp_sum += d['weight']
         # print(temp_sum)    
-        return temp_sum    
+        return temp_sum
+
+    def collect_data_for_statistics_week(self):    
+        if len(self.x)<52:
+            self.x.append(Timer.get_time)
+            self.y.append(self.total_income)
+
 
 graph = Graph()
 
