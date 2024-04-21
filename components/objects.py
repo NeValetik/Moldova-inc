@@ -172,7 +172,7 @@ class ToSellButton(pygame.sprite.Sprite):
         for button in cls.buttons:
             if button.country.name == "Moldova":
                 pass
-            elif random.randint(1, 200) == 1 and button.country.contracted == False:
+            elif random.randint(1, 200) == 1 and button.country.contracted == False and Wine.naturality >= button.country.contract_condition_naturality and Wine.advertisment >= button.country.contract_condition_advertisment and Wine.taste >= button.country.contract_condition_taste:
                 button.is_available = True
 
 
@@ -483,9 +483,9 @@ class Wine:
     wine_color = (89, 16, 56)
     trandmarks = []
 
-    naturality = 1000
-    advertisment = 5
-    taste = 100
+    naturality = 0
+    advertisment = 0
+    taste = 0
 
     def __init__(self, name, taste=0, naturality=0, advertisement=0):
         self.name = name
