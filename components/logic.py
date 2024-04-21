@@ -28,7 +28,7 @@ class Graph(nx.Graph):
 
     def check_remove_invalid_by_date_contract(self):
         for u,v in self.edges():
-            if v.end_year<Timer.get_time_in_years():
+            if v.end_year < Timer.get_time_in_years():
                 # print(v.contracted)
                 v.contracted = False
                 self.remove_edge(u,v)

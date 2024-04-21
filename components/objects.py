@@ -137,7 +137,7 @@ class ToSellButton(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
 
-        self.pos = None
+        self.position = None
         self.rect.center = (-100, -100)
 
         ToSellButton.buttons.append(self)
@@ -156,14 +156,14 @@ class ToSellButton(pygame.sprite.Sprite):
                 random_point = (random.randint(1, country_width - 1), random.randint(1, country_height - 1))
                 while not button.country.mask.get_at(random_point):
                     random_point = (random.randint(1, country_width - 1), random.randint(1, country_height - 1))
-                button.pos = (button.country.rect.topleft[0] + random_point[0],
+                button.position = (button.country.rect.topleft[0] + random_point[0],
                               button.country.rect.topleft[1] + random_point[1] - 15)  # -15 for bottom to be at center
                 button.have_coordinates = True
 
             # Somewhere in the branch below we need to adjust scaling on zooming
             elif button.have_coordinates:
                 button.rect.center = (
-                    Map.rect.topleft[0] + Map.scale * button.pos[0], Map.rect.topleft[1] + Map.scale * button.pos[1])
+                    Map.rect.topleft[0] + Map.scale * button.position[0], Map.rect.topleft[1] + Map.scale * button.position[1])
                 
             window.blit(button.image, button.rect)
 
@@ -178,9 +178,9 @@ class ToSellButton(pygame.sprite.Sprite):
 
 class Tranport:
     @classmethod
-    def update(cls, window, Map):
-        Plane.update(window, Map)
-        Ship.update(window, Map)
+    def update(cls, window, Map, graph):
+        Plane.update(window, Map, graph)
+        Ship.update(window, Map, graph)
 
 
 class Plane(pygame.sprite.Sprite):
@@ -204,8 +204,9 @@ class Plane(pygame.sprite.Sprite):
         Plane.planes.append(self)
 
     @classmethod
-    def update(cls, window, Map):
-        Plane.display_planes(window, Map)
+    def update(cls, window, Map, graph):
+        cls.display_planes(window, Map)
+        cls.random_activation(graph)
 
     @classmethod
     def display_planes(cls, window, Map):
@@ -217,9 +218,7 @@ class Plane(pygame.sprite.Sprite):
                                     Map.rect.topleft[1] + Map.scale*plane.path[0][1])
 
                 # Look at middle point (before middle point), look at destination (after middle point)
-                # if plane.before_middle_point and plane.path[0] != plane.middle_point:
                 if plane.before_middle_point:
-
                     # Look to which side should be made additional rotation
                     plane.before_middle_point = False
                     if plane.origin[1] - plane.destination[1]>0:
@@ -232,27 +231,11 @@ class Plane(pygame.sprite.Sprite):
                             plane.image = pygame.transform.rotate(plane.image,180 - Plane.angle_between_points(plane.origin, plane.middle_point))
                         elif plane.origin[0] - plane.destination[0]<=0:
                             plane.image = pygame.transform.rotate(plane.image,180 + Plane.angle_between_points(plane.origin, plane.middle_point))
-                # elif plane.path[0] == plane.middle_point:
-                #         if plane.origin[1] - plane.destination[1]>0:
-                #             plane.image = pygame.transform.rotate(plane.image,  Plane.angle_between_points(plane.middle_point, plane.destination))
-                #         else:
-                #             plane.image = pygame.transform.rotate(plane.image,  90 - Plane.angle_between_points(plane.origin, plane.middle_point) + Plane.angle_between_points(plane.middle_point, plane.destination))
-
                 window.blit(plane.image, plane.rect)
                 del plane.path[0]
 
     @classmethod
     def get_path(cls, c1, c2):
-        # middle_point = (min([c1[0], c2[0]]) + (abs(c1[0] - c2[0]) / 2), min([c1[1], c2[1]]) + (abs(c1[1] - c2[1]) / 2))
-        
-        # direction_vector = (c2[0] - c1[0], c2[1] - c1[1])
-        # perp_vect = (-direction_vector[1], direction_vector[0])
-        # magnitude = math.sqrt(sum(component**2 for component in perp_vect))
-        # normalized_perp_vector = (perp_vect[0] / magnitude, perp_vect[1] / magnitude)
-
-        # distance = 20
-        # third_point = (middle_point[0] + normalized_perp_vector[0]*distance, middle_point[1] + normalized_perp_vector[1]*distance)
-        
         x_values = [c1[0], c2[0]]
         y_values = [c1[1], c2[1]]
             
@@ -266,6 +249,12 @@ class Plane(pygame.sprite.Sprite):
         if c1[0] > c2[0]:
             coordinates.sort(reverse=True)
         return coordinates
+    
+    @classmethod
+    def random_activation(cls, graph):
+        for n1, n2, edge in graph.edges(data=True):
+            if random.randint(1, 2_000) == 1:
+                Plane(n2.position)
 
     @classmethod
     def angle_between_points(cls, point1, point2):
@@ -298,18 +287,18 @@ class Ship(pygame.sprite.Sprite):
                                                     (30, 30)).convert_alpha()
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
-        self.pos = None
+        self.position = None
         Ship.ships.append(self)
 
     @classmethod
-    def update(cls, window, Map):
+    def update(cls, window, Map, graph):
         Ship.display_ships(window, Map)
 
     @classmethod
     def display_ships(cls, window, Map):
         for ship in Ship.ships:
-            ship.rect.center = (Map.rect.topleft[0] + Map.scale * ship.pos[0],
-                                Map.rect.topleft[1] + Map.scale * ship.pos[1])
+            ship.rect.center = (Map.rect.topleft[0] + Map.scale * ship.position[0],
+                                Map.rect.topleft[1] + Map.scale * ship.position[1])
 
             window.blit(ship.image, ship.rect)
 
@@ -328,7 +317,7 @@ class Country(pygame.sprite.Sprite):
     old_map_scale = 1  # To rescale the map only after Map.scale modification
     initial_scale_factor = 0.325    # Optimal scale for countries for 1200x800
 
-    def __init__(self, name, image_path, pos, continent,naturality,advertisment,taste,contract_condition_naturality,contract_condition_advertisment,contract_condition_taste):
+    def __init__(self, name, image_path, position, continent,naturality,advertisment,taste,contract_condition_naturality,contract_condition_advertisment,contract_condition_taste):
         self.initial_scale_factor = 0.325  # Optimal scale for countries for 1200x800
         self.not_scaled_width = Image.open(image_path).size[0]
         self.not_scaled_height = Image.open(image_path).size[1]
@@ -343,10 +332,10 @@ class Country(pygame.sprite.Sprite):
         self.initial_not_scaled_image = pygame.image.load(image_path).convert_alpha()
 
         self.rect = self.image.get_rect()
-        self.scaled_x_pos = Country.initial_scale_factor * pos[0]
-        self.scaled_y_pos = Country.initial_scale_factor * pos[1]
-        self.pos = (self.scaled_x_pos, self.scaled_y_pos)
-        self.rect.center = self.pos
+        self.scaled_x_pos = Country.initial_scale_factor * position[0]
+        self.scaled_y_pos = Country.initial_scale_factor * position[1]
+        self.position = (self.scaled_x_pos, self.scaled_y_pos)
+        self.rect.center = self.position
         self.mask = pygame.mask.from_surface(self.image)
 
         self.name = name
@@ -391,7 +380,7 @@ class Country(pygame.sprite.Sprite):
 
             # Changing the coordinates of the country
             country.rect.center = (
-                Map.rect.topleft[0] + Map.scale * country.pos[0], Map.rect.topleft[1] + Map.scale * country.pos[1])
+                Map.rect.topleft[0] + Map.scale * country.position[0], Map.rect.topleft[1] + Map.scale * country.position[1])
             window.blit(country.image, country.rect)
     @staticmethod
     def add_deal_duration(self,end_year):
@@ -432,7 +421,7 @@ class Country(pygame.sprite.Sprite):
                     # Logistic stuff:
                     if to_sell_button.country != Country.moldova:  # Do not send plane from Moldova to Moldova
                         to_sell_button.country.start_time = Timer.get_time_in_years() # Gives the time of the contract activation                       
-                        cls.open_contracts.append((Contract(to_sell_button.pos),[Country.moldova, to_sell_button.country])) #
+                        cls.open_contracts.append((Contract(to_sell_button.position),[Country.moldova, to_sell_button.country])) #
                         Country.moldova.sell_to.append(to_sell_button.country)
                         to_sell_button.country.buy_from.append(Country.moldova)
                         to_sell_button.country.contracted = True
