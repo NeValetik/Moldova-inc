@@ -243,11 +243,11 @@ class UpgradeMenu:
         ['assets/upgrade-elements/coming-soon-skill.png', (477, 524)],
     ]
 
-    naturality_prices = [10_000, 12_000, 15_000]
+    naturality_prices = [10_000, 12_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000]
     naturality_index = 0
-    taste_prices = [5_000, 6_000, 7_000]
+    taste_prices = [5_000, 6_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000]
     taste_index = 0
-    advertisment_prices = [2_000, 3_000, 4_000]
+    advertisment_prices = [2_000, 3_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000]
     advertisment_index = 0
 
     skill_description = {
@@ -257,9 +257,9 @@ class UpgradeMenu:
     }
 
     stats_bars = [
-        ProgressBar(0, 3000, 200, 30, (100, 10, 10), (255, 255, 255), (30, 650), getter=BarsGetters.get_wine_naturality),
-        ProgressBar(0, 15, 200, 30, (100, 10, 10), (255, 255, 255), (330, 650), getter=BarsGetters.get_wine_advertisment),
-        ProgressBar(0, 300, 200, 30, (100, 10, 10), (255, 255, 255), (630, 650), getter=BarsGetters.get_wine_taste),
+        ProgressBar(0, 10000, 200, 30, (100, 10, 10), (255, 255, 255), (30, 650), getter=BarsGetters.get_wine_naturality),
+        ProgressBar(0, 10000, 200, 30, (100, 10, 10), (255, 255, 255), (330, 650), getter=BarsGetters.get_wine_advertisment),
+        ProgressBar(0, 10000, 200, 30, (100, 10, 10), (255, 255, 255), (630, 650), getter=BarsGetters.get_wine_taste),
     ]
 
 
@@ -367,8 +367,8 @@ class UpgradeMenu:
                                 if Graph.total_income >= cls.naturality_prices[cls.naturality_index]:
                                     Graph.total_income -= cls.naturality_prices[cls.naturality_index]
                                     cls.naturality_index += 1
-                                    Wine.naturality += 1000
-                                    if cls.naturality_index == 2:
+                                    Wine.naturality += 100
+                                    if cls.naturality_index == 9:
                                         button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
                                         cls.naturality_index = -1  # Mark full upgraded skill
 
@@ -378,8 +378,8 @@ class UpgradeMenu:
                                 if Graph.total_income >= cls.advertisment_prices[cls.advertisment_index]:
                                     Graph.total_income -= cls.advertisment_prices[cls.advertisment_index]
                                     cls.advertisment_index += 1
-                                    Wine.advertisment += 5
-                                    if cls.advertisment_index == 2:
+                                    Wine.advertisment += 100
+                                    if cls.advertisment_index == 9:
                                         button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
                                         cls.advertisment_index = -1  # Mark full upgraded skill
 
@@ -390,7 +390,7 @@ class UpgradeMenu:
                                     Graph.total_income -= cls.taste_prices[cls.taste_index]
                                     cls.taste_index += 1
                                     Wine.taste += 100
-                                    if cls.taste_index == 2:
+                                    if cls.taste_index == 9:
                                         button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
                                         cls.taste_index = -1  # Mark full upgraded skill
                 else:
