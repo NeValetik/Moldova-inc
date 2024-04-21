@@ -121,7 +121,7 @@ class Pause:
     def update(cls, window):
         cls.display_background(window)
         cls.display_buttons(window)
-        cls.check_collisions()
+        cls.check_collisions(window)
 
     @classmethod
     def display_background(cls, window):
@@ -412,23 +412,23 @@ class UpgradeMenu:
 
         first_text_surface = font.render(first_text, True, (0, 0, 0))
         first_text_rect = first_text_surface.get_rect()       
-        first_text_rect.topleft = (1100, 200)
+        first_text_rect.topleft = (900, 200)
 
         second_text_surface = font.render(second_text, True, (0, 0, 0))
         second_text_rect = first_text_surface.get_rect()       
-        second_text_rect.topleft = (1100, 250)
+        second_text_rect.topleft = (900, 250)
 
-        rect = pygame.Rect(830, 100, 270, 450)  # info panel (830, 100) 270x450
+        # rect = pygame.Rect(830, 100, 270, 450)  # info panel (830, 100) 270x450
 
-        # Set the opacity of the rectangle to 0 (completely transparent)
-        rect_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-        rect_surface.fill((255, 255, 255, 0))
+        # # Set the opacity of the rectangle to 0 (completely transparent)
+        # rect_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
+        # rect_surface.fill((255, 255, 255, 0))
 
-        pygame.draw.rect(rect_surface, (0, 0, 0), rect, 2)
-        window.blit(rect_surface, rect)
+        # pygame.draw.rect(rect_surface, (0, 0, 0), rect, 2)
+        # window.blit(rect_surface, rect)
 
-        first_text_rect.clamp_ip(rect)
-        second_text_rect.clamp_ip(rect)
+        # first_text_rect.clamp_ip(rect)
+        # second_text_rect.clamp_ip(rect)
         window.blit(first_text_surface, first_text_rect)
         window.blit(second_text_surface, second_text_rect)
 
@@ -448,11 +448,22 @@ class CountryStatistic:
     focus_country = None
 
     @classmethod
+    def initialize_statistics(cls):
+        cls.country_description = {country.name: ["Naturality low" if country.naturality_coef < 0.4 else("Naturality middle" if 0.6>country.naturality_coef > 0.4 else "Naturality high"),
+                                          "Advertisment low" if country.advertisment_coef < 0.4 else("Advertisment middle" if 0.6>country.advertisment_coef > 0.4 else "Advertisment high"),
+                                          "Taste low" if country.taste_coef < 0.4 else("Taste middle" if 0.6>country.taste_coef > 0.4 else "Taste high"),
+                                          f"Naturality needed={country.contract_condition_naturality}",
+                                          f"Advertisment needed={country.contract_condition_advertisment}",
+                                          f"Taste needed={country.contract_condition_taste}"] for country in Country.countries}
+
+    @classmethod
     def update(cls, window):
+        cls.initialize_statistics()
         cls.display_country(window)
         cls.display_statistics(window)
         cls.display_title(window)
         cls.display_buttons(window)
+        cls.display_info_about_country(window,cls.focus_country)
         cls.check_collisions()
 
     @classmethod
@@ -491,6 +502,51 @@ class CountryStatistic:
     def display_buttons(cls, window):
         Button.display_buttons(cls, window)
         Button.display_text_on_buttons(cls, window)
+
+    @classmethod
+    def display_info_about_country(cls, window, country):
+        font = pygame.font.SysFont(None, 40)
+        try:
+            first_text = cls.country_description[country.name][0]
+            second_text = cls.country_description[country.name][1]
+            third_text = cls.country_description[country.name][2]
+            fourth_text = cls.country_description[country.name][3]
+            fifth_text = cls.country_description[country.name][4]
+            sixth_text = cls.country_description[country.name][5]
+        except:
+            first_text = 'Soon'
+            second_text = ''
+
+        first_text_surface = font.render(first_text, True, (0, 0, 0))
+        first_text_rect = first_text_surface.get_rect()       
+        first_text_rect.topleft = (900, 200)
+
+        second_text_surface = font.render(second_text, True, (0, 0, 0))
+        second_text_rect = first_text_surface.get_rect()       
+        second_text_rect.topleft = (900, 250)
+
+        third_text_surface = font.render(third_text, True, (0, 0, 0))
+        third_text_rect = first_text_surface.get_rect()       
+        third_text_rect.topleft = (900, 300)
+
+        fourth_text_surface = font.render(fourth_text, True, (0, 0, 0))
+        fourth_text_rect = first_text_surface.get_rect()       
+        fourth_text_rect.topleft = (900, 350)
+
+        fifth_text_surface = font.render(fifth_text, True, (0, 0, 0))
+        fifth_text_rect = first_text_surface.get_rect()       
+        fifth_text_rect.topleft = (900, 400)
+
+        sixth_text_surface = font.render(sixth_text, True, (0, 0, 0))
+        sixth_text_rect = first_text_surface.get_rect()       
+        sixth_text_rect.topleft = (900, 450)
+
+        window.blit(first_text_surface, first_text_rect)
+        window.blit(second_text_surface, second_text_rect)
+        window.blit(third_text_surface, third_text_rect)
+        window.blit(fourth_text_surface, fourth_text_rect)
+        window.blit(fifth_text_surface, fifth_text_rect)
+        window.blit(sixth_text_surface, sixth_text_rect)
 
     @classmethod
     def check_collisions(cls):
