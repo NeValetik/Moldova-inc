@@ -3,6 +3,7 @@ from pygame.locals import *
 from components.scenes import *
 
 pygame.init()
+pygame.display.init()
 pygame_icon = pygame.image.load('assets/icons/mainicon.jpg')
 pygame.display.set_icon(pygame_icon)
 
@@ -10,6 +11,7 @@ WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+
 
 #------------------------------------------
 #UNCOMMENT THE CODE BELOW TO TURN ON MUSIC:

@@ -154,9 +154,25 @@ class Pause:
 class Statistic:
     _one_plot = True  # (to generate one plot per space button, not each frame)
 
+    buttons = [
+        Button("Back", (640, 600))
+    ]
+
+    image_path = "assets/background/pause-background.png"
+    initial_image = pygame.image.load(image_path)
+    # rect = 
+
+    background = pygame.transform.scale(pygame.image.load(image_path), (1280, 720))
+    background.set_alpha(50)
+
+    back_is = None
+
     @classmethod
     def update(cls, window):
+        cls.display_background(window)
+        cls.display_buttons(window)
         cls.display_plot(window)
+        # cls.check_collisions()
 
     @classmethod
     def display_plot(cls, window):
@@ -168,17 +184,39 @@ class Statistic:
             plt.savefig('plot.png')
 
             plot = pygame.image.load('plot.png')
-            rect = plot.get_rect()
-            window.blit(plot, rect)
+            window.blit(plot, (0,0))
             Statistic._one_plot = False
         else:
             plot = pygame.image.load('plot.png')
-            rect = plot.get_rect()
-            window.blit(plot, rect)
+            # rect = plot.get_rect()
+            window.blit(plot, (0,0))
     
     @classmethod
     def delete_plot(self):
         os.remove('plot.png')
+        pass
+
+    @classmethod
+    def display_background(cls, window):
+        window.fill((0, 0, 0))
+        window.blit(cls.background, cls.background.get_rect())
+
+    @classmethod
+    def display_buttons(cls, window):
+        Button.display_buttons(cls, window)
+        Button.display_text_on_buttons(cls, window)
+    
+    # @classmethod
+    # def check_collisions(cls):
+        # for button in cls.buttons:
+        #     if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
+        #         Music.play_click_sound()
+        #         if button.name == "Back":
+        #             GameState.settings = False
+        #             if Settings.back_is == "main_menu":
+        #                 GameState.main_menu = True
+        #             elif Settings.back_is == "pause":
+        #                 GameState.pause = True
 
 class UpgradeMenu:
     buttons = [
