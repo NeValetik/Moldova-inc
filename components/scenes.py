@@ -28,6 +28,7 @@ class GameState:
         elif GameState.pause:
             Pause.update(window)
         elif GameState.country_statistic:
+            Map.update(window)
             CountryStatistic.update(window)
         elif GameState.upgrade_menu:
             UpgradeMenu.update(window)
@@ -335,7 +336,7 @@ class UpgradeMenu:
         else:
             text = cls.focus.name
 
-        font = pygame.font.Font('assets/font/evil-empire.ttf', 36)
+        font = pygame.font.Font('assets/font/lexend.ttf', 36)
         text = font.render(text, True, (0, 0, 0))
         text_rect = text.get_rect()
         text_rect.center = (1046.50, 140)
@@ -461,12 +462,20 @@ class CountryStatistic:
     @classmethod
     def update(cls, window):
         cls.initialize_statistics()
+        cls.transparent_background(window)
         cls.display_country(window)
         cls.display_statistics(window)
         cls.display_title(window)
         cls.display_buttons(window)
         cls.display_info_about_country(window,cls.focus_country)
         cls.check_collisions()
+
+    @classmethod
+    def transparent_background(cls, window):
+        background = pygame.Surface((1280, 720))
+        background.fill((255, 255, 255))
+        background.set_alpha(230)
+        window.blit(background, (0, 0))
 
     @classmethod
     def display_country(cls, window):
@@ -481,7 +490,7 @@ class CountryStatistic:
             country.image = pygame.transform.scale(country.initial_not_scaled_image, (country.not_scaled_width * scale_factor,
                                                                                     country.not_scaled_height * scale_factor))
             country.rect = country.image.get_rect()
-            country.rect.center = (400, 360)  # center of remain space
+            country.rect.center = (400, 360)
             window.blit(country.image, country.rect)
             del country
     
@@ -494,7 +503,7 @@ class CountryStatistic:
 
     @classmethod
     def display_title(cls, window):
-        font = pygame.font.Font('assets/font/evil-empire.ttf', 36)
+        font = pygame.font.Font('assets/font/lexend-bold.ttf', 36)
         text = font.render(cls.focus_country.name, True, (0, 0, 0))
         text_rect = text.get_rect()
         text_rect.center = (1046.50, 140)
@@ -507,7 +516,7 @@ class CountryStatistic:
 
     @classmethod
     def display_info_about_country(cls, window, country):
-        font = pygame.font.SysFont(None, 32)
+        font = pygame.font.Font('assets/font/lexend.ttf', 23)
         try:
             first_text = cls.country_description[country.name][0]
             second_text = cls.country_description[country.name][1]
@@ -604,12 +613,12 @@ class Settings:
                     
 class Map:
     buttons = [
-        Button('upgrade_menu', (1100, 600), dimension=(100,100)),
-        Button('statistics', (170, 600)),
+        Button('upgrade_menu', (1100, 670), dimension=None, image_path='assets/stuff/menu-button.png'),
+        Button('statistics', (170, 670), dimension=None, image_path='assets/stuff/menu-button.png'),
     ]
 
     stats_bars = [
-        ProgressBar(0, 100_000, 200, 30, (100, 10, 10), (255, 255, 255), (71, 500), getter=BarsGetters.get_world_progress),
+        ProgressBar(0, 100_000, 200, 30, (100, 10, 10), (255, 255, 255), (71, 600), getter=BarsGetters.get_world_progress),
     ]
 
     image = pygame.transform.scale(pygame.image.load('assets/background/oceans-4k.png'), (1280, 720))
