@@ -334,7 +334,7 @@ class UpgradeMenu:
         else:
             text = cls.focus.name
 
-        font = pygame.font.Font('assets/font/Lexend.ttf', 36)
+        font = pygame.font.Font('assets/font/lexend.ttf', 36)
         text = font.render(text, True, (0, 0, 0))
         text_rect = text.get_rect()
         text_rect.center = (1046.50, 140)
@@ -501,7 +501,7 @@ class CountryStatistic:
 
     @classmethod
     def display_title(cls, window):
-        font = pygame.font.Font('assets/font/Lexend.ttf', 36)
+        font = pygame.font.Font('assets/font/lexend-bold.ttf', 36)
         text = font.render(cls.focus_country.name, True, (0, 0, 0))
         text_rect = text.get_rect()
         text_rect.center = (1046.50, 140)
@@ -514,7 +514,7 @@ class CountryStatistic:
 
     @classmethod
     def display_info_about_country(cls, window, country):
-        font = pygame.font.SysFont(None, 32)
+        font = pygame.font.Font('assets/font/lexend.ttf', 23)
         try:
             first_text = cls.country_description[country.name][0]
             second_text = cls.country_description[country.name][1]
