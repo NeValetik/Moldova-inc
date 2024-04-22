@@ -35,6 +35,7 @@ class GameState:
             graph.update()
             Map.update(window)
             Timer.update(window)
+
             News.update(window)
         if GameState.statistic:
             Statistic.update(window)
@@ -101,7 +102,8 @@ class MainMenu:
                     GameState.main_menu = False
                     GameState.settings = True
                 elif button.name == 'exit':
-                    sys.exit()
+                    exit_game()
+
             else:
                 Music.is_clicked = False
     
@@ -148,7 +150,7 @@ class Pause:
                     GameState.pause = False
                     GameState.settings = True
                 elif button.name == 'exit':
-                    sys.exit()
+                    exit_game()
 
 
 class Statistic:

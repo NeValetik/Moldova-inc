@@ -1,8 +1,53 @@
+import sys
+
 import pygame, random, math, os, datetime, csv, sqlite3
 from PIL import Image
 import numpy as np
 
 pygame.init()
+
+# with open("components/resume/winedata.txt", "w") as input:
+#     input.write(str(BarsGetters.get_wine_advertisment()))
+#     input.write("\n")
+#     input.write(str(BarsGetters.get_wine_naturality()))
+#     input.write("\n")
+#     input.write(str(BarsGetters.get_wine_taste()))
+#     input.write("\n")
+# sys.exit()
+def winetasteinit():
+    try:
+        with open("components/resume/winedata.txt", "r") as input:
+            return int(input.readlines()[2][:-1])
+    except:
+        return 0
+def winenaturalityinit():
+    try:
+        with open("components/resume/winedata.txt", "r") as input:
+            return int(input.readlines()[1][:-1])
+    except:
+        return 0
+def wineadvertismentinit():
+    try:
+        with open("components/resume/winedata.txt", "r") as input:
+            return int(input.readlines()[0][:-1])
+    except:
+        return 0
+
+class Resume:
+
+    @staticmethod
+    def load_timer():
+        try:
+            with open("components/resume/x.txt", "r") as input:
+                date = input.readlines()[-1]
+                parts = date.split("/")
+                month = int(parts[1])
+                day = int(parts[0])
+                year = int(parts[2])
+                return datetime.datetime(year, month, day, 12, 0,0 )
+
+        except:
+            return datetime.datetime(1950, 12, 30, 12, 0, 0)
 
 
 class Button(pygame.sprite.Sprite):
@@ -472,9 +517,9 @@ class Wine:
     wine_color = (89, 16, 56)
     trandmarks = []
 
-    naturality = 0
-    advertisment = 0
-    taste = 0
+    naturality = winenaturalityinit()
+    advertisment = wineadvertismentinit()
+    taste = winetasteinit()
 
     def __init__(self, name, taste=0, naturality=0, advertisement=0):
         self.name = name
@@ -533,8 +578,11 @@ class Woman:
         return False
 
 class Timer:
-    start_time = datetime.datetime(1950, 12, 30, 12, 0, 0)
+
+    start_time = Resume.load_timer()
+
     current_time = start_time
+
     frame = 1
     
     #Counts years from the start of the game

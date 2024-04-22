@@ -24,7 +24,7 @@ clock = pygame.time.Clock()
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            sys.exit()
+            exit_game()
         if event.type == pygame.MOUSEWHEEL:
             Map.scroll = event.y
         elif event.type == pygame.KEYDOWN:
@@ -66,7 +66,6 @@ while True:
 
     window.fill((255, 255, 255))
     GameState.update(window)
-
     pygame.display.update()
     clock.tick(60)
     # print(int(clock.get_fps()))
