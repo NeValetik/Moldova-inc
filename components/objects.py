@@ -14,24 +14,15 @@ pygame.init()
 #     input.write(str(BarsGetters.get_wine_taste()))
 #     input.write("\n")
 # sys.exit()
-def winetasteinit():
+
+def winedatainit():
+    '''returns taste, naturality and advertisment'''
     try:
         with open("components/resume/winedata.txt", "r") as input:
-            return int(input.readlines()[2][:-1])
+            lines = input.readlines()
+            return int(lines[2][:-1]), int(lines[1][:-1]), int(lines[0][:-1])
     except:
-        return 0
-def winenaturalityinit():
-    try:
-        with open("components/resume/winedata.txt", "r") as input:
-            return int(input.readlines()[1][:-1])
-    except:
-        return 0
-def wineadvertismentinit():
-    try:
-        with open("components/resume/winedata.txt", "r") as input:
-            return int(input.readlines()[0][:-1])
-    except:
-        return 0
+        return 0,0,0
 
 class Resume:
 
@@ -517,9 +508,7 @@ class Wine:
     wine_color = (89, 16, 56)
     trandmarks = []
 
-    naturality = winenaturalityinit()
-    advertisment = wineadvertismentinit()
-    taste = winetasteinit()
+    taste, naturality, advertisment = winedatainit()
 
     def __init__(self, name, taste=0, naturality=0, advertisement=0):
         self.name = name
@@ -527,7 +516,7 @@ class Wine:
 
         self.taste = taste
         self.naturality = naturality
-        self.advertisement = advertisement
+        self.advertisment = advertisement
 
     def set_taste(self, taste):
         self.taste = taste
@@ -536,7 +525,7 @@ class Wine:
         self.taste = naturality
 
     def set_advertisement(self, advertisement):
-        self.advertisement = advertisement
+        self.advertisment = advertisement
     
     def return_taste(self, taste):
         return self.taste
@@ -545,7 +534,7 @@ class Wine:
         return self.naturality
 
     def return_advertisement(self, advertisement):
-        return self.advertisement    
+        return self.advertisment
 
 class Woman:
     def __init__(self, id, wash_dishes_speed, her_owner):

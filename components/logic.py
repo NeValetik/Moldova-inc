@@ -3,7 +3,7 @@ from objects import *
 
 
 def new_game():
-    directory = "resume"
+    directory = "components/resume"
     files = os.listdir(directory)
 
     # Iterate over each file and remove it
