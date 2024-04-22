@@ -54,7 +54,6 @@ def yinit():
         with open("components/resume/y.txt", "r") as input:
             x = []
 
-            print("In yinit")
 
             for line in input.readlines():
                 print(line)
@@ -62,8 +61,9 @@ def yinit():
                     x.append(int(line[:-1]))
             return x
     except:
-        print("EXPECTED:::")
+        print("New game apparently...")
         return []
+
 
 
 def total_income_init():
@@ -120,7 +120,7 @@ class Graph(nx.Graph):
         if len(self.x) < 52 and Timer.get_time() not in self.x:
             self.x.append(Timer.get_time())
             self.y.append(self.total_income)
-            print(self.y)
+            # print(self.y)
 
         elif Timer.get_time() not in self.x:
             self.x.pop(0)
