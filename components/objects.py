@@ -82,7 +82,7 @@ class ProgressBar:
         progress_rect = pygame.Rect(bar_x, bar_y, progress_width, self.bar_height)
         pygame.draw.rect(window, (*self.bar_color, 128), progress_rect, border_radius=border_radius)
 
-        font = pygame.font.Font("assets/font/evil-empire.ttf", 24)
+        font = pygame.font.Font("assets/font/Lexend.ttf", 24)
         percent_text = f"{int(self.current_value)}"
         text = font.render(percent_text, True, (0, 0, 0))
         text_rect = text.get_rect()
@@ -545,6 +545,7 @@ class Timer:
         cls.update_timer()
         cls.display_timer(window)
         cls.update_time_difference()
+        
     @classmethod
     def update_timer(cls):
         if cls.frame >= 60:
@@ -557,13 +558,13 @@ class Timer:
     def display_timer(cls, window):
         time = cls.get_time()
 
-        border_rect = pygame.Rect(1040, 20, 100, 20)
+        border_rect = pygame.Rect(1130, 20, 100, 20)
         pygame.draw.rect(window, (255, 255, 255), border_rect, border_radius=40)
 
-        font = pygame.font.Font("assets/font/evil-empire.ttf", 20)
+        font = pygame.font.Font("assets/font/Lexend.ttf", 15)
         text = font.render(time, True, (0, 0, 0))
         text_rect = text.get_rect()
-        text_rect.center = (1090, 30)
+        text_rect.center = (1180, 30)
         window.blit(text, text_rect)
 
     @classmethod
