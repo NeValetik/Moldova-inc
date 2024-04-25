@@ -274,16 +274,14 @@ class Plane(pygame.sprite.Sprite):
     def get_path(cls, c1, c2):
         x_values = [c1[0], c2[0]]
         y_values = [c1[1], c2[1]]
-            
-        x = np.array(x_values)
-        y = np.array(y_values)
-        coefficients = np.polyfit(x, y, 1)  # Fit a quadratic polynomial (degree 2)
-        curve_x = np.linspace(int(min(x)), int(max(x)), int(max(x)-min(x)+1))
-        curve_y = np.polyval(coefficients, curve_x)
-        coordinates = [(x_val, y_val) for x_val, y_val in zip(curve_x, curve_y)]
 
-        if c1[0] > c2[0]:
-            coordinates.sort(reverse=True)
+        t = np.array(np.linspace(0,1,100 ))    
+        x = c1[0] + (c2[0]-c1[0])*t
+        y = c1[1] + (c2[1]-c1[1])*t
+        coordinates = [(x_val, y_val) for x_val, y_val in zip(x,y)]
+
+        # if c1[0] > c2[0]:
+            # coordinates.sort(reverse=True)
         return coordinates
     
     @classmethod

@@ -31,6 +31,10 @@ def exit_game():
         input.write("\n")
         input.write(str(BarsGetters.get_wine_taste()))
         input.write("\n")
+
+    with open("components/resume/graph.txt", "w") as input:
+        for u, v in graph.edges():
+            input.write(v.name.replace(" ", "-") + ' ' + str(v.end_year) + ' ' + str(v.contracted) + "\n")
     sys.exit()
 
 
@@ -80,6 +84,8 @@ class Graph(nx.Graph):
     x = xinit()
     y = yinit()
 
+    checked_txt = False
+
     def __init__(self):
         super().__init__()
 
@@ -87,10 +93,12 @@ class Graph(nx.Graph):
             self.add_node(country.name)
 
     def update(self):
+        # self.check_contracts_data_base()
         self.check_new_contracts()
         self.collect_data_for_statistics_week()
 
     def check_new_contracts(self):
+        print(Country.countries)
         self.check_remove_invalid_by_date_contract()
         while len(Country.contracts) != 0:
             contract = Country.contracts[0]
@@ -98,6 +106,29 @@ class Graph(nx.Graph):
             Graph.total_income += weight
             self.add_weighted_edges_from([(contract[0], contract[1], weight)])
             del Country.contracts[0]
+        self.checked_txt = True
+        print(Country.countries)
+        try:
+            with open("components/resume/graph.txt", "r") as input:
+                for line in input:
+                    parts = [part.strip() for part in line.split()]
+
+                    if len(parts) == 3:
+                        countryin = parts[0].replace("-", " ")
+                        number = float(parts[1])
+                        status = bool(parts[2])
+                    # print(countryin, number, status)
+                    for country in Country.countries:
+                    # print(country.name, countryin)
+                        if country.name == countryin:
+                            print(country)
+                        # self.add_weighted_edges_from([(contract[0], contract[1], weight)])
+                            country.end_year = number
+                            country.contracted = status
+                            self.add_weighted_edges_from([(country.moldova, country, 0)])
+        except:
+            print("Excepted:::")
+                    
 
     def income(self, contract):
         return Wine.naturality * contract.naturality_coef + Wine.advertisment * contract.advertisment_coef + Wine.taste * contract.taste_coef
