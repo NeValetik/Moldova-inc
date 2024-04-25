@@ -14,17 +14,20 @@ pygame.init()
 #     input.write(str(BarsGetters.get_wine_taste()))
 #     input.write("\n")
 # sys.exit()
-
-def winedatainit():
-    '''returns taste, naturality and advertisment'''
-    try:
-        with open("components/resume/winedata.txt", "r") as input:
-            lines = input.readlines()
-            return int(lines[2][:-1]), int(lines[1][:-1]), int(lines[0][:-1])
-    except:
-        return 0,0,0
-
-class Resume:
+class ObjectInit():
+    @classmethod
+    def _initialize(cls):
+        Wine.taste, Wine.naturality, Wine.advertisment=cls.winedatainit()
+        Timer.start_time = cls.load_timer()
+        Timer.current_time = Timer.start_time
+    def winedatainit():
+        '''returns taste, naturality and advertisment'''
+        try:
+            with open("components/resume/winedata.txt", "r") as input:
+                lines = input.readlines()
+                return int(lines[2][:-1]), int(lines[1][:-1]), int(lines[0][:-1])
+        except:
+            return 0,0,0
 
     @staticmethod
     def load_timer():
@@ -506,7 +509,7 @@ class Wine:
     wine_color = (89, 16, 56)
     trandmarks = []
 
-    taste, naturality, advertisment = winedatainit()
+    taste, naturality, advertisment = (0,0,0)
 
     def __init__(self, name, taste=0, naturality=0, advertisement=0):
         self.name = name
@@ -566,7 +569,7 @@ class Woman:
 
 class Timer:
 
-    start_time = Resume.load_timer()
+    start_time = datetime.datetime(1950, 12, 30, 12, 0, 0)
 
     current_time = start_time
 

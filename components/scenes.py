@@ -48,9 +48,10 @@ class GameState:
 
 class MainMenu:
     buttons = [
-        Button('start', (300, 270)),
-        Button('settings', (300, 360)),
-        Button('exit', (300, 450)),
+        Button('continue', (300, 270)),
+        Button('start', (300, 360)),
+        Button('settings', (300, 450)),
+        Button('exit', (300, 540)),
     ]
 
     background = pygame.transform.scale(pygame.image.load('assets/background/main-background.png'), (1280, 720))
@@ -104,6 +105,12 @@ class MainMenu:
                     GameState.settings = True
                 elif button.name == 'exit':
                     exit_game()
+                elif button.name == 'continue':
+                    GraphInit._initialize()
+                    ObjectInit._initialize()
+                    GameState.main_menu = False
+                    GameState.play = True
+
 
             else:
                 Music.is_clicked = False

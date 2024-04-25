@@ -37,72 +37,77 @@ def exit_game():
             input.write(v.name.replace(" ", "-") + ' ' + str(v.end_year) + ' ' + str(v.contracted) + "\n")
     sys.exit()
 
+    
+class GraphInit():
+    @classmethod
+    def _initialize(cls):
+        cls.total_income_init()
+        cls.countries_init()
+        cls.xinit()
+        cls.yinit()
+    def xinit():
+        try:
+            with open("components/resume/x.txt", "r") as input:
+                x = []
+                for line in input.readlines():
+                    if line != '\n':
+                        x.append(line[:-1])
 
-def xinit():
-    try:
-        with open("components/resume/x.txt", "r") as input:
-            x = []
-            for line in input.readlines():
-                if line != '\n':
-                    x.append(line[:-1])
+                Graph.x = x
 
-            return x
-
-    except:
-        return []
-
-
-def yinit():
-    try:
-        with open("components/resume/y.txt", "r") as input:
-            x = []
-
-            for line in input.readlines():
-                print(line)
-                if line != '\n':
-                    x.append(int(line[:-1]))
-            return x
-    except:
-        print("New game apparently...")
-        return []
+        except:
+            Graph.x = []
 
 
-def total_income_init():
-    try:
-        with open("components/resume/y.txt", "r") as input:
-            return int(input.readlines()[-1][:-1])
-    except:
-        return 90_000
+    def yinit():
+        try:
+            with open("components/resume/y.txt", "r") as input:
+                x = []
+
+                for line in input.readlines():
+                    print(line)
+                    if line != '\n':
+                        x.append(int(line[:-1]))
+                Graph.y = x
+        except:
+            print("New game apparently...")
+            Graph.y = []
 
 
-def countries_init():
-    try:
-        print("Inside countryis init")
-        countries = []
-        with open("components/resume/graph.txt", "r") as input:
-            print(input)
-            for line in input:
-                parts = [part.strip() for part in line.split()]
-                print(parts)
-                if len(parts) == 3:
-                    countryin = parts[0].replace("-", " ")
-                    number = float(parts[1])
-                    status = bool(parts[2])
-                countries.append((countryin, number, status))
-            print(countries)
-            return countries
+    def total_income_init():
+        try:
+            with open("components/resume/y.txt", "r") as input:
+                Graph.total_income = int(input.readlines()[-1][:-1])
+        except:
+            Graph.total_income = 90_000
 
-    except:
-        print("This except")
-        return []
+
+    def countries_init():
+        try:
+            print("Inside countryis init")
+            countries = []
+            with open("components/resume/graph.txt", "r") as input:
+                for line in input:
+                    parts = [part.strip() for part in line.split()]
+                    print(parts)
+                    if len(parts) == 3:
+                        countryin = parts[0].replace("-", " ")
+                        number = float(parts[1])
+                        status = bool(parts[2])
+                    countries.append((countryin, number, status))
+                Graph.countries_init = countries
+
+        except:
+            print("This except")
+            Graph.countries_init = []
 
 
 class Graph(nx.Graph):
     initiated = False
-    total_income = total_income_init()
-    countries_init = countries_init()
-    x = xinit()
-    y = yinit()
+    total_income = 90_000
+    countries_init = []
+    x = []
+    y = []
 
     checked_txt = False
 
@@ -135,8 +140,8 @@ class Graph(nx.Graph):
             # print(self.countries_init)
             for country in Country.countries:
                 if len(self.countries_init) != 0 and self.countries_init[0][0] == country.name:
-                    country.contracted = self.countries_init[0][1]
-                    country.end_year = self.countries_init[0][2]
+                    country.contracted = self.countries_init[0][2]
+                    country.end_year = self.countries_init[0][1]
                     self.add_weighted_edges_from([(country.moldova, country, 0)])
                     self.countries_init.pop(0)
 
