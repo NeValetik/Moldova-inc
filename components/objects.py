@@ -23,7 +23,7 @@ class ObjectInit():
     def winedatainit():
         '''returns taste, naturality and advertisment'''
         try:
-            with open("components/resume/winedata.txt", "r") as input:
+            with open("components/saved_game/winedata.txt", "r") as input:
                 lines = input.readlines()
                 return int(lines[2][:-1]), int(lines[1][:-1]), int(lines[0][:-1])
         except:
@@ -32,7 +32,7 @@ class ObjectInit():
     @staticmethod
     def load_timer():
         try:
-            with open("components/resume/x.txt", "r") as input:
+            with open("components/saved_game/x.txt", "r") as input:
                 date = input.readlines()[-1]
                 parts = date.split("/")
                 month = int(parts[1])

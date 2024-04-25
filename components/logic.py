@@ -3,7 +3,7 @@ from objects import *
 
 
 def new_game():
-    directory = "components/resume"
+    directory = "components/saved_game"
     files = os.listdir(directory)
 
     # Iterate over each file and remove it
@@ -14,17 +14,17 @@ def new_game():
 
 
 def exit_game():
-    with open("components/resume/x.txt", "w") as input:
+    with open("components/saved_game/x.txt", "w") as input:
         for line in graph.x:
             input.write(line)
             input.write("\n")
 
-    with open("components/resume/y.txt", "w") as input:
+    with open("components/saved_game/y.txt", "w") as input:
         for line in graph.y:
             input.write(str(int(line)))
             input.write("\n")
 
-    with open("components/resume/winedata.txt", "w") as input:
+    with open("components/saved_game/winedata.txt", "w") as input:
         input.write(str(BarsGetters.get_wine_advertisment()))
         input.write("\n")
         input.write(str(BarsGetters.get_wine_naturality()))
@@ -32,7 +32,7 @@ def exit_game():
         input.write(str(BarsGetters.get_wine_taste()))
         input.write("\n")
 
-    with open("components/resume/graph.txt", "w") as input:
+    with open("components/saved_game/graph.txt", "w") as input:
         for u, v in graph.edges():
             input.write(v.name.replace(" ", "-") + ' ' + str(v.end_year) + ' ' + str(v.contracted) + "\n")
     sys.exit()
@@ -47,7 +47,7 @@ class GraphInit():
         cls.yinit()
     def xinit():
         try:
-            with open("components/resume/x.txt", "r") as input:
+            with open("components/saved_game/x.txt", "r") as input:
                 x = []
                 for line in input.readlines():
                     if line != '\n':
@@ -61,11 +61,11 @@ class GraphInit():
 
     def yinit():
         try:
-            with open("components/resume/y.txt", "r") as input:
+            with open("components/saved_game/y.txt", "r") as input:
                 x = []
 
                 for line in input.readlines():
-                    print(line)
+                    # print(line)
                     if line != '\n':
                         x.append(int(line[:-1]))
                 Graph.y = x
@@ -76,7 +76,7 @@ class GraphInit():
 
     def total_income_init():
         try:
-            with open("components/resume/y.txt", "r") as input:
+            with open("components/saved_game/y.txt", "r") as input:
                 Graph.total_income = int(input.readlines()[-1][:-1])
         except:
             Graph.total_income = 90_000
@@ -86,7 +86,7 @@ class GraphInit():
         try:
             print("Inside countryis init")
             countries = []
-            with open("components/resume/graph.txt", "r") as input:
+            with open("components/saved_game/graph.txt", "r") as input:
                 for line in input:
                     parts = [part.strip() for part in line.split()]
                     print(parts)
