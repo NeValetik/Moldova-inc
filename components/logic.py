@@ -35,7 +35,7 @@ def exit_game():
     sys.exit()
 
     
-class GraphInit():
+class GraphInit:
     @classmethod
     def _initialize(cls):
         cls.total_income_init()
@@ -105,8 +105,6 @@ class Graph(nx.Graph):
     countries_init = []
     x = []
     y = []
-
-    checked_txt = False
 
     def __init__(self):
         super().__init__()

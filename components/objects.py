@@ -6,15 +6,7 @@ import numpy as np
 
 pygame.init()
 
-# with open("components/resume/winedata.txt", "w") as input:
-#     input.write(str(BarsGetters.get_wine_advertisment()))
-#     input.write("\n")
-#     input.write(str(BarsGetters.get_wine_naturality()))
-#     input.write("\n")
-#     input.write(str(BarsGetters.get_wine_taste()))
-#     input.write("\n")
-# sys.exit()
-class ObjectInit():
+class ObjectInit:
     @classmethod
     def _initialize(cls):
         cls.winedatainit()
@@ -161,9 +153,9 @@ class Contract(pygame.sprite.Sprite):
         Button.display_buttons(cls, window)
         Button.display_text_on_buttons(cls, window)
         # window.blit(cls.image, cls.rect)
-        for iterator in range(len(cls.buttons)):  # The buttons are driving away anyway (will fix it later)
-            cls.buttons[iterator].rect.center = (
-            Map.rect.topleft[0] + Map.scale * cls.positions[iterator][0], Map.rect.topleft[1] + Map.scale * cls.positions[iterator][1])
+        # for iterator in range(len(cls.buttons)):  # The buttons are driving away anyway (will fix it later)
+        #     cls.buttons[iterator].rect.center = (
+        #     Map.rect.topleft[0] + Map.scale * cls.positions[iterator][0], Map.rect.topleft[1] + Map.scale * cls.positions[iterator][1])
 
 
 class ToSellButton(pygame.sprite.Sprite):

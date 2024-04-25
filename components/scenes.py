@@ -9,7 +9,7 @@ from logic import *
 pygame.init()
 pygame.mixer.init()
 
-class ScenesInit():
+class ScenesInit:
     @staticmethod    
     def buttons_init():
         directory = "components/saved_game"
@@ -29,7 +29,7 @@ class ScenesInit():
             ]
     @staticmethod    
     def upgrade_buttons_init():
-            upgrade_buttons = [
+            UpgradeMenu.upgrade_buttons = [
                 Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
                 Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
                 Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
@@ -47,14 +47,12 @@ class ScenesInit():
                 with open("components/saved_game/winedata.csv", mode='r') as file:
                     csv_reader = csv.DictReader(file)
                     for row in csv_reader:
-                        for button in upgrade_buttons:
+                        for button in UpgradeMenu.upgrade_buttons:
                             if row.get(button.name+"_index") is not None:
                                 if int(row[button.name+"_index"]) == -1:
                                     button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
-                return upgrade_buttons
             except:
-                return upgrade_buttons                    
-
+                pass
 class GameState:
     main_menu = True
     play = False
@@ -146,6 +144,7 @@ class MainMenu:
                 elif button.name == 'exit':
                     exit_game()
                 elif button.name == 'continue':
+                    ScenesInit.upgrade_buttons_init()
                     GraphInit._initialize()
                     ObjectInit._initialize()
                     GameState.main_menu = False
@@ -262,7 +261,20 @@ class UpgradeMenu:
         Button('bar', (1120, 609), image_path='assets/upgrade-elements/besi-button.png', dimension=None),
     ]   
 
-    upgrade_buttons = ScenesInit.upgrade_buttons_init()
+    upgrade_buttons = [
+                Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('advertisment', (368, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (474, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (210, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (316, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (423, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (159, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+            ]
 
     skills_icons = [
         ['assets/upgrade-elements/quality-skill.png', (316, 247.5)],
