@@ -275,10 +275,28 @@ class Plane(pygame.sprite.Sprite):
 
     @classmethod
     def get_path(cls, c1, c2):
-        x_values = [c1[0], c2[0]]
-        y_values = [c1[1], c2[1]]
+        vector_length = ((c2[0]-c1[0])**2+(c2[1]-c1[1])**2)**(1/2)
+        if vector_length < 100:
+            t = np.array(np.linspace(0,1,30))
+        elif vector_length < 200:
+            t = np.array(np.linspace(0,1,90))    
+        elif vector_length < 300:
+            t = np.array(np.linspace(0,1,150))
+        elif vector_length < 400:
+            t = np.array(np.linspace(0,1,200))
+        elif vector_length < 500:
+            t = np.array(np.linspace(0,1,250))    
+        elif vector_length < 600:
+            t = np.array(np.linspace(0,1,300))                    
+        elif vector_length < 700:
+            t = np.array(np.linspace(0,1,350))  
+        elif vector_length < 800:
+            t = np.array(np.linspace(0,1,400))  
+        elif vector_length < 900:
+            t = np.array(np.linspace(0,1,450))
+        else:
+            t = np.array(np.linspace(0,1,500))    
 
-        t = np.array(np.linspace(0,1,100 ))    
         x = c1[0] + (c2[0]-c1[0])*t
         y = c1[1] + (c2[1]-c1[1])*t
         coordinates = [(x_val, y_val) for x_val, y_val in zip(x,y)]
