@@ -43,14 +43,17 @@ class ScenesInit():
                 Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
                 Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
             ]
-            with open("components/saved_game/winedata.csv", mode='r') as file:
-                csv_reader = csv.DictReader(file)
-                for row in csv_reader:
-                    for button in upgrade_buttons:
-                        if row.get(button.name+"_index") is not None:
-                            if int(row[button.name+"_index"]) == -1:
-                                button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
-            return upgrade_buttons                    
+            try:
+                with open("components/saved_game/winedata.csv", mode='r') as file:
+                    csv_reader = csv.DictReader(file)
+                    for row in csv_reader:
+                        for button in upgrade_buttons:
+                            if row.get(button.name+"_index") is not None:
+                                if int(row[button.name+"_index"]) == -1:
+                                    button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
+                return upgrade_buttons
+            except:
+                return upgrade_buttons                    
 
 class GameState:
     main_menu = True
