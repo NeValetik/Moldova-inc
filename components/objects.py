@@ -143,7 +143,7 @@ class Contract(pygame.sprite.Sprite):
             Button("accept", (self.position[0]-40, self.position[1]),size=(70,30),font_size=16),
             Button("decline", (self.position[0]+40, self.position[1]),size=(70,30),font_size=16)
         ]
-        self.start_year = Timer.get_time_in_years()
+        self.start_year = Timer.get_initial_time_in_years()
         self.end_year = self.start_year+1
         Contract.buttons.append(self._buttons[0])
         Contract.positions.append((self.position[0]-40, self.position[1]))
@@ -454,7 +454,7 @@ class Country(pygame.sprite.Sprite):
                     to_sell_button.is_positioned = False
                     # Logistic stuff:
                     if to_sell_button.country != Country.moldova:  # Do not send plane from Moldova to Moldova
-                        to_sell_button.country.start_time = Timer.get_time_in_years() # Gives the time of the contract activation                       
+                        to_sell_button.country.start_time = Timer.get_initial_time_in_years() # Gives the time of the contract activation                       
                         cls.open_contracts.append((Contract(to_sell_button.position),[Country.moldova, to_sell_button.country])) #
                         Country.moldova.sell_to.append(to_sell_button.country)
                         to_sell_button.country.buy_from.append(Country.moldova)
@@ -609,6 +609,13 @@ class Timer:
     @classmethod
     def get_time_in_years(cls):
         time_difference = cls.current_time - cls.start_time
+        total_seconds = time_difference.total_seconds()
+        total_years = total_seconds / (365.25 * 24 * 3600)  # Assuming 365.25 days in a year for leap years
+        return total_years
+    
+    @classmethod
+    def get_initial_time_in_years(cls):
+        time_difference = cls.current_time - datetime.datetime(1950, 12, 30, 12, 0, 0)
         total_seconds = time_difference.total_seconds()
         total_years = total_seconds / (365.25 * 24 * 3600)  # Assuming 365.25 days in a year for leap years
         return total_years

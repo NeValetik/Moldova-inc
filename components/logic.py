@@ -38,7 +38,6 @@ def exit_game():
     sys.exit()
 
 
-
 def xinit():
     try:
         with open("components/resume/x.txt", "r") as input:
@@ -58,7 +57,6 @@ def yinit():
         with open("components/resume/y.txt", "r") as input:
             x = []
 
-
             for line in input.readlines():
                 print(line)
                 if line != '\n':
@@ -69,7 +67,6 @@ def yinit():
         return []
 
 
-
 def total_income_init():
     try:
         with open("components/resume/y.txt", "r") as input:
@@ -77,10 +74,33 @@ def total_income_init():
     except:
         return 90_000
 
+
+def countries_init():
+    try:
+        print("Inside countryis init")
+        countries = []
+        with open("components/resume/graph.txt", "r") as input:
+            print(input)
+            for line in input:
+                parts = [part.strip() for part in line.split()]
+                print(parts)
+                if len(parts) == 3:
+                    countryin = parts[0].replace("-", " ")
+                    number = float(parts[1])
+                    status = bool(parts[2])
+                countries.append((countryin, number, status))
+            print(countries)
+            return countries
+
+    except:
+        print("This except")
+        return []
+
+
 class Graph(nx.Graph):
     initiated = False
     total_income = total_income_init()
-
+    countries_init = countries_init()
     x = xinit()
     y = yinit()
 
@@ -95,10 +115,11 @@ class Graph(nx.Graph):
     def update(self):
         # self.check_contracts_data_base()
         self.check_new_contracts()
+        self.check_data_contracts()
         self.collect_data_for_statistics_week()
 
     def check_new_contracts(self):
-        print(Country.countries)
+        # print(Country.countries)
         self.check_remove_invalid_by_date_contract()
         while len(Country.contracts) != 0:
             contract = Country.contracts[0]
@@ -107,35 +128,24 @@ class Graph(nx.Graph):
             self.add_weighted_edges_from([(contract[0], contract[1], weight)])
             del Country.contracts[0]
         self.checked_txt = True
-        print(Country.countries)
-        try:
-            with open("components/resume/graph.txt", "r") as input:
-                for line in input:
-                    parts = [part.strip() for part in line.split()]
+        # print(Country.countries)
 
-                    if len(parts) == 3:
-                        countryin = parts[0].replace("-", " ")
-                        number = float(parts[1])
-                        status = bool(parts[2])
-                    # print(countryin, number, status)
-                    for country in Country.countries:
-                    # print(country.name, countryin)
-                        if country.name == countryin:
-                            print(country)
-                        # self.add_weighted_edges_from([(contract[0], contract[1], weight)])
-                            country.end_year = number
-                            country.contracted = status
-                            self.add_weighted_edges_from([(country.moldova, country, 0)])
-        except:
-            print("Excepted:::")
-                    
+    def check_data_contracts(self):
+        if len(self.countries_init) != 0:
+            # print(self.countries_init)
+            for country in Country.countries:
+                if len(self.countries_init) != 0 and self.countries_init[0][0] == country.name:
+                    country.contracted = self.countries_init[0][1]
+                    country.end_year = self.countries_init[0][2]
+                    self.add_weighted_edges_from([(country.moldova, country, 0)])
+                    self.countries_init.pop(0)
 
     def income(self, contract):
         return Wine.naturality * contract.naturality_coef + Wine.advertisment * contract.advertisment_coef + Wine.taste * contract.taste_coef
 
     def check_remove_invalid_by_date_contract(self):
         for u, v in self.edges():
-            if v.end_year < Timer.get_time_in_years():
+            if v.end_year < Timer.get_initial_time_in_years():
                 # print(v.contracted)
                 v.contracted = False
                 self.remove_edge(u, v)
