@@ -17,17 +17,20 @@ pygame.init()
 class ObjectInit():
     @classmethod
     def _initialize(cls):
-        Wine.taste, Wine.naturality, Wine.advertisment=cls.winedatainit()
+        cls.winedatainit()
         Timer.start_time = cls.load_timer()
         Timer.current_time = Timer.start_time
     def winedatainit():
-        '''returns taste, naturality and advertisment'''
-        try:
-            with open("components/saved_game/winedata.txt", "r") as input:
-                lines = input.readlines()
-                return int(lines[2][:-1]), int(lines[1][:-1]), int(lines[0][:-1])
-        except:
-            return 0,0,0
+        with open("components/saved_game/winedata.csv", mode='r') as file:
+            csv_reader = csv.DictReader(file)
+            for row in csv_reader:
+                Wine.advertisment=int(row['advertisment'])
+                Wine.advertisment_index = int(row['advertisment_index'])
+                Wine.naturality=int(row['naturality'])
+                Wine.naturality_index = int(row['naturality_index'])
+                Wine.taste=int(row['taste'])
+                Wine.taste_index = int(row['taste_index'])
+                        # advertisment,advertisment_index,naturality,naturality_index,taste,taste_index
 
     @staticmethod
     def load_timer():
@@ -528,6 +531,7 @@ class Wine:
     trandmarks = []
 
     taste, naturality, advertisment = (0,0,0)
+    taste_index, naturality_index, advertisment_index = (0,0,0)
 
     def __init__(self, name, taste=0, naturality=0, advertisement=0):
         self.name = name
@@ -546,13 +550,13 @@ class Wine:
     def set_advertisement(self, advertisement):
         self.advertisment = advertisement
     
-    def return_taste(self, taste):
+    def return_taste(self):
         return self.taste
 
-    def return_naturality(self, naturality):
+    def return_naturality(self):
         return self.naturality
 
-    def return_advertisement(self, advertisement):
+    def return_advertisement(self):
         return self.advertisment
 
 class Woman:

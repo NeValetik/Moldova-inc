@@ -9,6 +9,49 @@ from logic import *
 pygame.init()
 pygame.mixer.init()
 
+class ScenesInit():
+    @staticmethod    
+    def buttons_init():
+        directory = "components/saved_game"
+        files = os.listdir(directory)
+        if len(files) != 0:
+            return [
+                Button('continue', (300, 270)),
+                Button('start', (300, 360)),
+                Button('settings', (300, 450)),
+                Button('exit', (300, 540)),
+            ]
+        else:
+            return [
+                Button('start', (300, 270)),
+                Button('settings', (300, 360)),
+                Button('exit', (300, 450)),
+            ]
+    @staticmethod    
+    def upgrade_buttons_init():
+            upgrade_buttons = [
+                Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('advertisment', (368, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (474, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (210, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (316, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (423, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (159, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+            ]
+            with open("components/saved_game/winedata.csv", mode='r') as file:
+                csv_reader = csv.DictReader(file)
+                for row in csv_reader:
+                    for button in upgrade_buttons:
+                        if row.get(button.name+"_index") is not None:
+                            if int(row[button.name+"_index"]) == -1:
+                                button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
+            return upgrade_buttons                    
+
 class GameState:
     main_menu = True
     play = False
@@ -45,14 +88,8 @@ class GameState:
         
         cls.mouse_button_was_pressed = pygame.mouse.get_pressed()[0]
 
-
 class MainMenu:
-    buttons = [
-        Button('continue', (300, 270)),
-        Button('start', (300, 360)),
-        Button('settings', (300, 450)),
-        Button('exit', (300, 540)),
-    ]
+    buttons = ScenesInit.buttons_init()
 
     background = pygame.transform.scale(pygame.image.load('assets/background/main-background.png'), (1280, 720))
     stripe = pygame.transform.scale(pygame.image.load('assets/background/stripe.png'), (400, 720))
@@ -160,7 +197,6 @@ class Pause:
                 elif button.name == 'exit':
                     exit_game()
 
-
 class Statistic:
     _one_plot = True  # to generate one plot per space button, not each frame
 
@@ -223,20 +259,7 @@ class UpgradeMenu:
         Button('bar', (1120, 609), image_path='assets/upgrade-elements/besi-button.png', dimension=None),
     ]   
 
-    upgrade_buttons = [
-        Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('advertisment', (368, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (474, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (210, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (316, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (423, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (159, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-    ]
+    upgrade_buttons = ScenesInit.upgrade_buttons_init()
 
     skills_icons = [
         ['assets/upgrade-elements/quality-skill.png', (316, 247.5)],
@@ -256,14 +279,11 @@ class UpgradeMenu:
     naturality_prices =     [10_000, 12_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000]
     taste_prices =          [5_000, 6_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000]
     advertisment_prices =   [2_000, 3_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 7_000]
-    naturality_index = 0
-    taste_index = 0
-    advertisment_index = 0
 
     skill_description = {
-        'naturality':   ['Add naturality +1', f'Cost: {naturality_prices[naturality_index]}'],
-        'taste':        ['Add taste +1', f'Cost: {taste_prices[taste_index]}'],
-        'advertisment': ['Add advertisment +1', f'Cost: {advertisment_prices[advertisment_index]}'],
+        'naturality':   ['Add naturality +1', f'Cost: {naturality_prices[Wine.naturality_index]}'],
+        'taste':        ['Add taste +1', f'Cost: {taste_prices[Wine.taste_index]}'],
+        'advertisment': ['Add advertisment +1', f'Cost: {advertisment_prices[Wine.advertisment_index]}'],
     }
 
     stats_bars = {
@@ -348,7 +368,7 @@ class UpgradeMenu:
         text_rect = text.get_rect()
         text_rect.center = (1046.50, 140)
         window.blit(text, text_rect)
-
+    
     @classmethod
     def check_collisions(cls , window):
         for button in cls.buttons:
@@ -374,37 +394,37 @@ class UpgradeMenu:
                         cls.pressed_2 = True
                         if pygame.mouse.get_pressed()[0]:
                             if button.name == 'naturality':
-                                if cls.naturality_index == -1:  # If it's full marked, skip interaction with this button
+                                if Wine.naturality_index == -1:  # If it's full marked, skip interaction with this button
                                     return
-                                if Graph.total_income >= cls.naturality_prices[cls.naturality_index]:
-                                    Graph.total_income -= cls.naturality_prices[cls.naturality_index]
-                                    cls.naturality_index += 1
+                                if Graph.total_income >= cls.naturality_prices[Wine.naturality_index]:
+                                    Graph.total_income -= cls.naturality_prices[Wine.naturality_index]
+                                    Wine.naturality_index += 1
                                     Wine.naturality += 1000
-                                    if cls.naturality_index == 10:
+                                    if Wine.naturality_index == 10:
                                         button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
-                                        cls.naturality_index = -1  # Mark full upgraded skill
+                                        Wine.naturality_index = -1  # Mark full upgraded skill
 
                             elif button.name == 'advertisment':
-                                if cls.advertisment_index == -1:  # If it's full marked, skip interaction with this button
+                                if Wine.advertisment_index == -1:  # If it's full marked, skip interaction with this button
                                     return
-                                if Graph.total_income >= cls.advertisment_prices[cls.advertisment_index]:
-                                    Graph.total_income -= cls.advertisment_prices[cls.advertisment_index]
-                                    cls.advertisment_index += 1
+                                if Graph.total_income >= cls.advertisment_prices[Wine.advertisment_index]:
+                                    Graph.total_income -= cls.advertisment_prices[Wine.advertisment_index]
+                                    Wine.advertisment_index += 1
                                     Wine.advertisment += 1000
-                                    if cls.advertisment_index == 10:
+                                    if Wine.advertisment_index == 10:
                                         button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
-                                        cls.advertisment_index = -1  # Mark full upgraded skill
+                                        Wine.advertisment_index = -1  # Mark full upgraded skill
 
                             elif button.name == 'taste':
-                                if cls.taste_index == -1:  # If it's full marked, skip interaction with this button
+                                if Wine.taste_index == -1:  # If it's full marked, skip interaction with this button
                                     return
-                                if Graph.total_income >= cls.taste_prices[cls.taste_index]:
-                                    Graph.total_income -= cls.taste_prices[cls.taste_index]
-                                    cls.taste_index += 1
+                                if Graph.total_income >= cls.taste_prices[Wine.taste_index]:
+                                    Graph.total_income -= cls.taste_prices[Wine.taste_index]
+                                    Wine.taste_index += 1
                                     Wine.taste += 1000
-                                    if cls.taste_index == 10:
+                                    if Wine.taste_index == 10:
                                         button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
-                                        cls.taste_index = -1  # Mark full upgraded skill
+                                        Wine.taste_index = -1  # Mark full upgraded skill
                 else:
                     cls.pressed_2 = False
                     Music.is_clicked = False
@@ -445,9 +465,9 @@ class UpgradeMenu:
     @classmethod
     def update_info_skills(cls):
         cls.skill_description = {
-        'naturality' : ['Add naturality +1', f'Cost: {cls.naturality_prices[cls.naturality_index]}'],
-        'taste' : ['Add taste +1', f'Cost: {cls.taste_prices[cls.taste_index]}'],
-        'advertisment' : ['Add advertisment +1', f'Cost: {cls.advertisment_prices[cls.advertisment_index]}'],
+        'naturality' : ['Add naturality +1', f'Cost: {cls.naturality_prices[Wine.naturality_index]}'],
+        'taste' : ['Add taste +1', f'Cost: {cls.taste_prices[Wine.taste_index]}'],
+        'advertisment' : ['Add advertisment +1', f'Cost: {cls.advertisment_prices[Wine.advertisment_index]}'],
     }
 
 class CountryStatistic:
@@ -625,7 +645,7 @@ class Map:
     ]
 
     stats_bars = [
-        ProgressBar(0, 100_000, 200, 30, (100, 10, 10), (255, 255, 255), (71, 600), getter=BarsGetters.get_world_progress),
+        ProgressBar(0, 1_000_000, 200, 30, (100, 10, 10), (255, 255, 255), (71, 600), getter=BarsGetters.get_world_progress),
     ]
 
     image = pygame.transform.scale(pygame.image.load('assets/background/oceans-4k.png'), (1280, 720))

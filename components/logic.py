@@ -24,14 +24,11 @@ def exit_game():
             input.write(str(int(line)))
             input.write("\n")
 
-    with open("components/saved_game/winedata.txt", "w") as input:
-        input.write(str(BarsGetters.get_wine_advertisment()))
-        input.write("\n")
-        input.write(str(BarsGetters.get_wine_naturality()))
-        input.write("\n")
-        input.write(str(BarsGetters.get_wine_taste()))
-        input.write("\n")
-
+    with open("components/saved_game/winedata.csv", "w") as input:
+        input.write("advertisment,advertisment_index,naturality,naturality_index,taste,taste_index\n")
+        input.write(str(BarsGetters.get_wine_advertisment())+","+str(Wine.advertisment_index)+","+str(BarsGetters.get_wine_naturality())+","+str(Wine.naturality_index)+","+str(BarsGetters.get_wine_taste())+","+str(Wine.taste_index)+"\n")
+        #advertisment,advertisment_index,naturality,naturality_index,taste,taste_index
+        #10000,-1,10000,-1,10000,-1
     with open("components/saved_game/graph.txt", "w") as input:
         for u, v in graph.edges():
             input.write(v.name.replace(" ", "-") + ' ' + str(v.end_year) + ' ' + str(v.contracted) + "\n")
@@ -89,7 +86,7 @@ class GraphInit():
             with open("components/saved_game/graph.txt", "r") as input:
                 for line in input:
                     parts = [part.strip() for part in line.split()]
-                    print(parts)
+                    # print(parts)
                     if len(parts) == 3:
                         countryin = parts[0].replace("-", " ")
                         number = float(parts[1])
