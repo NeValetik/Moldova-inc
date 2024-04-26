@@ -129,33 +129,49 @@ class ProgressBar:
 
 
 class Contract(pygame.sprite.Sprite): 
-    buttons = []
-    positions = []
-
+    contracts = []
 
 
     def __init__(self,position):
         super().__init__()
-        self.position = position
+        self.position = (170, 530)
+        self._position = position
         self._buttons = [
             Button("accept", (self.position[0]-40, self.position[1]),size=(70,30),font_size=16),
             Button("decline", (self.position[0]+40, self.position[1]),size=(70,30),font_size=16)
         ]
+
         self.start_year = Timer.get_initial_time_in_years()
         self.end_year = self.start_year+1
-        Contract.buttons.append(self._buttons[0])
-        Contract.positions.append((self.position[0]-40, self.position[1]))
-        Contract.buttons.append(self._buttons[1])
-        Contract.positions.append((self.position[0]+40, self.position[1]))
+
+        self.image = Contract.make_surface(size = (250,100),color=(120, 120, 120, 128))
+        
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.position[0],self.position[1]-30)
+
+        
+        Contract.contracts.append(self)
+
 
     @classmethod
     def display_contracts(cls, window, Map):
-        Button.display_buttons(cls, window)
-        Button.display_text_on_buttons(cls, window)
-        # window.blit(cls.image, cls.rect)
+        if len(cls.contracts)!= 0 :
+            window.blit(cls.contracts[-1].image, cls.contracts[-1].rect)
+            for button in cls.contracts[-1]._buttons:
+                window.blit(button.image, button.rect)
+                button.text_rect.center = button.rect.center
+                window.blit(button.text, button.text_rect)
+                
         # for iterator in range(len(cls.buttons)):  # The buttons are driving away anyway (will fix it later)
         #     cls.buttons[iterator].rect.center = (
         #     Map.rect.topleft[0] + Map.scale * cls.positions[iterator][0], Map.rect.topleft[1] + Map.scale * cls.positions[iterator][1])
+    
+    @classmethod
+    def make_surface(cls, size=(200, 80), color=(255, 255, 255, 128)):
+        box = pygame.Surface(size, pygame.SRCALPHA)
+        box.fill(color)
+        pygame.draw.rect(box, color, (0, 0, *size))
+        return box    
 
 
 class ToSellButton(pygame.sprite.Sprite):
@@ -432,6 +448,8 @@ class Country(pygame.sprite.Sprite):
             country.rect.center = (
                 Map.rect.topleft[0] + Map.scale * country.position[0], Map.rect.topleft[1] + Map.scale * country.position[1])
             window.blit(country.image, country.rect)
+    
+    
     @staticmethod
     def add_deal_duration(self,end_year):
         self.end_year = end_year
@@ -443,19 +461,15 @@ class Country(pygame.sprite.Sprite):
             return
         #checking only contracts
         for open_contract in cls.open_contracts:
-            for button in open_contract[0]._buttons:
+            for button in open_contract[0].contracts[-1]._buttons:
                 if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                     if button.name == "accept":
                         cls.add_deal_duration(open_contract[1][1],open_contract[0].end_year)
                         cls.contracts.append(open_contract[1])
-                        Plane(open_contract[0].position)
-                    for i in range(len(open_contract[0].buttons)):
-                        if open_contract[0].buttons[i] == open_contract[0]._buttons[0]:
-                            open_contract[0].buttons.pop(i+1)
-                            open_contract[0].buttons.pop(i)
-                            open_contract[0].positions.pop(i+1)
-                            open_contract[0].positions.pop(i)
-                            break   
+                        Plane(open_contract[0].contracts[-1]._position)
+                    if button.name == "decline":
+                        open_contract[1][1].contracted = False   
+                    open_contract[0].contracts.pop()
                     cls.pop_open_contract(open_contract)
                     return
                     

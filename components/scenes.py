@@ -262,19 +262,19 @@ class UpgradeMenu:
     ]   
 
     upgrade_buttons = [
-                Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('advertisment', (368, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (474, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (210, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (316, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (423, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (159, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-            ]
+        Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('advertisment', (368, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (474, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (210, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (316, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (423, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (159, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+    ]
 
     skills_icons = [
         ['assets/upgrade-elements/quality-skill.png', (316, 247.5)],
@@ -616,7 +616,7 @@ class Settings:
     buttons = [
         Button('back', (640, 600))
     ]
-
+    
     image_path = 'assets/background/pause-background.png'
     initial_image = pygame.image.load(image_path)
 

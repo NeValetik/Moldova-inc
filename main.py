@@ -16,8 +16,8 @@ window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 #------------------------------------------
 #UNCOMMENT THE CODE BELOW TO TURN ON MUSIC:
 #------------------------------------------
-
 # Music.initiate_background_music()
+
 pygame.display.set_caption("Moldova Inc")
 clock = pygame.time.Clock()
 
@@ -28,7 +28,7 @@ while True:
         if event.type == pygame.MOUSEWHEEL:
             Map.scroll = event.y
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+            if event.key == pygame.K_ESCAPE: 
                 if GameState.play:
                     GameState.play = False
                     GameState.pause = True
