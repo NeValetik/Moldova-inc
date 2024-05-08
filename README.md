@@ -16,4 +16,5 @@
 
 > [!TIP]
 > How to play:
-> Turn your head off and chill on the waves of wine ocean :wine_glass:
+
+Turn your head off and chill on the waves of wine ocean :wine_glass:
