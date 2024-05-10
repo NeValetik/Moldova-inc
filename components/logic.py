@@ -34,7 +34,7 @@ def exit_game():
             input.write(v.name.replace(" ", "-") + ' ' + str(v.end_year) + ' ' + str(v.contracted) + "\n")
     sys.exit()
 
-    
+
 class GraphInit:
     @classmethod
     def _initialize(cls):
@@ -42,6 +42,7 @@ class GraphInit:
         cls.countries_init()
         cls.xinit()
         cls.yinit()
+    
     def xinit():
         try:
             with open("components/saved_game/x.txt", "r") as input:
@@ -99,6 +100,10 @@ class GraphInit:
             Graph.countries_init = []
 
 
+class EndGame:
+    def init():
+        pass
+
 class Graph(nx.Graph):
     initiated = False
     total_income = 90_000
@@ -123,7 +128,7 @@ class Graph(nx.Graph):
         self.check_remove_invalid_by_date_contract()
         while len(Country.contracts) != 0:
             contract = Country.contracts[0]
-            weight = self.income(contract[1])
+            weight = income(contract[1])
             Graph.total_income += weight
             self.add_weighted_edges_from([(contract[0], contract[1], weight)])
             del Country.contracts[0]
@@ -140,8 +145,6 @@ class Graph(nx.Graph):
                     self.add_weighted_edges_from([(country.moldova, country, 0)])
                     self.countries_init.pop(0)
 
-    def income(self, contract):
-        return Wine.naturality * contract.naturality_coef + Wine.advertisment * contract.advertisment_coef + Wine.taste * contract.taste_coef
 
     def check_remove_invalid_by_date_contract(self):
         for u, v in self.edges():

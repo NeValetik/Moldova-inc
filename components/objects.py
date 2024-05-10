@@ -6,12 +6,17 @@ import numpy as np
 
 pygame.init()
 
+def income(contract):
+        return Wine.naturality * contract.naturality_coef + Wine.advertisment * contract.advertisment_coef + Wine.taste * contract.taste_coef
+
+
 class ObjectInit:
     @classmethod
     def _initialize(cls):
         cls.winedatainit()
         Timer.start_time = cls.load_timer()
         Timer.current_time = Timer.start_time
+
     def winedatainit():
         with open("components/saved_game/winedata.csv", mode='r') as file:
             csv_reader = csv.DictReader(file)
@@ -132,7 +137,7 @@ class Contract(pygame.sprite.Sprite):
     contracts = []
 
 
-    def __init__(self,position):
+    def __init__(self,position,country):
         super().__init__()
         self.position = (170, 530)
         self._position = position
@@ -140,6 +145,12 @@ class Contract(pygame.sprite.Sprite):
             Button("accept", (self.position[0]-40, self.position[1]),size=(70,30),font_size=16),
             Button("decline", (self.position[0]+40, self.position[1]),size=(70,30),font_size=16)
         ]
+
+        self.country_text = Contract.get_text_object(country.name,22)
+        self.country_text_rect = self.country_text.get_rect()
+
+        self.deal_text = Contract.get_text_object(str(income(country)),22)
+        self.deal_text_rect = self.deal_text.get_rect()
 
         self.start_year = Timer.get_initial_time_in_years()
         self.end_year = self.start_year+1
@@ -161,6 +172,7 @@ class Contract(pygame.sprite.Sprite):
                 window.blit(button.image, button.rect)
                 button.text_rect.center = button.rect.center
                 window.blit(button.text, button.text_rect)
+            cls.display_text_on_contracts(cls,window)    
                 
         # for iterator in range(len(cls.buttons)):  # The buttons are driving away anyway (will fix it later)
         #     cls.buttons[iterator].rect.center = (
@@ -171,7 +183,22 @@ class Contract(pygame.sprite.Sprite):
         box = pygame.Surface(size, pygame.SRCALPHA)
         box.fill(color)
         pygame.draw.rect(box, color, (0, 0, *size))
-        return box    
+        return box
+    
+    @classmethod
+    def display_text_on_contracts(cls, from_class, window):
+        if len(cls.contracts)!= 0:
+            from_class.contracts[-1].country_text_rect.center = (from_class.contracts[-1].rect.center[0],from_class.contracts[-1].rect.center[1]-35)
+            window.blit(from_class.contracts[-1].country_text, from_class.contracts[-1].country_text_rect)
+            
+            from_class.contracts[-1].deal_text_rect.center = (from_class.contracts[-1].rect.center[0],from_class.contracts[-1].rect.center[1]-5)
+            window.blit(from_class.contracts[-1].deal_text, from_class.contracts[-1].deal_text_rect)
+
+    @classmethod
+    def get_text_object(cls, message, font_size):
+        font = pygame.font.Font("assets/font/evil-empire.ttf", font_size)
+        text = font.render(message, True, (0, 0, 0))
+        return text    
 
 
 class ToSellButton(pygame.sprite.Sprite):
@@ -485,7 +512,7 @@ class Country(pygame.sprite.Sprite):
                     # Logistic stuff:
                     if to_sell_button.country != Country.moldova:  # Do not send plane from Moldova to Moldova
                         to_sell_button.country.start_time = Timer.get_initial_time_in_years() # Gives the time of the contract activation                       
-                        cls.open_contracts.append((Contract(to_sell_button.position),[Country.moldova, to_sell_button.country])) #
+                        cls.open_contracts.append((Contract(to_sell_button.position,to_sell_button.country),[Country.moldova, to_sell_button.country])) #
                         Country.moldova.sell_to.append(to_sell_button.country)
                         to_sell_button.country.buy_from.append(Country.moldova)
                         to_sell_button.country.contracted = True
