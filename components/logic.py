@@ -100,10 +100,6 @@ class GraphInit:
             Graph.countries_init = []
 
 
-class EndGame:
-    def init():
-        pass
-
 class Graph(nx.Graph):
     initiated = False
     total_income = 90_000

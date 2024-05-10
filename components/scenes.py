@@ -53,6 +53,7 @@ class ScenesInit:
                                     button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
             except:
                 pass
+
 class GameState:
     main_menu = True
     play = False
@@ -62,9 +63,27 @@ class GameState:
     country_statistic = False
     upgrade_menu = False
     bar = False
+    end_game = False
 
     mouse_button_was_pressed = None
     mouse_position = None
+
+    @classmethod
+    def __init__(cls,minimal_amount,maximal_amount):
+        cls.win_condition = maximal_amount
+        cls.lose_condtion = minimal_amount
+
+    @classmethod
+    def check_end_game(cls,window):
+        if BarsGetters.get_world_progress() >= cls.win_condition and EndGameWindow.initialized == False:
+            cls.play = False
+            EndGameWindow("Victory");
+            cls.end_game = True   
+        elif BarsGetters.get_world_progress() < cls.lose_condtion and EndGameWindow.initialized == False:
+            cls.play = False
+            EndGameWindow("Defeat");
+            cls.end_game = True   
+        
 
     @classmethod
     def update(cls, window):
@@ -83,8 +102,12 @@ class GameState:
             graph.update()
             Map.update(window)
             Timer.update(window)
-
+            cls.check_end_game(window)
             News.update(window)
+        
+        if GameState.end_game:
+            Map.update(window)
+            EndGameWindow.update(cls,window)
         if GameState.statistic:
             Statistic.update(window)
         if GameState.settings:
@@ -735,7 +758,8 @@ class Map:
     def update(cls, window):
         window.blit(cls.initial_background, cls.background_rect)
 
-        # Look like a mess because I avoided in this way double click/missclick of Button and Country
+        GameState(cls.stats_bars[0].start_value,cls.stats_bars[0].max_value)
+        # Looks like a mess because I avoided in this way double click/missclick of Button and Country
         Country.update(window, Map, GameState, CountryStatistic)
         Country.display_countries(window, Map)
         

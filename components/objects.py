@@ -682,4 +682,88 @@ class Timer:
     def update_time_difference(cls):
         cls.years_from_start = cls.current_time.year-cls.start_time.year
 
+
+class EndGameWindow(pygame.sprite.Sprite):
+    windows = []
+    initialized = False
+
+    def __init__(self,text):
+        super().__init__()
+        self.position = (1280//2, 720//2)
+        self._buttons = [
+            Button("accept", (self.position[0]-40, self.position[1]),size=(70,30),font_size=16),
+            Button("decline", (self.position[0]+40, self.position[1]),size=(70,30),font_size=16)
+        ]
+
+        self.end_text = Contract.get_text_object(text,40)
+        self.end_text_rect = self.end_text.get_rect()
+
+        self.image = Contract.make_surface(size = (500,250),color=(130, 40, 170, 128))
+        self.rect = self.image.get_rect()
+        self.rect.center = (self.position[0],self.position[1])
+        EndGameWindow.initialized = True
+        EndGameWindow.windows.append(self)
+
+    @classmethod
+    def update(cls, GameState, window):
+        cls.check_collisions(GameState)
+        cls.transparent_background(window)
+        cls.display_window(window)
+
+    @classmethod
+    def display_window(cls, window):
+        if len(cls.windows)!= 0 :
+            window.blit(cls.windows[-1].image, cls.windows[-1].rect)
+            cls.display_text_on_end_window(window)    
+            for button in cls.windows[-1]._buttons:
+                window.blit(button.image, button.rect)
+                button.text_rect.center = button.rect.center
+                window.blit(button.text, button.text_rect)
+        # for iterator in range(len(cls.buttons)):  # The buttons are driving away anyway (will fix it later)
+        #     cls.buttons[iterator].rect.center = (
+        #     Map.rect.topleft[0] + Map.scale * cls.positions[iterator][0], Map.rect.topleft[1] + Map.scale * cls.positions[iterator][1])
+    
+    @classmethod
+    def make_surface(cls, size=(200, 80), color=(255, 255, 255, 128)):
+        box = pygame.Surface(size, pygame.SRCALPHA)
+        box.fill(color)
+        pygame.draw.rect(box, color, (0, 0, *size))
+        return box
+    
+    @classmethod
+    def display_text_on_end_window(cls, window):
+        if len(cls.windows)!= 0:
+            cls.windows[-1].end_text_rect.center = (cls.windows[-1].rect.center[0],cls.windows[-1].rect.center[1]-40)
+            window.blit(cls.windows[-1].end_text, cls.windows[-1].end_text_rect)
+
+    @classmethod
+    def get_text_object(cls, message, font_size):
+        font = pygame.font.Font("assets/font/evil-empire.ttf", font_size)
+        text = font.render(message, True, (0, 0, 0))
+        return text
+    
+
+    @classmethod
+    def check_collisions(cls, GameState):
+        for window in cls.windows:
+            for button in window._buttons:
+                if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
+                    if button.name == "accept":
+                        cls.windows.pop()
+                        GameState.end_game = False
+                        GameState.play = True
+                    if button.name == "decline":
+                        cls.windows.pop()
+                        GameState.end_game = False
+                        GameState.play = True
+                    return
+    
+    
+    @classmethod
+    def transparent_background(cls, window):
+        background = pygame.Surface((1280, 720))
+        background.fill((255, 255, 255))
+        background.set_alpha(100)
+        window.blit(background, (0, 0))            
+
 pygame.quit()
