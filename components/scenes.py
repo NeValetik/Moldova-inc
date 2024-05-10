@@ -53,6 +53,7 @@ class ScenesInit:
                                     button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
             except:
                 pass
+
 class GameState:
     main_menu = True
     play = False
@@ -64,6 +65,21 @@ class GameState:
 
     mouse_button_was_pressed = None
     mouse_position = None
+
+    @classmethod
+    def __init__(cls,minimal_amount,maximal_amount):
+        cls.win_condition = maximal_amount
+        cls.lose_condtion = minimal_amount
+
+    @classmethod
+    def check_win(cls):
+        if BarsGetters.get_world_progress >= cls.win_condition:
+            print("WIN");
+            
+    @classmethod
+    def check_lose(cls):
+        if BarsGetters.get_world_progress < cls.win_condition:
+            print("LOSE");   
 
     @classmethod
     def update(cls, window):
@@ -80,6 +96,8 @@ class GameState:
             graph.update()
             Map.update(window)
             Timer.update(window)
+            cls.check_lose()
+            cls.check_win()
 
             News.update(window)
         if GameState.statistic:
@@ -701,7 +719,8 @@ class Map:
     def update(cls, window):
         window.blit(cls.initial_background, cls.background_rect)
 
-        # Look like a mess because I avoided in this way double click/missclick of Button and Country
+        GameState(cls.stats_bars[0].start_value,cls.stats_bars[0].max_value)
+        # Looks like a mess because I avoided in this way double click/missclick of Button and Country
         Country.update(window, Map, GameState, CountryStatistic)
         Country.display_countries(window, Map)
         
