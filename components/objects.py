@@ -6,12 +6,17 @@ import numpy as np
 
 pygame.init()
 
+def income(contract):
+        return Wine.naturality * contract.naturality_coef + Wine.advertisment * contract.advertisment_coef + Wine.taste * contract.taste_coef
+
+
 class ObjectInit:
     @classmethod
     def _initialize(cls):
         cls.winedatainit()
         Timer.start_time = cls.load_timer()
         Timer.current_time = Timer.start_time
+
     def winedatainit():
         with open("components/saved_game/winedata.csv", mode='r') as file:
             csv_reader = csv.DictReader(file)
@@ -144,8 +149,8 @@ class Contract(pygame.sprite.Sprite):
         self.country_text = Contract.get_text_object(country.name,22)
         self.country_text_rect = self.country_text.get_rect()
 
-        # self.deal_text = Contract.get_text_object()
-        # self.deal_text_rect = self.text.get_rect()
+        self.deal_text = Contract.get_text_object(str(income(country)),22)
+        self.deal_text_rect = self.deal_text.get_rect()
 
         self.start_year = Timer.get_initial_time_in_years()
         self.end_year = self.start_year+1
@@ -183,8 +188,11 @@ class Contract(pygame.sprite.Sprite):
     @classmethod
     def display_text_on_contracts(cls, from_class, window):
         if len(cls.contracts)!= 0:
-            from_class.contracts[-1].country_text_rect.center = from_class.contracts[-1].rect.center
+            from_class.contracts[-1].country_text_rect.center = (from_class.contracts[-1].rect.center[0],from_class.contracts[-1].rect.center[1]-35)
             window.blit(from_class.contracts[-1].country_text, from_class.contracts[-1].country_text_rect)
+            
+            from_class.contracts[-1].deal_text_rect.center = (from_class.contracts[-1].rect.center[0],from_class.contracts[-1].rect.center[1]-5)
+            window.blit(from_class.contracts[-1].deal_text, from_class.contracts[-1].deal_text_rect)
 
     @classmethod
     def get_text_object(cls, message, font_size):
