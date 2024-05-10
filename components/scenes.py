@@ -16,32 +16,32 @@ class ScenesInit:
         files = os.listdir(directory)
         if len(files) != 0:
             return [
-                Button('continue', (300, 270)),
-                Button('start', (300, 360)),
-                Button('settings', (300, 450)),
-                Button('exit', (300, 540)),
+                Button('continue', (300, 270), dimension=(230, 80)),
+                Button('start', (300, 360), dimension=(230, 80)),
+                Button('settings', (300, 450), dimension=(230, 80)),
+                Button('exit', (300, 540), dimension=(230, 80)),
             ]
         else:
             return [
-                Button('start', (300, 270)),
-                Button('settings', (300, 360)),
-                Button('exit', (300, 450)),
+                Button('start', (300, 270), dimension=(230, 80)),
+                Button('settings', (300, 360), dimension=(230, 80)),
+                Button('exit', (300, 450), dimension=(230, 80)),
             ]
     @staticmethod    
     def upgrade_buttons_init():
             UpgradeMenu.upgrade_buttons = [
-                Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('advertisment', (368, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (474, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (210, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (316, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (423, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (159, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-                Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+                Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png'),
+                Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png'),
+                Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png'),
+                Button('advertisment', (368, 340), image_path='assets/upgrade-elements/grey-circle.png'),
+                Button('Coming Soon', (474, 340), image_path='assets/upgrade-elements/grey-circle.png'),
+                Button('Coming Soon', (210, 432), image_path='assets/upgrade-elements/grey-circle.png'),
+                Button('Coming Soon', (316, 432), image_path='assets/upgrade-elements/grey-circle.png'),
+                Button('Coming Soon', (423, 432), image_path='assets/upgrade-elements/grey-circle.png'),
+                Button('Coming Soon', (159, 524), image_path='assets/upgrade-elements/grey-circle.png'),
+                Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png'),
+                Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png'),
+                Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png'),
             ]
             try:
                 with open("components/saved_game/winedata.csv", mode='r') as file:
@@ -61,6 +61,7 @@ class GameState:
     statistic = False
     country_statistic = False
     upgrade_menu = False
+    bar = False
 
     mouse_button_was_pressed = None
     mouse_position = None
@@ -76,6 +77,8 @@ class GameState:
             CountryStatistic.update(window)
         elif GameState.upgrade_menu:
             UpgradeMenu.update(window)
+        elif GameState.bar:
+            Bar.update(window)
         elif GameState.play:
             graph.update()
             Map.update(window)
@@ -156,9 +159,9 @@ class MainMenu:
     
 class Pause:
     buttons = [
-        Button('resume', (300, 270)),
-        Button('settings', (300, 360)),
-        Button('exit', (300, 450)),
+        Button('resume', (300, 270), dimension=(230, 80)),
+        Button('settings', (300, 360), dimension=(230, 80)),
+        Button('exit', (300, 450), dimension=(230, 80)),
     ]
 
     background = pygame.transform.scale(pygame.image.load('assets/background/pause-background.png'), (1280, 720))
@@ -203,7 +206,7 @@ class Statistic:
     _one_plot = True  # to generate one plot per space button, not each frame
 
     buttons = [
-        Button('Back', (640, 600))
+        Button('Back', (640, 600), dimension=(230, 80))
     ]
 
     image_path = 'assets/background/pause-background.png'
@@ -257,23 +260,23 @@ class Statistic:
 
 class UpgradeMenu:
     buttons = [
-        Button('map', (976, 609), image_path='assets/upgrade-elements/besi-button.png', dimension=None),
-        Button('bar', (1120, 609), image_path='assets/upgrade-elements/besi-button.png', dimension=None),
+        Button('map', (976, 609), image_path='assets/upgrade-elements/besi-button.png'),
+        Button('bar', (1120, 609), image_path='assets/upgrade-elements/besi-button.png'),
     ]   
 
     upgrade_buttons = [
-        Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('advertisment', (368, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (474, 340), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (210, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (316, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (423, 432), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (159, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
-        Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png', dimension=None),
+        Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png'),
+        Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png'),
+        Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png'),
+        Button('advertisment', (368, 340), image_path='assets/upgrade-elements/grey-circle.png'),
+        Button('Coming Soon', (474, 340), image_path='assets/upgrade-elements/grey-circle.png'),
+        Button('Coming Soon', (210, 432), image_path='assets/upgrade-elements/grey-circle.png'),
+        Button('Coming Soon', (316, 432), image_path='assets/upgrade-elements/grey-circle.png'),
+        Button('Coming Soon', (423, 432), image_path='assets/upgrade-elements/grey-circle.png'),
+        Button('Coming Soon', (159, 524), image_path='assets/upgrade-elements/grey-circle.png'),
+        Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png'),
+        Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png'),
+        Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png'),
     ]
 
     skills_icons = [
@@ -325,9 +328,7 @@ class UpgradeMenu:
         cls.display_grape_bubbles(window)
         cls.display_icon_skills(window)
         cls.display_info_panel(window)
-        cls.display_title(window)
         cls.display_buttons(window)
-        cls.display_stats_bars(window)
         cls.check_collisions(window)
 
     @classmethod
@@ -365,11 +366,10 @@ class UpgradeMenu:
     
     @classmethod
     def display_stats_bars(cls, window):
-        if cls.focus != None:
-            try:
-                cls.stats_bars[cls.focus.name].update(window)
-            except:
-                pass
+        try:
+            cls.stats_bars[cls.focus.name].update(window)
+        except:
+            pass
     
     @classmethod
     def display_title(cls, window):
@@ -395,14 +395,20 @@ class UpgradeMenu:
                         if button.name == 'map':
                             GameState.upgrade_menu = False
                             GameState.play = True
+                        elif button.name == 'bar':
+                            GameState.upgrade_menu = False
+                            GameState.bar = True
                 else:
                     cls.pressed_1 = False
                     Music.is_clicked = False
         
         for button in cls.upgrade_buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
-                cls.display_info_about_skill(window, button)
                 cls.focus = button
+                cls.display_info_about_skill(window, button)
+                cls.display_title(window)
+                cls.display_stats_bars(window)
+
                 if pygame.mouse.get_pressed()[0]:
                     Music.play_click_sound()
                     if not cls.pressed_2:
@@ -463,17 +469,6 @@ class UpgradeMenu:
         second_text_rect = first_text_surface.get_rect()       
         second_text_rect.topleft = (900, 250)
 
-        # rect = pygame.Rect(830, 100, 270, 450)  # info panel (830, 100) 270x450
-
-        # # Set the opacity of the rectangle to 0 (completely transparent)
-        # rect_surface = pygame.Surface((rect.width, rect.height), pygame.SRCALPHA)
-        # rect_surface.fill((255, 255, 255, 0))
-
-        # pygame.draw.rect(rect_surface, (0, 0, 0), rect, 2)
-        # window.blit(rect_surface, rect)
-
-        # first_text_rect.clamp_ip(rect)
-        # second_text_rect.clamp_ip(rect)
         window.blit(first_text_surface, first_text_rect)
         window.blit(second_text_surface, second_text_rect)
 
@@ -487,7 +482,7 @@ class UpgradeMenu:
 
 class CountryStatistic:
     buttons = [
-        Button('back', (1046, 609), image_path='assets/stuff/button.png', dimension=None),
+        Button('back', (1046, 609), image_path='assets/stuff/button.png'),
     ]
 
     focus_country = None
@@ -655,8 +650,8 @@ class Settings:
                     
 class Map:
     buttons = [
-        Button('upgrade_menu', (1100, 670), dimension=None, image_path='assets/stuff/menu-button.png'),
-        Button('statistics', (170, 670), dimension=None, image_path='assets/stuff/menu-button.png'),
+        Button('upgrade_menu', (1100, 670), image_path='assets/stuff/menu-button.png'),
+        Button('statistics', (170, 670), image_path='assets/stuff/menu-button.png'),
     ]
 
     stats_bars = [
@@ -863,5 +858,117 @@ class Music:
         if not cls.is_clicked:
             cls.click_sound.play()
             cls.is_clicked = True        
+
+class Bar:
+    buttons = [
+        Button('map', (976, 609), image_path='assets/upgrade-elements/besi-button.png'),
+        Button('upgrade', (1120, 609), image_path='assets/upgrade-elements/besi-button.png'),
+    ]   
+
+    # Static elements will not collide with anything
+    static_elements = [
+        Button('assets/upgrade-wine/rect.png', (316, 249), image_path='assets/upgrade-wine/rect.png'),
+        Button('assets/upgrade-wine/rect.png', (316, 249), image_path='assets/upgrade-wine/table.png'),
+
+        Button('assets/upgrade-wine/rect.png', (316, 249), image_path='assets/upgrade-wine/small-red-wine.png'),
+        Button('assets/upgrade-wine/rect.png', (316, 249), image_path='assets/upgrade-wine/small-pink-wine.png'),
+        Button('assets/upgrade-wine/rect.png', (316, 249), image_path='assets/upgrade-wine/small-white-wine.png'),
+        Button('assets/upgrade-wine/rect.png', (316, 249), image_path='assets/upgrade-wine/small-sparkling-wine.png'),
+    ]
+
+    # Elements that will (check collision and) change 'big' wine 
+    dynamic_elements = [
+        Button('tag-1', (316, 249), image_path='assets/upgrade-wine/tag.png'),
+        Button('tag-2', (316, 249), image_path='assets/upgrade-wine/tag.png'),
+        Button('tag-3', (316, 249), image_path='assets/upgrade-wine/tag.png'),
+        Button('tag-4', (316, 249), image_path='assets/upgrade-wine/tag.png'),
+
+        Button('support-rect-1', (316, 249), image_path='assets/upgrade-wine/support-rect.png'),
+        Button('support-rect-2', (316, 249), image_path='assets/upgrade-wine/support-rect.png'),
+        Button('support-rect-3', (316, 249), image_path='assets/upgrade-wine/support-rect.png'),
+        Button('support-rect-4', (316, 249), image_path='assets/upgrade-wine/support-rect.png'),
+    ]
+
+    image = pygame.image.load('assets/upgrade-wine/background.png')
+    rect = image.get_rect()
+
+    pressed_1 = True
+    pressed_2 = False
+    focus =     None
+
+    @classmethod
+    def update(cls, window):
+        cls.display_background(window)
+        cls.display_static_and_dynamic_elements(window)
+        cls.display_buttons(window)
+        cls.check_collisions(window)
+
+    @classmethod
+    def display_background(cls, window):
+        window.blit(cls.image, cls.rect)
+
+    @classmethod
+    def display_static_and_dynamic_elements(cls, window):
+        for button in cls.static_elements:
+            window.blit(button.image, button.rect)
+        for button in cls.dynamic_elements:
+            window.blit(button.image, button.rect)
+
+    @classmethod
+    def display_buttons(cls, window):
+        Button.display_buttons(cls, window)
+        Button.display_text_on_buttons(cls, window)
+
+    
+    @classmethod
+    def display_title(cls, window):
+        if cls.focus == None:
+            text = ' '
+        else:
+            text = cls.focus.name
+
+        font = pygame.font.Font('assets/font/lexend.ttf', 36)
+        text = font.render(text, True, (0, 0, 0))
+        text_rect = text.get_rect()
+        text_rect.center = (1046.50, 140)
+        window.blit(text, text_rect)
+    
+    @classmethod
+    def check_collisions(cls , window):
+        for button in cls.buttons:
+            if button.rect.collidepoint(pygame.mouse.get_pos()):
+                if not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
+                    Music.play_click_sound()
+                    if not cls.pressed_1:
+                        cls.pressed_1 = True
+                        if button.name == 'map':
+                            GameState.bar = False
+                            GameState.play = True
+                        elif button.name == 'upgrade':
+                            GameState.bar = False
+                            GameState.upgrade_menu = True
+                else:
+                    cls.pressed_1 = False
+                    Music.is_clicked = False
+
+        for button in cls.dynamic_elements:
+            if button.rect.collidepoint(pygame.mouse.get_pos()):
+                cls.focus = button
+                cls.display_title(window)
+
+                # Displaying Big Glass of Wine
+                if cls.focus.name == 'tag-1' or cls.focus.name == 'support-rect-1':
+                    big_wine = pygame.image.load('assets/upgrade-wine/big-red-wine.png')
+                elif cls.focus.name == 'tag-2' or cls.focus.name == 'support-rect-2':
+                    big_wine = pygame.image.load('assets/upgrade-wine/big-sparkling-wine.png')
+                elif cls.focus.name == 'tag-3' or cls.focus.name == 'support-rect-3':
+                    big_wine = pygame.image.load('assets/upgrade-wine/big-pink-wine.png')
+                elif cls.focus.name == 'tag-4' or cls.focus.name == 'support-rect-4':
+                    big_wine = pygame.image.load('assets/upgrade-wine/big-white-wine.png')
+                else:
+                    return
+                big_wine_rect = big_wine.get_rect()
+                big_wine_rect.center = (500, 500)
+                window.blit(big_wine, big_wine_rect)
 
 pygame.quit()

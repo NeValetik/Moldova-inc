@@ -1,3 +1,0 @@
-Central-Africa 1.057494866529774 True
-Central-Europe 1.0766598220396988 True
-West-Africa 1.0958247775496235 True

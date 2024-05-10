@@ -43,7 +43,7 @@ class Button(pygame.sprite.Sprite):
     frame = pygame.transform.scale(pygame.image.load("assets/stuff/button-frame.png"), (230, 80))
     frame_rect = frame.get_rect()
 
-    def __init__(self, name, position, image_path=None, dimension=(230, 80), size = (200, 80), font_size=30):
+    def __init__(self, name, position, image_path=None, dimension=None, size = (200, 80), font_size=30):
         super().__init__()
         self.name = name
 
@@ -116,7 +116,7 @@ class ProgressBar:
         progress_rect = pygame.Rect(bar_x, bar_y, progress_width, self.bar_height)
         pygame.draw.rect(window, (*self.bar_color, 128), progress_rect, border_radius=border_radius)
 
-        font = pygame.font.Font("assets/font/Lexend.ttf", 24)
+        font = pygame.font.Font("assets/font/lexend.ttf", 24)
         percent_text = f"{int(self.current_value)}"
         text = font.render(percent_text, True, (0, 0, 0))
         text_rect = text.get_rect()
@@ -627,7 +627,7 @@ class Timer:
         border_rect = pygame.Rect(1130, 20, 100, 20)
         pygame.draw.rect(window, (255, 255, 255), border_rect, border_radius=40)
 
-        font = pygame.font.Font("assets/font/Lexend.ttf", 15)
+        font = pygame.font.Font("assets/font/lexend.ttf", 15)
         text = font.render(time, True, (0, 0, 0))
         text_rect = text.get_rect()
         text_rect.center = (1180, 30)
