@@ -42,7 +42,8 @@ class GraphInit:
         cls.countries_init()
         cls.xinit()
         cls.yinit()
-    def xinit(self):
+    
+    def xinit():
         try:
             with open("components/saved_game/x.txt", "r") as input:
                 x = []
@@ -56,7 +57,7 @@ class GraphInit:
             Graph.x = []
 
 
-    def yinit(self):
+    def yinit():
         try:
             with open("components/saved_game/y.txt", "r") as input:
                 x = []
@@ -71,7 +72,7 @@ class GraphInit:
             Graph.y = []
 
 
-    def total_income_init(self):
+    def total_income_init():
         try:
             with open("components/saved_game/y.txt", "r") as input:
                 Graph.total_income = int(input.readlines()[-1][:-1])
@@ -79,7 +80,7 @@ class GraphInit:
             Graph.total_income = 90_000
 
 
-    def countries_init(self):
+    def countries_init():
         try:
             print("Inside countryis init")
             countries = []

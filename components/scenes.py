@@ -14,7 +14,7 @@ class ScenesInit:
     def buttons_init():
         directory = "components/saved_game"
         files = os.listdir(directory)
-        if len(files) != 0:
+        if len(files) > 1:
             return [
                 Button('continue', (300, 270)),
                 Button('start', (300, 360)),
