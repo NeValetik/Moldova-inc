@@ -931,26 +931,26 @@ class Bar:
 
     # Static elements will not collide with anything
     static_elements = [
-        Button('assets/upgrade-wine/rect.png', (316, 249), image_path='assets/upgrade-wine/rect.png'),
-        Button('assets/upgrade-wine/rect.png', (316, 249), image_path='assets/upgrade-wine/table.png'),
+        Button('assets/upgrade-wine/rect.png', (1046, 357), image_path='assets/upgrade-wine/rect.png'),
+        Button('assets/upgrade-wine/rect.png', (1046, 583.5), image_path='assets/upgrade-wine/table.png'),
 
-        Button('assets/upgrade-wine/rect.png', (316, 249), image_path='assets/upgrade-wine/small-red-wine.png'),
-        Button('assets/upgrade-wine/rect.png', (316, 249), image_path='assets/upgrade-wine/small-pink-wine.png'),
-        Button('assets/upgrade-wine/rect.png', (316, 249), image_path='assets/upgrade-wine/small-white-wine.png'),
-        Button('assets/upgrade-wine/rect.png', (316, 249), image_path='assets/upgrade-wine/small-sparkling-wine.png'),
+        Button('assets/upgrade-wine/rect.png', (204.00, 263.5), image_path='assets/upgrade-wine/small-white-wine.png'),
+        Button('assets/upgrade-wine/rect.png', (204, 500.5), image_path='assets/upgrade-wine/small-red-wine.png'),
+        Button('assets/upgrade-wine/rect.png', (565.00,263.5), image_path='assets/upgrade-wine/small-pink-wine.png'),
+        Button('assets/upgrade-wine/rect.png', (565, 500.5), image_path='assets/upgrade-wine/small-sparkling-wine.png'),
     ]
 
     # Elements that will (check collision and) change 'big' wine 
     dynamic_elements = [
-        Button('tag-1', (316, 249), image_path='assets/upgrade-wine/tag.png'),
-        Button('tag-2', (316, 249), image_path='assets/upgrade-wine/tag.png'),
-        Button('tag-3', (316, 249), image_path='assets/upgrade-wine/tag.png'),
-        Button('tag-4', (316, 249), image_path='assets/upgrade-wine/tag.png'),
+        Button('support-rect-1', (213, 264), image_path='assets/upgrade-wine/support-rect.png'),
+        Button('support-rect-2', (568, 264), image_path='assets/upgrade-wine/support-rect.png'),
+        Button('support-rect-3', ( 213, 501), image_path='assets/upgrade-wine/support-rect.png'),
+        Button('support-rect-4', (568, 501), image_path='assets/upgrade-wine/support-rect.png'),
 
-        Button('support-rect-1', (316, 249), image_path='assets/upgrade-wine/support-rect.png'),
-        Button('support-rect-2', (316, 249), image_path='assets/upgrade-wine/support-rect.png'),
-        Button('support-rect-3', (316, 249), image_path='assets/upgrade-wine/support-rect.png'),
-        Button('support-rect-4', (316, 249), image_path='assets/upgrade-wine/support-rect.png'),
+        Button('tag-1', (320.5, 261.5), image_path='assets/upgrade-wine/tag.png'),
+        Button('tag-2', (684.5, 261.5), image_path='assets/upgrade-wine/tag.png'),
+        Button('tag-3', (320.5, 498.5), image_path='assets/upgrade-wine/tag.png'),
+        Button('tag-4', (684.5, 498.5), image_path='assets/upgrade-wine/tag.png'),
     ]
 
     image = pygame.image.load('assets/upgrade-wine/background.png')
@@ -973,9 +973,9 @@ class Bar:
 
     @classmethod
     def display_static_and_dynamic_elements(cls, window):
-        for button in cls.static_elements:
-            window.blit(button.image, button.rect)
         for button in cls.dynamic_elements:
+            window.blit(button.image, button.rect)
+        for button in cls.static_elements:
             window.blit(button.image, button.rect)
 
     @classmethod
@@ -1032,7 +1032,7 @@ class Bar:
                 else:
                     return
                 big_wine_rect = big_wine.get_rect()
-                big_wine_rect.center = (500, 500)
+                big_wine_rect.center = (1041.5, 396)
                 window.blit(big_wine, big_wine_rect)
 
 pygame.quit()
