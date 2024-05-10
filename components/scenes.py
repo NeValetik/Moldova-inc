@@ -74,12 +74,12 @@ class GameState:
 
     @classmethod
     def check_win(cls):
-        if BarsGetters.get_world_progress >= cls.win_condition:
+        if BarsGetters.get_world_progress() >= cls.win_condition:
             print("WIN");
-            
+
     @classmethod
     def check_lose(cls):
-        if BarsGetters.get_world_progress < cls.win_condition:
+        if BarsGetters.get_world_progress() < cls.lose_condtion:
             print("LOSE");   
 
     @classmethod
