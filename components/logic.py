@@ -34,7 +34,7 @@ def exit_game():
             input.write(v.name.replace(" ", "-") + ' ' + str(v.end_year) + ' ' + str(v.contracted) + "\n")
     sys.exit()
 
-    
+
 class GraphInit:
     @classmethod
     def _initialize(cls):
@@ -42,7 +42,7 @@ class GraphInit:
         cls.countries_init()
         cls.xinit()
         cls.yinit()
-    def xinit():
+    def xinit(self):
         try:
             with open("components/saved_game/x.txt", "r") as input:
                 x = []
@@ -56,7 +56,7 @@ class GraphInit:
             Graph.x = []
 
 
-    def yinit():
+    def yinit(self):
         try:
             with open("components/saved_game/y.txt", "r") as input:
                 x = []
@@ -71,7 +71,7 @@ class GraphInit:
             Graph.y = []
 
 
-    def total_income_init():
+    def total_income_init(self):
         try:
             with open("components/saved_game/y.txt", "r") as input:
                 Graph.total_income = int(input.readlines()[-1][:-1])
@@ -79,7 +79,7 @@ class GraphInit:
             Graph.total_income = 90_000
 
 
-    def countries_init():
+    def countries_init(self):
         try:
             print("Inside countryis init")
             countries = []
@@ -98,6 +98,10 @@ class GraphInit:
             print("This except")
             Graph.countries_init = []
 
+
+class EndGame:
+    def init():
+        pass
 
 class Graph(nx.Graph):
     initiated = False
