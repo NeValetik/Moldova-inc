@@ -908,7 +908,7 @@ class News:
 class Music:
     click_sound = pygame.mixer.Sound('assets/sound/click-menu.ogg')
     is_clicked = False
-    click_sound_is_allowed = True
+    click_sound_is_allowed = False
 
     @classmethod
     def initiate_background_music(cls):
