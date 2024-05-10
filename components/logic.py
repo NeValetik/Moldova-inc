@@ -106,10 +106,11 @@ class Graph(nx.Graph):
     countries_init = []
     x = []
     y = []
+    taxes_payed = 0 #holds the year from the begining for which the taxes was payed including the years before
+    taxes_sum = 1000
 
     def __init__(self):
         super().__init__()
-
         for country in Country.countries:
             self.add_node(country.name)
 
@@ -118,6 +119,7 @@ class Graph(nx.Graph):
         self.check_new_contracts()
         self.check_data_contracts()
         self.collect_data_for_statistics_week()
+        self.count_the_taxes()
 
     def check_new_contracts(self):
         # print(Country.countries)
@@ -168,6 +170,10 @@ class Graph(nx.Graph):
             self.y.pop(0)
             self.y.append(self.total_income)
 
+    def count_the_taxes(self):
+        if Graph.taxes_payed != int(Timer.get_time_in_years()):
+            Graph.taxes_payed = int(Timer.get_time_in_years())
+            Graph.total_income -= Graph.taxes_sum*Graph.taxes_payed
 
 graph = Graph()
 
