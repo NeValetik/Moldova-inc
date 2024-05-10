@@ -611,6 +611,10 @@ class Settings:
     buttons = [
         Button('back', (640, 600))
     ]
+
+    music_state = Button('off', (720, 280), size=(60, 49))
+    sound_effect_state = Button('off', (720, 330), size=(60, 49))
+
     
     image_path = 'assets/background/pause-background.png'
     initial_image = pygame.image.load(image_path)
@@ -623,6 +627,7 @@ class Settings:
     @classmethod
     def update(cls, window):
         cls.display_background(window)
+        cls.dislplay_text(window)
         cls.display_buttons(window)
         cls.check_collisions()
 
@@ -630,6 +635,23 @@ class Settings:
     def display_background(cls, window):
         window.fill((0, 0, 0))
         window.blit(cls.background, cls.background.get_rect())
+
+    @classmethod
+    def dislplay_text(cls, window):
+        font = pygame.font.Font('assets/font/lexend.ttf', 48)
+        text = 'Music is ' + cls.music_state.name
+        text_surface = font.render(text, True, (255, 255, 255))
+        text_rect = text_surface.get_rect()
+        text_rect = (500, 250)
+        window.blit(text_surface, text_rect)
+
+        font = pygame.font.Font('assets/font/lexend.ttf', 48)
+        text = 'Sound effect is ' + cls.sound_effect_state.name
+        text_surface = font.render(text, True, (255, 255, 255))
+        text_rect = text_surface.get_rect()
+        text_rect = (340, 300)
+
+        window.blit(text_surface, text_rect)
 
     @classmethod
     def display_buttons(cls, window):
@@ -647,6 +669,23 @@ class Settings:
                         GameState.main_menu = True
                     elif Settings.back_is == 'pause':
                         GameState.pause = True
+        if cls.music_state.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
+                Music.play_click_sound()
+                if cls.music_state.name == 'on':
+                    pygame.mixer.music.set_volume(0)
+                    cls.music_state.name = 'off'
+                elif cls.music_state.name == 'off':
+                    pygame.mixer.music.set_volume(0.5)
+                    cls.music_state.name = 'on'
+        elif cls.sound_effect_state.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
+                Music.play_click_sound()
+                if cls.sound_effect_state.name == 'on':
+                    cls.sound_effect_state.name = 'off'
+                    Music.click_sound_is_allowed = False
+                elif cls.sound_effect_state.name == 'off':
+                    Music.click_sound_is_allowed = True
+                    cls.sound_effect_state.name = 'on'
+                    
                     
 class Map:
     buttons = [
@@ -845,17 +884,18 @@ class News:
 class Music:
     click_sound = pygame.mixer.Sound('assets/sound/click-menu.ogg')
     is_clicked = False
+    click_sound_is_allowed = True
 
     @classmethod
     def initiate_background_music(cls):
         pygame.mixer.init()
         pygame.mixer.music.load('assets/sound/theme.ogg')
         pygame.mixer.music.play(loops=-1)
-        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.set_volume(0)
 
     @classmethod
     def play_click_sound(cls):
-        if not cls.is_clicked:
+        if not cls.is_clicked and cls.click_sound_is_allowed:
             cls.click_sound.play()
             cls.is_clicked = True        
 
