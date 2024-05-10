@@ -863,7 +863,7 @@ class Map:
                         elif button.name == 'statistics':
                             GameState.play = False
                             GameState.statistic = True
-                        return 'changed'
+                        return 'changed' 
                 else:
                     cls.pressed_icon = False
                     Music.is_clicked = False
