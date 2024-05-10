@@ -63,6 +63,7 @@ class GameState:
     country_statistic = False
     upgrade_menu = False
     bar = False
+    end_game = False
 
     mouse_button_was_pressed = None
     mouse_position = None
@@ -73,14 +74,16 @@ class GameState:
         cls.lose_condtion = minimal_amount
 
     @classmethod
-    def check_win(cls):
-        if BarsGetters.get_world_progress() >= cls.win_condition:
-            print("WIN");
-
-    @classmethod
-    def check_lose(cls):
-        if BarsGetters.get_world_progress() < cls.lose_condtion:
-            print("LOSE");   
+    def check_end_game(cls,window):
+        if BarsGetters.get_world_progress() >= cls.win_condition and EndGameWindow.initialized == False:
+            cls.play = False
+            EndGameWindow("Victory");
+            cls.end_game = True   
+        elif BarsGetters.get_world_progress() < cls.lose_condtion and EndGameWindow.initialized == False:
+            cls.play = False
+            EndGameWindow("Defeat");
+            cls.end_game = True   
+        
 
     @classmethod
     def update(cls, window):
@@ -99,10 +102,12 @@ class GameState:
             graph.update()
             Map.update(window)
             Timer.update(window)
-            cls.check_lose()
-            cls.check_win()
-
+            cls.check_end_game(window)
             News.update(window)
+        
+        if GameState.end_game:
+            Map.update(window)
+            EndGameWindow.update(cls,window)
         if GameState.statistic:
             Statistic.update(window)
         if GameState.settings:
