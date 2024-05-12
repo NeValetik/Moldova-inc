@@ -477,20 +477,25 @@ class Country(pygame.sprite.Sprite):
             # Changing the coordinates of the country
             country.rect.center = (
                 Map.rect.topleft[0] + Map.scale * country.position[0], Map.rect.topleft[1] + Map.scale * country.position[1])
-            window.blit(country.image, country.rect)
 
         for country in Country.countries:
             if country.contracted:
+
+                image_copy = country.image.copy()
+
                 # Get the array representation of the country image
-                pixels = pygame.surfarray.pixels3d(country.image)
+                pixels = pygame.surfarray.pixels3d(image_copy)
 
                 # Set all non-transparent pixels to green
                 pixels[:, :, 0] = 53  # Set red channel to
                 pixels[:, :, 1] = 12  # Set green channel
                 pixels[:, :, 2] = 37  # Set blue channel
 
-                # Update the surface with the modified pixel data
                 del pixels
+                window.blit(image_copy, country.rect)
+            else:
+                window.blit(country.image, country.rect)
+
 
     @staticmethod
     def add_deal_duration(self,end_year):
