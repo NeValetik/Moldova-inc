@@ -440,12 +440,14 @@ class Country(pygame.sprite.Sprite):
         self.to_sell_button = ToSellButton(self)
         self.old_map_scale = 1
 
-        #Here is read from database base the initial data for each country which states the effect of each characteristic on the income
+        # Here is read from database base the initial data for each country which states the effect of each
+        # characteristic on the income
         self.naturality_coef = naturality
         self.advertisment_coef = advertisment
         self.taste_coef = taste
         
-        #Here is read from database base the initial data for each country which states the needed amount of progress to make the contract
+        # Here is read from database base the initial data for each country which states the needed amount of
+        # progress to make the contract
         self.contract_condition_naturality = contract_condition_naturality
         self.contract_condition_advertisment = contract_condition_advertisment
         self.contract_condition_taste = contract_condition_taste
@@ -476,8 +478,20 @@ class Country(pygame.sprite.Sprite):
             country.rect.center = (
                 Map.rect.topleft[0] + Map.scale * country.position[0], Map.rect.topleft[1] + Map.scale * country.position[1])
             window.blit(country.image, country.rect)
-    
-    
+
+        for country in Country.countries:
+            if country.contracted:
+                # Get the array representation of the country image
+                pixels = pygame.surfarray.pixels3d(country.image)
+
+                # Set all non-transparent pixels to green
+                pixels[:, :, 0] = 53  # Set red channel to
+                pixels[:, :, 1] = 12  # Set green channel
+                pixels[:, :, 2] = 37  # Set blue channel
+
+                # Update the surface with the modified pixel data
+                del pixels
+
     @staticmethod
     def add_deal_duration(self,end_year):
         self.end_year = end_year
