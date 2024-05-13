@@ -253,7 +253,7 @@ class ToSellButton(pygame.sprite.Sprite):
                 button.is_available = True
 
 
-class Tranport:
+class Transport:
     @classmethod
     def update(cls, window, Map, graph):
         Plane.update(window, Map, graph)
@@ -495,7 +495,6 @@ class Country(pygame.sprite.Sprite):
                 window.blit(image_copy, country.rect)
             else:
                 window.blit(country.image, country.rect)
-
 
     @staticmethod
     def add_deal_duration(self,end_year):

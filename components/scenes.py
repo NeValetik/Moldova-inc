@@ -767,7 +767,7 @@ class Map:
 
         ToSellButton.display_buttons(window, Map)
         Map.display_buttons(window)
-        Tranport.update(window, Map, graph)
+        Transport.update(window, Map, graph)
 
         if Map.personal_update(window) != 'changed':  # Checking the Country collision only if map Button were not pressed
             Country.check_collisions(Map, GameState, CountryStatistic)
