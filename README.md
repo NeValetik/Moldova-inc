@@ -1,4 +1,4 @@
-# Moldova Inc. :wine_glass:
+# **Moldova Inc**. - real time strategic game
 
 > [!NOTE]
 > PBL project developed by software engineering students of Technical University of Moldova.
