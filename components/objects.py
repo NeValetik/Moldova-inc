@@ -788,7 +788,7 @@ class EndGameWindow(pygame.sprite.Sprite):
         window.blit(background, (0, 0))            
 
 
-class News:
+class NewsItem:
     buttons = [
         Button('okay', (600, 750))
     ]
@@ -801,7 +801,7 @@ class News:
     stored_notifications = []
     current_notification = None
 
-
+    
     one_time_activated = False
 
     def __init__(self,id,event,date,news,naturality_bonus,taste_bonus,advertisment_bonus):
@@ -813,22 +813,30 @@ class News:
         self.taste_bonus = taste_bonus
         self.advertisment_bonus = advertisment_bonus
 
+        self.image = NewsItem.make_surface(size = (420,45))
+        self.rect = self.image.get_rect()
+        self.rect.center = (640,670)
+
+        self.text = Button.get_text_object(news,10)
+        self.text_rect = self.text.get_rect()
+        self.text_rect.center = self.rect.center
+
     @classmethod
     def update(cls, window):
-        cls.check_data()
-        cls.display_notification()
-        cls.store_notification()
+        # cls.check_data()
         cls.one_time_activation()
+        cls.display_notification(window)
+        # cls.store_notification()
 
 
     @staticmethod
     def one_time_activation():
-        if not News.one_time_activated:
+        if not NewsItem.one_time_activated:
             with open("components/news_data/news.csv", "r") as file:
                 csv_reader = csv.DictReader(file)
                 for row in csv_reader:
                     if row["event"]== "None":
-                        News.none_notification.append(News(int(row["id"]),
+                        NewsItem.none_notification.append(NewsItem(int(row["id"]),
                                                         row["event"],
                                                         row["date"],
                                                         row["news"],
@@ -836,7 +844,7 @@ class News:
                                                         int(row["taste_bonus"]),
                                                         int(row["advertisment_bonus"])))
                     elif row["event"]== "historic":
-                        News.historic_notification.append(News(int(row["id"]),
+                        NewsItem.historic_notification.append(NewsItem(int(row["id"]),
                                                         row["event"],
                                                         row["date"],
                                                         row["news"],
@@ -844,7 +852,7 @@ class News:
                                                         int(row["taste_bonus"]),
                                                         int(row["advertisment_bonus"])))
                     elif row["event"]== "achievement":
-                        News.achievement_notification.append(News(int(row["id"]),
+                        NewsItem.achievement_notification.append(NewsItem(int(row["id"]),
                                                         row["event"],
                                                         row["date"],
                                                         row["news"],
@@ -852,14 +860,21 @@ class News:
                                                         int(row["taste_bonus"]),
                                                         int(row["advertisment_bonus"])))   
                     elif row["event"]== "contract":
-                        News.contract_notification.append(News(int(row["id"]),
+                        NewsItem.contract_notification.append(NewsItem(int(row["id"]),
                                                         row["event"],
                                                         row["date"],
                                                         row["news"],
                                                         int(row["naturality_bonus"]),
                                                         int(row["taste_bonus"]),
                                                         int(row["advertisment_bonus"])))
-                    News.one_time_activated = True    
+                    NewsItem.one_time_activated = True    
+
+
+    @classmethod
+    def get_text_object(cls, name, font_size):
+        font = pygame.font.Font("assets/font/evil-empire.ttf", font_size)
+        text = font.render(name, True, (0, 0, 0))
+        return text
 
 
     @classmethod
@@ -871,11 +886,16 @@ class News:
         pass
 
     @classmethod
-    def display_notification(cls):
-        '''
-        Method wich will display current_notification on window
-        '''
-        pass
+    def display_notification(cls,window):
+        window.blit(cls.none_notification[0].image,cls.none_notification[0].rect)
+        window.blit(cls.none_notification[0].text,cls.none_notification[0].text_rect)        
+    
+    @staticmethod
+    def make_surface(size=(200, 80), color=(255, 255, 255, 128)):
+        box = pygame.Surface(size, pygame.SRCALPHA)
+        box.fill(color)
+        pygame.draw.rect(box, (255, 255, 255, 255), (0, 0, *size))
+        return box 
 
     @classmethod
     def store_notification(cls):

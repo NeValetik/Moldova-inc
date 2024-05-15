@@ -999,4 +999,24 @@ class Bar:
                 big_wine_rect.center = (1041.5, 396)
                 window.blit(big_wine, big_wine_rect)
 
+
+class News:
+
+    # Elements that will (check collision and) change 'big' wine 
+    image = NewsItem.make_surface(size = (450,50))
+    rect = image.get_rect()
+    rect.center = (640,670)
+
+    @classmethod
+    def update(cls, window):
+        cls.display_background(window)
+        NewsItem.update(window)
+        # cls.display_static_and_dynamic_elements(window)
+
+    @classmethod
+    def display_background(cls, window):
+        window.blit(cls.image, cls.rect)
+
+           
+
 pygame.quit()
