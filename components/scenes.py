@@ -868,42 +868,6 @@ class Map:
                     cls.pressed_icon = False
                     Music.is_clicked = False
         
-class News:
-    buttons = [
-        Button('okay', (600, 750))
-    ]
-
-    stored_notifications = []
-    current_notification = None
-
-    @classmethod
-    def update(cls, window):
-        cls.check_data()
-        cls.display_notification()
-        cls.store_notification()
-
-    @classmethod
-    def check_data(cls):
-        '''
-        Method wich will look at countries data,
-        and notify about presetted events
-        '''
-        pass
-
-    @classmethod
-    def display_notification(cls):
-        '''
-        Method wich will display current_notification on window
-        '''
-        pass
-
-    @classmethod
-    def store_notification(cls):
-        if cls.current_notification is not None:
-            cls.store_notification.append(cls.current_notification)
-            cls.current_notification = None
-            if len(cls.store_notification) > 10:
-                cls.store_notification = cls.store_notification[-10:]
     
 class Music:
     click_sound = pygame.mixer.Sound('assets/sound/click-menu.ogg')

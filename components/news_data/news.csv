@@ -1,40 +1,40 @@
 id,event,date,news,naturality_bonus,taste_bonus,advertisment_bonus
-1,None,None,The Castel Mimi from republic of moldova has announced to have developed a new sort of wine,None,400,None
-2,historic,01/09/1939,World War 2 started,None,-100,-300
-3,achievement,None,New improvement available in the Naturality category,None,None,None
-4,achievement,None,New improvement available in the Advertisement category,None,None,None
-5,achievement,None,New improvement available in the Taste category,None,None,None
-6,contract,None,Moldova has signed a contract with Germany,None,None,None
-7,contract,None,Moldova has signed a contract with the United States,None,None,None
-8,contract,None,Moldova has signed a contract with Australia,None,None,None
-9,historic,07/10/2010,According to the organizers' forecasts more than one hundred thousand people are expected to attend the 8nd National Wine Day,None,None,500
-10,None,None,New records for Moldovan wine, export reached the highest values in the last ten years,None,200,100
+1,None,None,The Castel Mimi from republic of moldova has announced to have developed a new sort of wine,0,400,0
+2,historic,01/09/1939,World War 2 started,0,-100,-300
+3,achievement,None,New improvement available in the Naturality category,0,0,0
+4,achievement,None,New improvement available in the Advertisement category,0,0,0
+5,achievement,None,New improvement available in the Taste category,0,0,0
+6,contract,None,Moldova has signed a contract with Germany,0,0,0
+7,contract,None,Moldova has signed a contract with the United States,0,0,0
+8,contract,None,Moldova has signed a contract with Australia,0,0,0
+9,historic,07/10/2010,According to the organizers' forecasts more than one hundred thousand people are expected to attend the 8nd National Wine Day,0,0,500
+10,None,None,New records for Moldovan wine export reached the highest values in the last ten years,0,200,100
 11,historic,30/01/2020,The World Health Organization (WHO) declares the COVID-19 pandemic,100,300,-150
-12,achievement,None,Moldovan wine has been tasted by 100.000 people,None,200,None
-13,achievement,None,The advertisement for your wine has reached 1.000.000 views on TikTok,None,None,450
-14,achievement,None,Moldovan wine has started to be sold in Michelin-starred restaurants,250,300,None
-15,historic,15/04/1933,In France the United Kingdom and the USA electronic televisions have arrived in stores,None,None,230
-16,historic,22/08/1990,The Internet is starting to spread to all households it's time to buy yourself a PC,None,None,170
-17,None,None,Cricova Winery opens its doors for visitors from all around the wolrd,150,None,150
-18,None,None,Moldovan winery wins prestigious international wine competition,200,350,None
+12,achievement,None,Moldovan wine has been tasted by 100.000 people,0,200,0
+13,achievement,None,The advertisement for your wine has reached 1.000.000 views on TikTok,0,0,450
+14,achievement,None,Moldovan wine has started to be sold in Michelin-starred restaurants,250,300,0
+15,historic,15/04/1933,In France the United Kingdom and the USA electronic televisions have arrived in stores,0,0,230
+16,historic,22/08/1990,The Internet is starting to spread to all households it's time to buy yourself a PC,0,0,170
+17,None,None,Cricova Winery opens its doors for visitors from all around the wolrd,150,0,150
+18,None,None,Moldovan winery wins prestigious international wine competition,200,350,0
 20,None,None,Moldovan winemaker Poiana introduces eco-friendly packaging for wines,200,-200,100
-21,None,None,Moldovan wine featured in top-rated wine magazine, sparking global interest,None,None,350
-22,historic,20/07/2015,Moldova hosts International Wine Festival, attracting wine enthusiasts from around the world,None,300,200
-23,None,None,Moldovan winery adopts sustainable farming practices to protect environment,300,-150,None
-24,achievement,None,Moldovan wine achieves record-breaking sales in Asian markets,None,None,300
-25,None,None,Moldovan winery Cricova launches limited edition wine series to commemorate national holiday,None,300,None
-26,None,None,Experts found a violation in wine production at the Poiana winery,None,-150,-300
-27,historic,18/09/2000,Moldova celebrates Wine Independence Day, marking liberation from trade restrictions,None,200,None
-28,contract,None,Moldova secures trade agreement with European Union, boosting wine exports,None,None,None
-29,None,None,Moldovan winery achieves organic certification for entire vineyard,200,200,None
-30,achievement,None,New technology implemented at Moldovan vineyard Castel Mimi to improve grape cultivation,100,None,200
-31,contract,None,Moldova signs trade deal with Japan to promote Moldovan wine in Asian markets,None,None,None
+21,None,None,Moldovan wine featured in top-rated wine magazine sparking global interest,0,0,350
+22,historic,20/07/2015,Moldova hosts International Wine Festival attracting wine enthusiasts from around the world,0,300,200
+23,None,None,Moldovan winery adopts sustainable farming practices to protect environment,300,-150,0
+24,achievement,None,Moldovan wine achieves record-breaking sales in Asian markets,0,0,300
+25,None,None,Moldovan winery Cricova launches limited edition wine series to commemorate national holiday,0,300,0
+26,None,None,Experts found a violation in wine production at the Poiana winery,0,-150,-300
+27,historic,18/09/2000,Moldova celebrates Wine Independence Day marking liberation from trade restrictions,0,200,0
+28,contract,None,Moldova secures trade agreement with European Union boosting wine exports,0,0,0
+29,None,None,Moldovan winery achieves organic certification for entire vineyard,200,200,0
+30,achievement,None,New technology implemented at Moldovan vineyard Castel Mimi to improve grape cultivation,100,0,200
+31,contract,None,Moldova signs trade deal with Japan to promote Moldovan wine in Asian markets,0,0,0
 32,None,None,Moldovan winery launches online wine-tasting experience for global audience,100,-100,200
-33,contract,None,Launch advertisements for Moldovan wine and secure more contracts,None,None,None
-34,contract,None,Develop winemaking technologies and secure more contracts,None,None,None
-35,historic,23/05/1927,World population reaches two billion,None,130,100
-36,historic,29/08/1949,Soviet Union tests an atomic bomb,-200,None,-100
-37,historic,03/11,1954,Godzilla is released in Japan,None,150,None
+33,contract,None,Launch advertisements for Moldovan wine and secure more contracts,0,0,0
+34,contract,None,Develop winemaking technologies and secure more contracts,0,0,0
+35,historic,23/05/1927,World population reaches two billion,0,130,100
+36,historic,29/08/1949,Soviet Union tests an atomic bomb,-200,0,-100
+37,historic,03/11/1954,Godzilla is released in Japan,0,150,0
 
 
 

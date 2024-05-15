@@ -143,7 +143,6 @@ class Graph(nx.Graph):
                     self.add_weighted_edges_from([(country.moldova, country, 0)])
                     self.countries_init.pop(0)
 
-
     def check_remove_invalid_by_date_contract(self):
         for u, v in self.edges():
             if v.end_year < Timer.get_initial_time_in_years():
@@ -173,7 +172,7 @@ class Graph(nx.Graph):
     def count_the_taxes(self):
         if Graph.taxes_payed != int(Timer.get_time_in_years()):
             Graph.taxes_payed = int(Timer.get_time_in_years())
-            Graph.total_income -= Graph.taxes_sum*Graph.taxes_payed
+            Graph.total_income -= (Graph.taxes_sum*Graph.taxes_payed+0.1*Graph.total_income)
 
 graph = Graph()
 

@@ -16,6 +16,7 @@ class ObjectInit:
         cls.winedatainit()
         Timer.start_time = cls.load_timer()
         Timer.current_time = Timer.start_time
+        cls.load_news()
 
     def winedatainit():
         with open("components/saved_game/winedata.csv", mode='r') as file:
@@ -42,6 +43,45 @@ class ObjectInit:
 
         except:
             return datetime.datetime(1950, 12, 30, 12, 0, 0)
+        
+    @staticmethod
+    def load_news():
+        with open("components/news_data/news.csv", "r") as file:
+            csv_reader = csv.DictReader(file)
+            for row in csv_reader:
+                if row["event"]== "None":
+                    News.none_notification.append(News(int(row["id"]),
+                                                       row["event"],
+                                                       row["date"],
+                                                       row["news"],
+                                                       int(row["naturality_bonus"]),
+                                                       int(row["taste_bonus"]),
+                                                       int(row["advertisment_bonus"])))
+                elif row["event"]== "historic":
+                    News.historic_notification.append(News(int(row["id"]),
+                                                       row["event"],
+                                                       row["date"],
+                                                       row["news"],
+                                                       int(row["naturality_bonus"]),
+                                                       int(row["taste_bonus"]),
+                                                       int(row["advertisment_bonus"])))
+                elif row["event"]== "achievement":
+                    News.achievement_notification.append(News(int(row["id"]),
+                                                       row["event"],
+                                                       row["date"],
+                                                       row["news"],
+                                                       int(row["naturality_bonus"]),
+                                                       int(row["taste_bonus"]),
+                                                       int(row["advertisment_bonus"])))   
+                elif row["event"]== "contract":
+                    News.achievement_notification.append(News(int(row["id"]),
+                                                       row["event"],
+                                                       row["date"],
+                                                       row["news"],
+                                                       int(row["naturality_bonus"]),
+                                                       int(row["taste_bonus"]),
+                                                       int(row["advertisment_bonus"])))   
+
 
 
 class Button(pygame.sprite.Sprite):
@@ -557,7 +597,9 @@ class Country(pygame.sprite.Sprite):
                     csv_reader = csv.DictReader(file)
                     for row in csv_reader:
                         Country(row['country'], row['image_path'], (float(row['x_position']), float(row['y_position'])),
-                                str(row['continent']),float(row["naturality"]),float(row["advertisment"]),float(row["taste"]),float(row["contract_condition_naturality"]),float(row["contract_condition_advertisment"]),float(row["contract_condition_taste"]))
+                                str(row['continent']),float(row["naturality"]),float(row["advertisment"]),
+                                float(row["taste"]),float(row["contract_condition_naturality"]),
+                                float(row["contract_condition_advertisment"]),float(row["contract_condition_taste"]))
             elif cls.initiate_from == 'sqlite3':
                 db_file = 'components/countries_data/countries_data.db'
                 conn = sqlite3.connect(db_file)
@@ -784,5 +826,58 @@ class EndGameWindow(pygame.sprite.Sprite):
         background.fill((255, 255, 255))
         background.set_alpha(100)
         window.blit(background, (0, 0))            
+
+
+class News:
+    buttons = [
+        Button('okay', (600, 750))
+    ]
+
+    none_notification = []
+    historic_notification = []
+    achievement_notification = []
+    contract_notification = []
+
+    stored_notifications = []
+    current_notification = None
+
+
+    def __init__(self,id,event,date,news,naturality_bonus,taste_bonus,advertisment_bonus):
+        self.id= id
+        self.event = event
+        self.date = date
+        self.news = news
+        self.naturality_bonus = naturality_bonus
+        self.taste_bonus = taste_bonus
+        self.advertisment_bonus = advertisment_bonus
+
+    @classmethod
+    def update(cls, window):
+        cls.check_data()
+        cls.display_notification()
+        cls.store_notification()
+
+    @classmethod
+    def check_data(cls):
+        '''
+        Method wich will look at countries data,
+        and notify about presetted events
+        '''
+        pass
+
+    @classmethod
+    def display_notification(cls):
+        '''
+        Method wich will display current_notification on window
+        '''
+        pass
+
+    @classmethod
+    def store_notification(cls):
+        if cls.current_notification is not None:
+            cls.store_notification.append(cls.current_notification)
+            cls.current_notification = None
+            if len(cls.store_notification) > 10:
+                cls.store_notification = cls.store_notification[-10:]
 
 pygame.quit()
