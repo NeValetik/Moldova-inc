@@ -82,7 +82,6 @@ class GraphInit:
 
     def countries_init():
         try:
-            print("Inside countryis init")
             countries = []
             with open("components/saved_game/graph.txt", "r") as input:
                 for line in input:

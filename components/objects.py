@@ -42,15 +42,19 @@ class ObjectInit:
                 return datetime.datetime(year, month, day, 12, 0,0 )
 
         except:
-            return datetime.datetime(1950, 12, 30, 12, 0, 0)
-        
+            return datetime.datetime(1950, 12, 30, 12, 0, 0)  
+
     @staticmethod
     def load_news():
         with open("components/news_data/news.csv", "r") as file:
             csv_reader = csv.DictReader(file)
+            none_notification = []
+            historic_notification = []
+            achievement_notification = []
+            contract_notification = []
             for row in csv_reader:
                 if row["event"]== "None":
-                    News.none_notification.append(News(int(row["id"]),
+                    none_notification.append(News(int(row["id"]),
                                                        row["event"],
                                                        row["date"],
                                                        row["news"],
@@ -58,7 +62,7 @@ class ObjectInit:
                                                        int(row["taste_bonus"]),
                                                        int(row["advertisment_bonus"])))
                 elif row["event"]== "historic":
-                    News.historic_notification.append(News(int(row["id"]),
+                    historic_notification.append(News(int(row["id"]),
                                                        row["event"],
                                                        row["date"],
                                                        row["news"],
@@ -66,7 +70,7 @@ class ObjectInit:
                                                        int(row["taste_bonus"]),
                                                        int(row["advertisment_bonus"])))
                 elif row["event"]== "achievement":
-                    News.achievement_notification.append(News(int(row["id"]),
+                    achievement_notification.append(News(int(row["id"]),
                                                        row["event"],
                                                        row["date"],
                                                        row["news"],
@@ -74,14 +78,14 @@ class ObjectInit:
                                                        int(row["taste_bonus"]),
                                                        int(row["advertisment_bonus"])))   
                 elif row["event"]== "contract":
-                    News.achievement_notification.append(News(int(row["id"]),
+                    contract_notification.append(News(int(row["id"]),
                                                        row["event"],
                                                        row["date"],
                                                        row["news"],
                                                        int(row["naturality_bonus"]),
                                                        int(row["taste_bonus"]),
-                                                       int(row["advertisment_bonus"])))   
-
+                                                       int(row["advertisment_bonus"])))
+            return none_notification,historic_notification,achievement_notification,contract_notification        
 
 
 class Button(pygame.sprite.Sprite):
@@ -832,11 +836,8 @@ class News:
     buttons = [
         Button('okay', (600, 750))
     ]
-
-    none_notification = []
-    historic_notification = []
-    achievement_notification = []
-    contract_notification = []
+    
+    none_notification,historic_notification,achievement_notification,contract_notification = ObjectInit.load_news()
 
     stored_notifications = []
     current_notification = None
@@ -844,7 +845,7 @@ class News:
 
     def __init__(self,id,event,date,news,naturality_bonus,taste_bonus,advertisment_bonus):
         self.id= id
-        self.event = event
+        self.event = event 
         self.date = date
         self.news = news
         self.naturality_bonus = naturality_bonus
