@@ -760,7 +760,7 @@ class Map:
 
         GameState(cls.stats_bars[0].start_value,cls.stats_bars[0].max_value)
         # Looks like a mess because I avoided in this way double click/missclick of Button and Country
-        Country.update(window)
+        Country.update(window, Map, GameState, CountryStatistic)
         Country.display_countries(window, Map)
         
         Contract.display_contracts(window,Map)
