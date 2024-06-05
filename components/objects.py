@@ -249,7 +249,7 @@ class ToSellButton(pygame.sprite.Sprite):
         for button in cls.buttons:
             if button.country.name == "Moldova":
                 pass
-            elif random.randint(1, 200) == 1 and button.country.contracted == False and Wine.naturality >= button.country.contract_condition_naturality and Wine.advertisment >= button.country.contract_condition_advertisment and Wine.taste >= button.country.contract_condition_taste:
+            elif random.randint(1, 200) == 1 and button.country.contracted == False and Wine.focus_on_wine.naturality >= button.country.contract_condition_naturality and Wine.focus_on_wine.advertisment >= button.country.contract_condition_advertisment and Wine.focus_on_wine.taste >= button.country.contract_condition_taste:
                 button.is_available = True
 
 
@@ -582,10 +582,9 @@ class Country(pygame.sprite.Sprite):
 
 class Wine:
     wine_color = (89, 16, 56)
-    trandmarks = []
-
-    taste, naturality, advertisment = (0,0,0)
-    taste_index, naturality_index, advertisment_index = (0,0,0)
+    wines = []
+    trandmarks = ['red-wine', 'sparkling-wine', 'pink-wine', 'white-wine']
+    focus_on_wine = None
 
     def __init__(self, name, taste=0, naturality=0, advertisement=0):
         self.name = name
@@ -594,6 +593,23 @@ class Wine:
         self.taste = taste
         self.naturality = naturality
         self.advertisment = advertisement
+
+        self.taste_index = 0
+        self.naturality_index = 0
+        self.advertisment_index = 0
+
+
+    @classmethod
+    def init_wines(cls):  # initialization of wines happens at the beggining of scenes
+        for trandmarks in cls.trandmarks:
+            cls.wines.append(cls(trandmarks))
+        cls.focus_on_wine = cls.wines[0]
+
+    @classmethod 
+    def change_focus(cls, name):
+        for wine in cls.wines:
+            if name == wine.name:
+                cls.focus_on_wine = wine
 
     def set_taste(self, taste):
         self.taste = taste
