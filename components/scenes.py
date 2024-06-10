@@ -6,6 +6,8 @@ sys.path.append(os.path.dirname(__file__))  # To avoid the error of neighbour fi
 from objects import *
 from logic import *
 
+Wine.init_wines()  # initialization of wines
+
 pygame.init()
 pygame.mixer.init()
 
@@ -77,11 +79,11 @@ class GameState:
     def check_end_game(cls,window):
         if BarsGetters.get_world_progress() >= cls.win_condition and EndGameWindow.initialized == False:
             cls.play = False
-            EndGameWindow("Victory");
+            EndGameWindow("Victory")
             cls.end_game = True   
         elif BarsGetters.get_world_progress() < cls.lose_condtion and EndGameWindow.initialized == False:
             cls.play = False
-            EndGameWindow("Defeat");
+            EndGameWindow("Defeat")
             cls.end_game = True   
         
 
@@ -326,9 +328,9 @@ class UpgradeMenu:
     advertisment_prices =   [2_000, 3_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 7_000]
 
     skill_description = {
-        'naturality':   ['Add naturality +1', f'Cost: {naturality_prices[Wine.naturality_index]}'],
-        'taste':        ['Add taste +1', f'Cost: {taste_prices[Wine.taste_index]}'],
-        'advertisment': ['Add advertisment +1', f'Cost: {advertisment_prices[Wine.advertisment_index]}'],
+        'naturality':   ['Add naturality +1', f'Cost: {naturality_prices[Wine.focus_on_wine.naturality_index]}'],
+        'taste':        ['Add taste +1', f'Cost: {taste_prices[Wine.focus_on_wine.taste_index]}'],
+        'advertisment': ['Add advertisment +1', f'Cost: {advertisment_prices[Wine.focus_on_wine.advertisment_index]}'],
     }
 
     stats_bars = {
@@ -336,6 +338,8 @@ class UpgradeMenu:
         'advertisment':    ProgressBar(0, 10_000, 200, 30, (100, 10, 10), (255, 255, 255), (955, 520), getter=BarsGetters.get_wine_advertisment),
         'taste':           ProgressBar(0, 10_000, 200, 30, (100, 10, 10), (255, 255, 255), (955, 520), getter=BarsGetters.get_wine_taste),
     }
+
+    
 
     image = pygame.transform.scale(pygame.image.load('assets/background/besi-background.png'),  (1280, 720))
     rect = image.get_rect()
@@ -442,37 +446,37 @@ class UpgradeMenu:
                         cls.pressed_2 = True
                         if pygame.mouse.get_pressed()[0]:
                             if button.name == 'naturality':
-                                if Wine.naturality_index == -1:  # If it's full marked, skip interaction with this button
+                                if Wine.focus_on_wine.naturality_index == -1:  # If it's full marked, skip interaction with this button
                                     return
-                                if Graph.total_income >= cls.naturality_prices[Wine.naturality_index]:
-                                    Graph.total_income -= cls.naturality_prices[Wine.naturality_index]
-                                    Wine.naturality_index += 1
-                                    Wine.naturality += 1000
-                                    if Wine.naturality_index == 10:
+                                if Graph.total_income >= cls.naturality_prices[Wine.focus_on_wine.naturality_index]:
+                                    Graph.total_income -= cls.naturality_prices[Wine.focus_on_wine.naturality_index]
+                                    Wine.focus_on_wine.naturality_index += 1
+                                    Wine.focus_on_wine.naturality += 1000
+                                    if Wine.focus_on_wine.naturality_index == 10:
                                         button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
-                                        Wine.naturality_index = -1  # Mark full upgraded skill
+                                        Wine.focus_on_wine.naturality_index = -1  # Mark full upgraded skill
 
                             elif button.name == 'advertisment':
-                                if Wine.advertisment_index == -1:  # If it's full marked, skip interaction with this button
+                                if Wine.focus_on_wine.advertisment_index == -1:  # If it's full marked, skip interaction with this button
                                     return
-                                if Graph.total_income >= cls.advertisment_prices[Wine.advertisment_index]:
-                                    Graph.total_income -= cls.advertisment_prices[Wine.advertisment_index]
-                                    Wine.advertisment_index += 1
-                                    Wine.advertisment += 1000
-                                    if Wine.advertisment_index == 10:
+                                if Graph.total_income >= cls.advertisment_prices[Wine.focus_on_wine.advertisment_index]:
+                                    Graph.total_income -= cls.advertisment_prices[Wine.focus_on_wine.advertisment_index]
+                                    Wine.focus_on_wine.advertisment_index += 1
+                                    Wine.focus_on_wine.advertisment += 1000
+                                    if Wine.focus_on_wine.advertisment_index == 10:
                                         button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
-                                        Wine.advertisment_index = -1  # Mark full upgraded skill
+                                        Wine.focus_on_wine.advertisment_index = -1  # Mark full upgraded skill
 
                             elif button.name == 'taste':
-                                if Wine.taste_index == -1:  # If it's full marked, skip interaction with this button
+                                if Wine.focus_on_wine.taste_index == -1:  # If it's full marked, skip interaction with this button
                                     return
-                                if Graph.total_income >= cls.taste_prices[Wine.taste_index]:
-                                    Graph.total_income -= cls.taste_prices[Wine.taste_index]
-                                    Wine.taste_index += 1
-                                    Wine.taste += 1000
-                                    if Wine.taste_index == 10:
+                                if Graph.total_income >= cls.taste_prices[Wine.focus_on_wine.taste_index]:
+                                    Graph.total_income -= cls.taste_prices[Wine.focus_on_wine.taste_index]
+                                    Wine.focus_on_wine.taste_index += 1
+                                    Wine.focus_on_wine.taste += 1000
+                                    if Wine.focus_on_wine.taste_index == 10:
                                         button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
-                                        Wine.taste_index = -1  # Mark full upgraded skill
+                                        Wine.focus_on_wine.taste_index = -1  # Mark full upgraded skill
                 else:
                     cls.pressed_2 = False
                     Music.is_clicked = False
@@ -502,9 +506,9 @@ class UpgradeMenu:
     @classmethod
     def update_info_skills(cls):
         cls.skill_description = {
-        'naturality' : ['Add naturality +1', f'Cost: {cls.naturality_prices[Wine.naturality_index]}'],
-        'taste' : ['Add taste +1', f'Cost: {cls.taste_prices[Wine.taste_index]}'],
-        'advertisment' : ['Add advertisment +1', f'Cost: {cls.advertisment_prices[Wine.advertisment_index]}'],
+        'naturality' : ['Add naturality +1', f'Cost: {cls.naturality_prices[Wine.focus_on_wine.naturality_index]}'],
+        'taste' : ['Add taste +1', f'Cost: {cls.taste_prices[Wine.focus_on_wine.taste_index]}'],
+        'advertisment' : ['Add advertisment +1', f'Cost: {cls.advertisment_prices[Wine.focus_on_wine.advertisment_index]}'],
     }
 
 class CountryStatistic:
@@ -908,7 +912,7 @@ class Bar:
         Button('assets/upgrade-wine/rect.png', (565, 500.5), image_path='assets/upgrade-wine/small-sparkling-wine.png'),
     ]
 
-    # Elements that will (check collision and) change 'big' wine 
+    # Elements that will (check collision and) change big wine glass
     dynamic_elements = [
         Button('support-rect-1', (213, 264), image_path='assets/upgrade-wine/support-rect.png'),
         Button('support-rect-2', (568, 264), image_path='assets/upgrade-wine/support-rect.png'),
@@ -933,7 +937,9 @@ class Bar:
         cls.display_background(window)
         cls.display_static_and_dynamic_elements(window)
         cls.display_buttons(window)
-        cls.check_collisions(window)
+        cls.display_title(window)
+        cls.display_wine_information(window)
+        cls.check_collisions(window)  # check collisions + load and display big wine glass
 
     @classmethod
     def display_background(cls, window):
@@ -954,10 +960,14 @@ class Bar:
     
     @classmethod
     def display_title(cls, window):
-        if cls.focus == None:
-            text = ' '
-        else:
-            text = cls.focus.name
+        if Wine.focus_on_wine.name == 'red-wine':
+            text = 'Red Wine'
+        if Wine.focus_on_wine.name == 'pink-wine':
+            text = 'Pink Wine'
+        if Wine.focus_on_wine.name == 'sparkling-wine':
+            text = 'Sparkling Wine'
+        if Wine.focus_on_wine.name == 'white-wine':
+            text = 'White Wine'
 
         font = pygame.font.Font('assets/font/lexend.ttf', 36)
         text = font.render(text, True, (0, 0, 0))
@@ -966,7 +976,20 @@ class Bar:
         window.blit(text, text_rect)
     
     @classmethod
+    def display_wine_information(cls, window):
+        pass
+
+    @classmethod
     def check_collisions(cls , window):
+        if Wine.focus_on_wine.name == 'red-wine':
+            big_wine = pygame.image.load('assets/upgrade-wine/big-red-wine.png')
+        elif Wine.focus_on_wine.name == 'sparkling-wine':
+            big_wine = pygame.image.load('assets/upgrade-wine/big-sparkling-wine.png')
+        elif Wine.focus_on_wine.name == 'pink-wine':
+            big_wine = pygame.image.load('assets/upgrade-wine/big-pink-wine.png')
+        elif Wine.focus_on_wine.name == 'white-wine':
+            big_wine = pygame.image.load('assets/upgrade-wine/big-white-wine.png')
+
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 if not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
@@ -983,25 +1006,30 @@ class Bar:
                     cls.pressed_1 = False
                     Music.is_clicked = False
 
+        # Displaying big glass of wine and change the selling wine on click
         for button in cls.dynamic_elements:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 cls.focus = button
-                cls.display_title(window)
-
-                # Displaying Big Glass of Wine
-                if cls.focus.name == 'tag-1' or cls.focus.name == 'support-rect-1':
-                    big_wine = pygame.image.load('assets/upgrade-wine/big-red-wine.png')
-                elif cls.focus.name == 'tag-2' or cls.focus.name == 'support-rect-2':
-                    big_wine = pygame.image.load('assets/upgrade-wine/big-sparkling-wine.png')
-                elif cls.focus.name == 'tag-3' or cls.focus.name == 'support-rect-3':
-                    big_wine = pygame.image.load('assets/upgrade-wine/big-pink-wine.png')
-                elif cls.focus.name == 'tag-4' or cls.focus.name == 'support-rect-4':
-                    big_wine = pygame.image.load('assets/upgrade-wine/big-white-wine.png')
+                
+                if not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
+                    Music.play_click_sound()
+                    if not cls.pressed_1:
+                        cls.pressed_1 = True
+                        if cls.focus.name == 'tag-1' or cls.focus.name == 'support-rect-1':
+                                Wine.change_focus('white-wine')
+                        elif cls.focus.name == 'tag-2' or cls.focus.name == 'support-rect-2':
+                                Wine.change_focus('pink-wine')
+                        elif cls.focus.name == 'tag-3' or cls.focus.name == 'support-rect-3':
+                                Wine.change_focus('red-wine')
+                        elif cls.focus.name == 'tag-4' or cls.focus.name == 'support-rect-4':
+                                Wine.change_focus('sparkling-wine')
                 else:
-                    return
-                big_wine_rect = big_wine.get_rect()
-                big_wine_rect.center = (1041.5, 396)
-                window.blit(big_wine, big_wine_rect)
+                    cls.pressed_1 = False
+                    Music.is_clicked = False
+
+        big_wine_rect = big_wine.get_rect()
+        big_wine_rect.center = (1041.5, 396)
+        window.blit(big_wine, big_wine_rect)
 
 
 class News:

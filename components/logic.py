@@ -26,7 +26,7 @@ def exit_game():
 
     with open("components/saved_game/winedata.csv", "w") as input:
         input.write("advertisment,advertisment_index,naturality,naturality_index,taste,taste_index\n")
-        input.write(str(BarsGetters.get_wine_advertisment())+","+str(Wine.advertisment_index)+","+str(BarsGetters.get_wine_naturality())+","+str(Wine.naturality_index)+","+str(BarsGetters.get_wine_taste())+","+str(Wine.taste_index)+"\n")
+        input.write(str(BarsGetters.get_wine_advertisment())+","+str(Wine.focus_on_wine.advertisment_index)+","+str(BarsGetters.get_wine_naturality())+","+str(Wine.focus_on_wine.naturality_index)+","+str(BarsGetters.get_wine_taste())+","+str(Wine.focus_on_wine.taste_index)+"\n")
         #advertisment,advertisment_index,naturality,naturality_index,taste,taste_index
         #10000,-1,10000,-1,10000,-1
     with open("components/saved_game/graph.txt", "w") as input:
@@ -184,12 +184,12 @@ class BarsGetters:
 
     @staticmethod
     def get_wine_naturality():
-        return Wine.naturality
+        return Wine.focus_on_wine.naturality
 
     @staticmethod
     def get_wine_advertisment():
-        return Wine.advertisment
+        return Wine.focus_on_wine.advertisment
 
     @staticmethod
     def get_wine_taste():
-        return Wine.taste
+        return Wine.focus_on_wine.taste
