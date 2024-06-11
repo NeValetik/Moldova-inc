@@ -544,7 +544,7 @@ class UpgradeMenu:
             first_text = cls.skill_description[button.name][0]
             second_text = cls.skill_description[button.name][1]
         except:
-            first_text = 'Soon'
+            first_text = ''
             second_text = ''
 
         first_text_surface = font.render(first_text, True, (0, 0, 0))
@@ -784,7 +784,7 @@ class Settings:
                     
 class Map:
     buttons = [
-        Button('upgrade_menu', (1100, 670), image_path='assets/stuff/menu-button.png'),
+        Button('upgrade menu', (1100, 670), image_path='assets/stuff/menu-button.png'),
         Button('statistics', (170, 670), image_path='assets/stuff/menu-button.png'),
     ]
 
@@ -827,7 +827,7 @@ class Map:
     pressed_icon = False
 
     ui_on = True
-    
+
     @classmethod
     def update(cls, window):
         window.blit(cls.initial_background, cls.background_rect)
@@ -933,7 +933,7 @@ class Map:
                     Music.play_click_sound()
                     if not cls.pressed_icon:
                         cls.pressed_icon = True
-                        if button.name == 'upgrade_menu':
+                        if button.name == 'upgrade menu':
                             GameState.play = False
                             GameState.upgrade_menu = True
                         elif button.name == 'statistics':
