@@ -22,13 +22,15 @@ class ObjectInit:
     def winedatainit():
         with open("components/saved_game/winedata.csv", mode='r') as file:
             csv_reader = csv.DictReader(file)
-            for row in csv_reader:
-                Wine.advertisment=int(row['advertisment'])
-                Wine.advertisment_index = int(row['advertisment_index'])
-                Wine.naturality=int(row['naturality'])
-                Wine.naturality_index = int(row['naturality_index'])
-                Wine.taste=int(row['taste'])
-                Wine.taste_index = int(row['taste_index'])
+            for wine in Wine.wines:
+                for row in csv_reader:
+                    if row["trademark"] == wine.name:
+                        wine.advertisment=int(row['advertisment'])
+                        Wine.advertisment_index = int(row['advertisment_index'])
+                        Wine.naturality=int(row['naturality'])
+                        Wine.naturality_index = int(row['naturality_index'])
+                        Wine.taste=int(row['taste'])
+                        Wine.taste_index = int(row['taste_index'])
                         # advertisment,advertisment_index,naturality,naturality_index,taste,taste_index
 
     @staticmethod
@@ -635,6 +637,7 @@ class Wine:
     def return_advertisement(self):
         return self.advertisment
 
+
 class Woman:
     def __init__(self, id, wash_dishes_speed, her_owner):
         self.id = id
@@ -664,6 +667,7 @@ class Woman:
 
     def get_driving_license(self):
         return False
+
 
 class Timer:
 

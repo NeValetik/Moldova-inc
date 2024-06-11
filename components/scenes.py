@@ -31,7 +31,7 @@ class ScenesInit:
             ]
     @staticmethod    
     def upgrade_buttons_init():
-            UpgradeMenu.upgrade_buttons = [
+            UpgradeMenu.upgrade_buttons = {trandmark:[
                 Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png'),
                 Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png'),
                 Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png'),
@@ -44,15 +44,18 @@ class ScenesInit:
                 Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png'),
                 Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png'),
                 Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png'),
-            ]
+            ] for trandmark in Wine.trandmarks
+            }
             try:
                 with open("components/saved_game/winedata.csv", mode='r') as file:
                     csv_reader = csv.DictReader(file)
                     for row in csv_reader:
-                        for button in UpgradeMenu.upgrade_buttons:
-                            if row.get(button.name+"_index") is not None:
-                                if int(row[button.name+"_index"]) == -1:
-                                    button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
+                        for trandmark in Wine.trandmarks:
+                            if row.get("trademark") == trandmark:
+                                for button in UpgradeMenu.upgrade_buttons[trandmark]:
+                                    if row.get(button.name+"_index") is not None:
+                                        if int(row[button.name+"_index"]) == -1:
+                                            button.image = pygame.image.load('assets/upgrade-elements/purple-circle.png')
             except:
                 pass
 
