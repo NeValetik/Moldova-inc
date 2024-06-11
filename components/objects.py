@@ -185,7 +185,10 @@ class ProgressBar:
         pygame.draw.rect(window, (*self.bar_color, 128), progress_rect, border_radius=border_radius)
 
         font = pygame.font.Font("assets/font/lexend.ttf", 24)
-        percent_text = f"{int(self.current_value)}"
+        if self.getter_attributes == None:
+            percent_text = f"{int(self.current_value)}$"
+        else:
+            percent_text = f"{int(self.current_value)}"
         text = font.render(percent_text, True, (0, 0, 0))
         text_rect = text.get_rect()
 
