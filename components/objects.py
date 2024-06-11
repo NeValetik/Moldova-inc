@@ -528,8 +528,8 @@ class Country(pygame.sprite.Sprite):
             Country.moldova = self
 
     @classmethod
-    def update(cls, window, Map, GameState, CountryStatistic):
-        cls.one_time_activation()
+    def update(cls, window, Map, GameState, CountryStatistic):  # was used in past
+        pass
 
     @classmethod
     def display_countries(cls, window, Map):

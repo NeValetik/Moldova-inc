@@ -97,6 +97,7 @@ class GameState:
         elif GameState.pause:
             Pause.update(window)
         elif GameState.country_statistic:
+            Map.ui_on = False
             Map.update(window)
             CountryStatistic.update(window)
         elif GameState.upgrade_menu:
@@ -104,16 +105,19 @@ class GameState:
         elif GameState.bar:
             Bar.update(window)
         elif GameState.play:
+            Map.ui_on = True
             graph.update()
             Map.update(window)
             Timer.update(window)
             cls.check_end_game(window)
             News.update(window)
-        
+
         if GameState.end_game:
             Map.update(window)
             EndGameWindow.update(cls,window)
         if GameState.statistic:
+            Map.ui_on = False
+            Map.update(window)
             Statistic.update(window)
         if GameState.settings:
             Settings.update(window)
@@ -234,7 +238,7 @@ class Statistic:
     _one_plot = True  # to generate one plot per space button, not each frame
 
     buttons = [
-        Button('Back', (640, 700), dimension=(230, 80))
+        Button('Back', (640, 650), image_path='assets/stuff/menu-button.png')
     ]
 
     image_path = 'assets/background/pause-background.png'
@@ -247,40 +251,64 @@ class Statistic:
 
     @classmethod
     def update(cls, window):
+        cls.display_transparent_background(window)
+        # cls.display_background(window)  # in case our designer will honor us with an image
         cls.display_buttons(window)
         cls.display_plot(window)
         cls.check_collisions()
 
     @classmethod
-    def display_plot(cls, window):
-        if Statistic._one_plot:
-            x = graph.x
-            plt.figure(figsize=(12,6))
+    def display_transparent_background(cls, window):
+        background = pygame.Surface((1280, 720))
+        background.fill((255, 255, 255))
+        background.set_alpha(230)
+        window.blit(background, (0, 0))
 
-            y = graph.y
-            plt.plot(x, y)
-            plt.title('Wine sold')
-            plt.xlabel("Date")
-            plt.ylabel("Deal")
-            plt.savefig('plot.png')
-
-            plot = pygame.image.load('plot.png')
-            window.blit(plot, (0,0))
-            Statistic._one_plot = False
-        else:
-            plot = pygame.image.load('plot.png')
-            window.blit(plot, (0,0))
-    
-    @classmethod
-    def delete_plot(self):
-        os.remove('plot.png')
-        pass
+    # @classmethod
+    # def display_background(cls, window):
+    #     window.blit(cls.background, cls.background.get_rect())
 
     @classmethod
     def display_buttons(cls, window):
         Button.display_buttons(cls, window)
         Button.display_text_on_buttons(cls, window)
+
+    @classmethod
+    def display_plot(cls, window):
+        if Statistic._one_plot:
+            x = graph.x
+            plt.figure(figsize=(7,6))
+            y = graph.y
+            plt.plot(x, y)
+            plt.title('Wine sold')
+            plt.xlabel("Date")
+            plt.ylabel("Deal")
+            plt.savefig('plot1.png', transparent=True)
+
+            labels = ['A', 'B', 'C', 'D']
+            sizes = [15, 30, 45, 10]  # %
+            colors = ['#ff9999','#66b3ff','#99ff99','#ffcc99']
+            fig, ax = plt.subplots()
+            ax.pie(sizes, colors=colors, labels=labels, autopct='%1.1f%%', startangle=90, textprops=dict(color="black"))
+            plt.title('Another Title')
+            plt.savefig('plot2.png', transparent=True)
+
+            plot1 = pygame.image.load('plot1.png')
+            plot2 = pygame.image.load('plot2.png')
+            window.blit(plot1, (40,30))
+            window.blit(plot2, (650,90))
+            Statistic._one_plot = False
+        else:
+            plot1 = pygame.image.load('plot1.png')
+            plot2 = pygame.image.load('plot2.png')
+            window.blit(plot1, (40,30))
+            window.blit(plot2, (650,90))
     
+    @classmethod
+    def delete_plot(self):
+        os.remove('plot1.png')
+        os.remove('plot2.png')
+
     @classmethod
     def check_collisions(cls):
         for button in cls.buttons:
@@ -566,7 +594,7 @@ class CountryStatistic:
     @classmethod
     def update(cls, window):
         cls.initialize_statistics()
-        cls.transparent_background(window)
+        cls.display_transparent_background(window)
         cls.display_country(window)
         cls.display_statistics(window)
         cls.display_title(window)
@@ -575,7 +603,7 @@ class CountryStatistic:
         cls.check_collisions()
 
     @classmethod
-    def transparent_background(cls, window):
+    def display_transparent_background(cls, window):
         background = pygame.Surface((1280, 720))
         background.fill((255, 255, 255))
         background.set_alpha(230)
@@ -796,32 +824,36 @@ class Map:
     motion = False
 
     # for check_collisions() method
-    pressed_icon = False  
+    pressed_icon = False
 
+    ui_on = True
+    
     @classmethod
     def update(cls, window):
         window.blit(cls.initial_background, cls.background_rect)
 
         GameState(cls.stats_bars[0].start_value,cls.stats_bars[0].max_value)
         # Looks like a mess because I avoided in this way double click/missclick of Button and Country
-        Country.update(window, Map, GameState, CountryStatistic)
+        Country.one_time_activation()
         Country.display_countries(window, Map)
         
         Contract.display_contracts(window,Map)
 
         ToSellButton.display_buttons(window, Map)
-        Map.display_buttons(window)
+        if Map.ui_on:
+            Map.display_buttons(window)
         Transport.update(window, Map, graph)
 
-        if Map.personal_update(window) != 'changed':  # Checking the Country collision only if map Button were not pressed
+        if Map.personal_update(window) != 'changed' and Map.ui_on:  # Checking the Country collision only if map Button were not pressed
             Country.check_collisions(Map, GameState, CountryStatistic)
 
     @classmethod
     def personal_update(cls, window):
-        cls.display_stats_bars(window)
+        if Map.ui_on:
+            cls.display_stats_bars(window)
         cls.to_scale()
         cls.to_drag(window)
-        if cls.check_collisions() == 'changed':
+        if Map.ui_on and cls.check_collisions() == 'changed':
             return 'changed'
 
 
