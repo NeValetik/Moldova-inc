@@ -96,7 +96,7 @@ class Button(pygame.sprite.Sprite):
         
 
 class ProgressBar:
-    def __init__(self, start_value, max_value, bar_width, bar_height, bar_color, background_color, position, getter):
+    def __init__(self, start_value, max_value, bar_width, bar_height, bar_color, background_color, position, getter, getter_attributes = None):
         self.start_value = start_value
         self.max_value = max_value
         self.current_value = start_value
@@ -106,6 +106,7 @@ class ProgressBar:
         self.background_color = background_color
         self.position = position
         self.getter = getter
+        self.getter_attributes = getter_attributes
 
     def update(self, window, new_value=0):
         self.update_progress_bar(new_value)
@@ -132,7 +133,10 @@ class ProgressBar:
         window.blit(text, text_rect)
 
     def update_progress_bar(self, getter):
-        self.current_value = min(self.getter(), self.max_value)
+        if self.getter_attributes == None:
+            self.current_value = min(self.getter(), self.max_value)
+        else:
+            self.current_value = min(self.getter(self.getter_attributes), self.max_value)    
 
 
 class Contract(pygame.sprite.Sprite): 

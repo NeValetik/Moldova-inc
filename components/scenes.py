@@ -293,7 +293,7 @@ class UpgradeMenu:
         Button('bar', (1120, 609), image_path='assets/upgrade-elements/besi-button.png'),
     ]   
 
-    upgrade_buttons = [
+    upgrade_buttons = {trandmark:[
         Button('naturality', (316, 249), image_path='assets/upgrade-elements/grey-circle.png'),
         Button('taste', (420, 249), image_path='assets/upgrade-elements/grey-circle.png'),
         Button('Coming Soon', (265, 340), image_path='assets/upgrade-elements/grey-circle.png'),
@@ -306,7 +306,8 @@ class UpgradeMenu:
         Button('Coming Soon', (264, 524), image_path='assets/upgrade-elements/grey-circle.png'),
         Button('Coming Soon', (369, 524), image_path='assets/upgrade-elements/grey-circle.png'),
         Button('Coming Soon', (474, 524), image_path='assets/upgrade-elements/grey-circle.png'),
-    ]
+    ] for trandmark in Wine.trandmarks
+    }
 
     skills_icons = [
         ['assets/upgrade-elements/quality-skill.png', (316, 247.5)],
@@ -323,22 +324,45 @@ class UpgradeMenu:
         ['assets/upgrade-elements/coming-soon-skill.png', (477, 524)],
     ]
 
-    naturality_prices =     [10_000, 12_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000]
-    taste_prices =          [5_000, 6_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000]
-    advertisment_prices =   [2_000, 3_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 7_000]
+    naturality_prices = {
+        trademark: [10_000, 12_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000, 15_000]
+        for trademark in Wine.trandmarks
+    }
+
+    taste_prices = {
+        trademark: [5_000, 6_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000, 7_000]
+        for trademark in Wine.trandmarks
+    }
+
+    advertisment_prices = {
+        trademark: [2_000, 3_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 4_000, 7_000]
+        for trademark in Wine.trandmarks
+    }
 
     skill_description = {
-        'naturality':   ['Add naturality +1', f'Cost: {naturality_prices[Wine.focus_on_wine.naturality_index]}'],
-        'taste':        ['Add taste +1', f'Cost: {taste_prices[Wine.focus_on_wine.taste_index]}'],
-        'advertisment': ['Add advertisment +1', f'Cost: {advertisment_prices[Wine.focus_on_wine.advertisment_index]}'],
-    }
+        # wine.name: {
+            'naturality': [
+                'Add naturality +1',
+                f'Cost: {naturality_prices[Wine.focus_on_wine.name][Wine.focus_on_wine.naturality_index]}'
+            ],
+            'taste': [
+                'Add taste +1',
+                f'Cost: {taste_prices[Wine.focus_on_wine.name][Wine.focus_on_wine.taste_index]}'
+            ],
+            'advertisment': [
+                'Add advertisement +1',
+                f'Cost: {advertisment_prices[Wine.focus_on_wine.name][Wine.focus_on_wine.advertisment_index]}'
+            ]
+        }
+        # for wine in Wine.wines
+    # }
 
-    stats_bars = {
-        'naturality':      ProgressBar(0, 10_000, 200, 30, (100, 10, 10), (255, 255, 255), (955, 520), getter=BarsGetters.get_wine_naturality),
-        'advertisment':    ProgressBar(0, 10_000, 200, 30, (100, 10, 10), (255, 255, 255), (955, 520), getter=BarsGetters.get_wine_advertisment),
-        'taste':           ProgressBar(0, 10_000, 200, 30, (100, 10, 10), (255, 255, 255), (955, 520), getter=BarsGetters.get_wine_taste),
+    stats_bars = {wine.name:{
+        'naturality':      ProgressBar(0, 10_000, 200, 30, (100, 10, 10), (255, 255, 255), (955, 520), getter=BarsGetters.get_wine_naturality,getter_attributes=wine),
+        'advertisment':    ProgressBar(0, 10_000, 200, 30, (100, 10, 10), (255, 255, 255), (955, 520), getter=BarsGetters.get_wine_advertisment,getter_attributes=wine),
+        'taste':           ProgressBar(0, 10_000, 200, 30, (100, 10, 10), (255, 255, 255), (955, 520), getter=BarsGetters.get_wine_taste,getter_attributes=wine),
+    }for wine in Wine.wines
     }
-
     
 
     image = pygame.transform.scale(pygame.image.load('assets/background/besi-background.png'),  (1280, 720))
@@ -372,7 +396,7 @@ class UpgradeMenu:
 
     @classmethod
     def display_grape_bubbles(cls, window):
-        for bubble in cls.upgrade_buttons:
+        for bubble in cls.upgrade_buttons[Wine.focus_on_wine.name]:
             window.blit(bubble.image, bubble.rect)
 
     @classmethod
@@ -398,7 +422,7 @@ class UpgradeMenu:
     @classmethod
     def display_stats_bars(cls, window):
         try:
-            cls.stats_bars[cls.focus.name].update(window)
+            cls.stats_bars[Wine.focus_on_wine.name][cls.focus.name].update(window)
         except:
             pass
     
@@ -433,7 +457,7 @@ class UpgradeMenu:
                     cls.pressed_1 = False
                     Music.is_clicked = False
         
-        for button in cls.upgrade_buttons:
+        for button in cls.upgrade_buttons[Wine.focus_on_wine.name]:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
                 cls.focus = button
                 cls.display_info_about_skill(window, button)
@@ -448,8 +472,8 @@ class UpgradeMenu:
                             if button.name == 'naturality':
                                 if Wine.focus_on_wine.naturality_index == -1:  # If it's full marked, skip interaction with this button
                                     return
-                                if Graph.total_income >= cls.naturality_prices[Wine.focus_on_wine.naturality_index]:
-                                    Graph.total_income -= cls.naturality_prices[Wine.focus_on_wine.naturality_index]
+                                if Graph.total_income >= cls.naturality_prices[Wine.focus_on_wine.name][Wine.focus_on_wine.naturality_index]:
+                                    Graph.total_income -= cls.naturality_prices[Wine.focus_on_wine.name][Wine.focus_on_wine.naturality_index]
                                     Wine.focus_on_wine.naturality_index += 1
                                     Wine.focus_on_wine.naturality += 1000
                                     if Wine.focus_on_wine.naturality_index == 10:
@@ -459,8 +483,8 @@ class UpgradeMenu:
                             elif button.name == 'advertisment':
                                 if Wine.focus_on_wine.advertisment_index == -1:  # If it's full marked, skip interaction with this button
                                     return
-                                if Graph.total_income >= cls.advertisment_prices[Wine.focus_on_wine.advertisment_index]:
-                                    Graph.total_income -= cls.advertisment_prices[Wine.focus_on_wine.advertisment_index]
+                                if Graph.total_income >= cls.advertisment_prices[Wine.focus_on_wine.name][Wine.focus_on_wine.advertisment_index]:
+                                    Graph.total_income -= cls.advertisment_prices[Wine.focus_on_wine.name][Wine.focus_on_wine.advertisment_index]
                                     Wine.focus_on_wine.advertisment_index += 1
                                     Wine.focus_on_wine.advertisment += 1000
                                     if Wine.focus_on_wine.advertisment_index == 10:
@@ -470,8 +494,8 @@ class UpgradeMenu:
                             elif button.name == 'taste':
                                 if Wine.focus_on_wine.taste_index == -1:  # If it's full marked, skip interaction with this button
                                     return
-                                if Graph.total_income >= cls.taste_prices[Wine.focus_on_wine.taste_index]:
-                                    Graph.total_income -= cls.taste_prices[Wine.focus_on_wine.taste_index]
+                                if Graph.total_income >= cls.taste_prices[Wine.focus_on_wine.name][Wine.focus_on_wine.taste_index]:
+                                    Graph.total_income -= cls.taste_prices[Wine.focus_on_wine.name][Wine.focus_on_wine.taste_index]
                                     Wine.focus_on_wine.taste_index += 1
                                     Wine.focus_on_wine.taste += 1000
                                     if Wine.focus_on_wine.taste_index == 10:
@@ -506,9 +530,18 @@ class UpgradeMenu:
     @classmethod
     def update_info_skills(cls):
         cls.skill_description = {
-        'naturality' : ['Add naturality +1', f'Cost: {cls.naturality_prices[Wine.focus_on_wine.naturality_index]}'],
-        'taste' : ['Add taste +1', f'Cost: {cls.taste_prices[Wine.focus_on_wine.taste_index]}'],
-        'advertisment' : ['Add advertisment +1', f'Cost: {cls.advertisment_prices[Wine.focus_on_wine.advertisment_index]}'],
+            'naturality': [
+                'Add naturality +1',
+                f'Cost: {cls.naturality_prices[Wine.focus_on_wine.name][Wine.focus_on_wine.naturality_index]}'
+            ],
+            'taste': [
+                'Add taste +1',
+                f'Cost: {cls.taste_prices[Wine.focus_on_wine.name][Wine.focus_on_wine.taste_index]}'
+            ],
+            'advertisment': [
+                'Add advertisement +1',
+                f'Cost: {cls.advertisment_prices[Wine.focus_on_wine.name][Wine.focus_on_wine.advertisment_index]}'
+            ]
     }
 
 class CountryStatistic:

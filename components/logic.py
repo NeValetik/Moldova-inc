@@ -25,10 +25,11 @@ def exit_game():
             input.write("\n")
 
     with open("components/saved_game/winedata.csv", "w") as input:
-        input.write("advertisment,advertisment_index,naturality,naturality_index,taste,taste_index\n")
-        input.write(str(BarsGetters.get_wine_advertisment())+","+str(Wine.focus_on_wine.advertisment_index)+","+str(BarsGetters.get_wine_naturality())+","+str(Wine.focus_on_wine.naturality_index)+","+str(BarsGetters.get_wine_taste())+","+str(Wine.focus_on_wine.taste_index)+"\n")
-        #advertisment,advertisment_index,naturality,naturality_index,taste,taste_index
-        #10000,-1,10000,-1,10000,-1
+        input.write("advertisment,advertisment_index,naturality,naturality_index,taste,taste_index,trademark\n")
+        for wine in Wine.wines:
+            input.write(str(BarsGetters.get_wine_advertisment(wine))+","+str(wine.advertisment_index)+","+str(BarsGetters.get_wine_naturality(wine))+","+str(wine.naturality_index)+","+str(BarsGetters.get_wine_taste(wine))+","+str(wine.taste_index)+","+str(wine.name)+"\n")
+            #advertisment,advertisment_index,naturality,naturality_index,taste,taste_index,trademark
+            #10000,-1,10000,-1,10000,-1,white-wine
     with open("components/saved_game/graph.txt", "w") as input:
         for u, v in graph.edges():
             input.write(v.name.replace(" ", "-") + ' ' + str(v.end_year) + ' ' + str(v.contracted) + "\n")
@@ -101,7 +102,7 @@ class GraphInit:
 
 class Graph(nx.Graph):
     initiated = False
-    total_income = 90_000
+    total_income = 900_000
     countries_init = []
     x = []
     y = []
@@ -183,13 +184,13 @@ class BarsGetters:
         return Graph.total_income
 
     @staticmethod
-    def get_wine_naturality():
-        return Wine.focus_on_wine.naturality
+    def get_wine_naturality(wine):
+        return wine.naturality
 
     @staticmethod
-    def get_wine_advertisment():
-        return Wine.focus_on_wine.advertisment
+    def get_wine_advertisment(wine):
+        return wine.advertisment
 
     @staticmethod
-    def get_wine_taste():
-        return Wine.focus_on_wine.taste
+    def get_wine_taste(wine):
+        return wine.taste
