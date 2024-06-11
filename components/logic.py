@@ -33,6 +33,17 @@ def exit_game():
     with open("components/saved_game/graph.txt", "w") as input:
         for u, v in graph.edges():
             input.write(v.name.replace(" ", "-") + ' ' + str(v.end_year) + ' ' + str(v.contracted) + "\n")
+
+    with open("components/saved_game/stored_news.csv", "w") as input:
+        input.write("id,event,date,news,naturality_bonus,taste_bonus,advertisment_bonus\n")
+        NewsItem.store_notification()
+        for news in NewsItem.stored_notifications:
+            input.write(str(news.id)+","+str(news.event)+","+str(news.date)+","+str(news.news)+","+str(news.naturality_bonus)+","+str(news.taste_bonus)+","+str(news.advertisment_bonus)+"\n")
+
+    with open("components/saved_game/taxes.csv", "w") as input:
+        input.write("taxes_payed,taxes_sum\n")
+        input.write(str(Graph.taxes_payed) + ',' + str(Graph.taxes_sum) + "\n")
+
     sys.exit()
 
 
@@ -43,6 +54,8 @@ class GraphInit:
         cls.countries_init()
         cls.xinit()
         cls.yinit()
+        cls.taxes_load()
+    
     
     def xinit():
         try:
@@ -99,6 +112,15 @@ class GraphInit:
             print("This except")
             Graph.countries_init = []
 
+    def taxes_load():        
+        try:
+            with open("components/saved_game/taxes.csv", "r") as file:
+                csv_reader = csv.DictReader(file)
+                for row in csv_reader:
+                    Graph.taxes_payed = float(row["taxes_payed"])
+                    Graph.taxes_sum = float(row["taxes_sum"])
+        except:
+            pass
 
 class Graph(nx.Graph):
     initiated = False
@@ -170,8 +192,8 @@ class Graph(nx.Graph):
             self.y.append(self.total_income)
 
     def count_the_taxes(self):
-        if Graph.taxes_payed != int(Timer.get_time_in_years()):
-            Graph.taxes_payed = int(Timer.get_time_in_years())
+        if Graph.taxes_payed != int(Timer.get_initial_time_in_years()):
+            Graph.taxes_payed = int(Timer.get_initial_time_in_years())
             Graph.total_income -= (Graph.taxes_sum*Graph.taxes_payed+0.1*Graph.total_income)
 
 graph = Graph()

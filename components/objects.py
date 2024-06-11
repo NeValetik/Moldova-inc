@@ -18,19 +18,21 @@ class ObjectInit:
         cls.winedatainit()
         Timer.start_time = cls.load_timer()
         Timer.current_time = Timer.start_time
+        cls.load_news()
 
+    @staticmethod
     def winedatainit():
         with open("components/saved_game/winedata.csv", mode='r') as file:
             csv_reader = csv.DictReader(file)
-            for wine in Wine.wines:
-                for row in csv_reader:
+            for row in csv_reader:
+                for wine in Wine.wines:
                     if row["trademark"] == wine.name:
                         wine.advertisment=int(row['advertisment'])
-                        Wine.advertisment_index = int(row['advertisment_index'])
-                        Wine.naturality=int(row['naturality'])
-                        Wine.naturality_index = int(row['naturality_index'])
-                        Wine.taste=int(row['taste'])
-                        Wine.taste_index = int(row['taste_index'])
+                        wine.advertisment_index = int(row['advertisment_index'])
+                        wine.naturality=int(row['naturality'])
+                        wine.naturality_index = int(row['naturality_index'])
+                        wine.taste=int(row['taste'])
+                        wine.taste_index = int(row['taste_index'])
                         # advertisment,advertisment_index,naturality,naturality_index,taste,taste_index
 
     @staticmethod
@@ -45,8 +47,64 @@ class ObjectInit:
                 return datetime.datetime(year, month, day, 12, 0,0 )
 
         except:
-            return datetime.datetime(1950, 12, 30, 12, 0, 0)  
+            return datetime.datetime(1950, 12, 30, 12, 0, 0)      
 
+    @staticmethod
+    def load_news():
+        try:
+            with open("components/saved_game/stored_news.csv", "r") as saved_file:
+                csv_saved_reader = csv.DictReader(saved_file)
+                ids = []
+                for row in csv_saved_reader:
+                    ids.append(row["id"])
+                    NewsItem.stored_notifications.append(NewsItem(int(row["id"]),
+                                                        row["event"],
+                                                        row["date"],
+                                                        row["news"],
+                                                        int(row["naturality_bonus"]),
+                                                        int(row["taste_bonus"]),
+                                                        int(row["advertisment_bonus"])))
+                NewsItem.current_notification = NewsItem.stored_notifications[-1]
+                NewsItem.stored_notifications.pop()    
+                with open("components/news_data/news.csv", "r") as file:
+                    csv_reader = csv.DictReader(file)
+                    for row in csv_reader:
+                        if row["event"]== "None" and row["id"] not in ids:
+                            NewsItem.none_notification.append(NewsItem(int(row["id"]),
+                                                            row["event"],
+                                                            row["date"],
+                                                            row["news"],
+                                                            int(row["naturality_bonus"]),
+                                                            int(row["taste_bonus"]),
+                                                            int(row["advertisment_bonus"])))
+                        elif row["event"]== "historic" and row["id"] not in ids:
+                            NewsItem.historic_notification.append(NewsItem(int(row["id"]),
+                                                            row["event"],
+                                                            row["date"],
+                                                            row["news"],
+                                                            int(row["naturality_bonus"]),
+                                                            int(row["taste_bonus"]),
+                                                            int(row["advertisment_bonus"])))
+                        elif row["event"]== "achievement" and row["id"] not in ids:
+                            NewsItem.achievement_notification.append(NewsItem(int(row["id"]),
+                                                            row["event"],
+                                                            row["date"],
+                                                            row["news"],
+                                                            int(row["naturality_bonus"]),
+                                                            int(row["taste_bonus"]),
+                                                            int(row["advertisment_bonus"])))   
+                        elif row["event"]== "contract" and row["id"] not in ids:
+                            NewsItem.contract_notification.append(NewsItem(int(row["id"]),
+                                                            row["event"],
+                                                            row["date"],
+                                                            row["news"],
+                                                            int(row["naturality_bonus"]),
+                                                            int(row["taste_bonus"]),
+                                                            int(row["advertisment_bonus"])))
+                        NewsItem.one_time_activated = True        
+
+        except:
+            NewsItem.one_time_activation()
 
 class Button(pygame.sprite.Sprite):
     frame = pygame.transform.scale(pygame.image.load("assets/stuff/button-frame.png"), (230, 80))
@@ -729,6 +787,12 @@ class Timer:
     def update_time_difference(cls):
         cls.years_from_start = cls.current_time.year-cls.start_time.year
 
+    @classmethod
+    def get_initial_date_in_years(cls):
+        time = datetime.datetime(1950, 12, 30, 12, 0, 0)
+        total_years = time.year + time.month/12 +time.day/365.25
+        return total_years        
+
 
 class EndGameWindow(pygame.sprite.Sprite):
     windows = []
@@ -841,16 +905,15 @@ class NewsItem:
         self.rect = self.image.get_rect()
         self.rect.center = (640,670)
 
-        self.text = Button.get_text_object(news,10)
+        self.text = Button.get_text_object(news,15)
         self.text_rect = self.text.get_rect()
         self.text_rect.center = self.rect.center
 
     @classmethod
     def update(cls, window):
-        # cls.check_data()
         cls.one_time_activation()
+        cls.check_data()
         cls.display_notification(window)
-        # cls.store_notification()
 
 
     @staticmethod
@@ -875,7 +938,7 @@ class NewsItem:
                                                         int(row["naturality_bonus"]),
                                                         int(row["taste_bonus"]),
                                                         int(row["advertisment_bonus"])))
-                    elif row["event"]== "achievement":
+                    elif row["event"]== "achievement" :
                         NewsItem.achievement_notification.append(NewsItem(int(row["id"]),
                                                         row["event"],
                                                         row["date"],
@@ -883,7 +946,7 @@ class NewsItem:
                                                         int(row["naturality_bonus"]),
                                                         int(row["taste_bonus"]),
                                                         int(row["advertisment_bonus"])))   
-                    elif row["event"]== "contract":
+                    elif row["event"]== "contract" :
                         NewsItem.contract_notification.append(NewsItem(int(row["id"]),
                                                         row["event"],
                                                         row["date"],
@@ -903,16 +966,24 @@ class NewsItem:
 
     @classmethod
     def check_data(cls):
-        '''
-        Method wich will look at countries data,
-        and notify about presetted events
-        '''
-        pass
+        for hist in cls.historic_notification:
+            if Timer.get_initial_time_in_years() > float(hist.date) - Timer.get_initial_date_in_years():
+                if cls.current_notification != None:
+                    cls.store_notification()
+                cls.current_notification = hist
+                cls.historic_notification.remove(hist)
+        if random.randint(1,5000) == 1 and len(cls.none_notification)!=0:
+            if cls.current_notification != None:
+                    cls.store_notification()
+            rand_elem = random.randint(0,len(cls.none_notification)-1)
+            cls.current_notification = cls.none_notification[rand_elem]
+            cls.none_notification.pop(rand_elem)
+
 
     @classmethod
     def display_notification(cls,window):
-        window.blit(cls.none_notification[0].image,cls.none_notification[0].rect)
-        window.blit(cls.none_notification[0].text,cls.none_notification[0].text_rect)        
+        window.blit(cls.current_notification.image,cls.current_notification.rect)
+        window.blit(cls.current_notification.text,cls.current_notification.text_rect)        
     
     @staticmethod
     def make_surface(size=(200, 80), color=(255, 255, 255, 128)):
@@ -924,9 +995,12 @@ class NewsItem:
     @classmethod
     def store_notification(cls):
         if cls.current_notification is not None:
-            cls.store_notification.append(cls.current_notification)
+            cls.stored_notifications.append(cls.current_notification)
             cls.current_notification = None
-            if len(cls.store_notification) > 10:
-                cls.store_notification = cls.store_notification[-10:]
+            if len(cls.stored_notifications) > 10:
+                cls.stored_notifications = cls.stored_notifications[-10:]
+
+    # def __repr__(self):
+    #     return self.id            
 
 pygame.quit()
