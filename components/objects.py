@@ -7,8 +7,10 @@ import numpy as np
 pygame.init()
 
 def income(contract):
-        return Wine.naturality * contract.naturality_coef + Wine.advertisment * contract.advertisment_coef + Wine.taste * contract.taste_coef
-
+    total_income = 0
+    for wine in Wine.wines:
+        total_income += wine.naturality * contract.naturality_coef + wine.advertisment * contract.advertisment_coef + wine.taste * contract.taste_coef 
+    return total_income
 
 class ObjectInit:
     @classmethod
@@ -705,14 +707,14 @@ class Timer:
     def get_time_in_years(cls):
         time_difference = cls.current_time - cls.start_time
         total_seconds = time_difference.total_seconds()
-        total_years = total_seconds / (365.25 * 24 * 3600)  # Assuming 365.25 days in a year for leap years
+        total_years = total_seconds / (365.25 * 24 * 3600) 
         return total_years
     
     @classmethod
     def get_initial_time_in_years(cls):
         time_difference = cls.current_time - datetime.datetime(1950, 12, 30, 12, 0, 0)
         total_seconds = time_difference.total_seconds()
-        total_years = total_seconds / (365.25 * 24 * 3600)  # Assuming 365.25 days in a year for leap years
+        total_years = total_seconds / (365.25 * 24 * 3600)
         return total_years
     
     @classmethod
@@ -779,7 +781,6 @@ class EndGameWindow(pygame.sprite.Sprite):
         text = font.render(message, True, (0, 0, 0))
         return text
     
-
     @classmethod
     def check_collisions(cls, GameState):
         for window in cls.windows:
@@ -794,7 +795,6 @@ class EndGameWindow(pygame.sprite.Sprite):
                         GameState.end_game = False
                         GameState.play = True
                     return
-    
     
     @classmethod
     def transparent_background(cls, window):
@@ -811,7 +811,7 @@ class NewsItem:
     
     none_notification = []
     historic_notification = []
-    achievement_notification = [ ]
+    achievement_notification = []
     contract_notification = []
 
     stored_notifications = []
