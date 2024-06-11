@@ -231,7 +231,7 @@ class Statistic:
     _one_plot = True  # to generate one plot per space button, not each frame
 
     buttons = [
-        Button('Back', (640, 600), dimension=(230, 80))
+        Button('Back', (640, 700), dimension=(230, 80))
     ]
 
     image_path = 'assets/background/pause-background.png'
@@ -251,10 +251,14 @@ class Statistic:
     @classmethod
     def display_plot(cls, window):
         if Statistic._one_plot:
-            x = graph.x 
-            y = graph.y  
+            x = graph.x
+            plt.figure(figsize=(12,6))
+
+            y = graph.y
             plt.plot(x, y)
-            plt.title('Wine Selled')
+            plt.title('Wine sold')
+            plt.xlabel("Date")
+            plt.ylabel("Deal")
             plt.savefig('plot.png')
 
             plot = pygame.image.load('plot.png')
