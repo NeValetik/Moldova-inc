@@ -320,8 +320,8 @@ class Statistic:
 
 class UpgradeMenu:
     buttons = [
-        Button('map', (976, 609), image_path='assets/upgrade-elements/besi-button.png'),
-        Button('bar', (1120, 609), image_path='assets/upgrade-elements/besi-button.png'),
+        Button('map', (1120, 609), image_path='assets/upgrade-elements/besi-button.png'),
+        Button('bar', (976, 609), image_path='assets/upgrade-elements/besi-button.png'),
     ]   
 
     upgrade_buttons = {trandmark:[
@@ -415,6 +415,7 @@ class UpgradeMenu:
         cls.display_icon_skills(window)
         cls.display_info_panel(window)
         cls.display_buttons(window)
+        # cls.dislpay_focus_wine(window)
         cls.check_collisions(window)
 
     @classmethod
@@ -557,6 +558,20 @@ class UpgradeMenu:
 
         window.blit(first_text_surface, first_text_rect)
         window.blit(second_text_surface, second_text_rect)
+
+    @classmethod
+    def dislpay_focus_wine(cls, window):
+        if Wine.focus_on_wine.name == 'red-wine':
+            image = pygame.image.load('assets/wine-tags/red-wine.png')
+        elif Wine.focus_on_wine.name == 'pink-wine':
+            image = pygame.image.load('assets/wine-tags/pink-wine.png')
+        elif Wine.focus_on_wine.name == 'sparkling-wine':
+            image = pygame.image.load('assets/wine-tags/sparkling-wine.png')
+        elif Wine.focus_on_wine.name == 'white-wine':
+            image = pygame.image.load('assets/wine-tags/white-wine.png')
+        rect = image.get_rect()
+        rect.center = (600, 600)
+        window.blit(image, rect)
 
     @classmethod
     def update_info_skills(cls):
@@ -842,6 +857,7 @@ class Map:
         ToSellButton.display_buttons(window, Map)
         if Map.ui_on:
             Map.display_buttons(window)
+            # cls.dislpay_focus_wine(window)
         Transport.update(window, Map, graph)
 
         if Map.personal_update(window) != 'changed' and Map.ui_on:  # Checking the Country collision only if map Button were not pressed
@@ -924,6 +940,20 @@ class Map:
             bar.update(window)
 
     @classmethod
+    def dislpay_focus_wine(cls, window):
+        if Wine.focus_on_wine.name == 'red-wine':
+            image = pygame.image.load('assets/wine-tags/red-wine.png')
+        elif Wine.focus_on_wine.name == 'pink-wine':
+            image = pygame.image.load('assets/wine-tags/pink-wine.png')
+        elif Wine.focus_on_wine.name == 'sparkling-wine':
+            image = pygame.image.load('assets/wine-tags/sparkling-wine.png')
+        elif Wine.focus_on_wine.name == 'white-wine':
+            image = pygame.image.load('assets/wine-tags/white-wine.png')
+        rect = image.get_rect()
+        rect.center = (600, 600)
+        window.blit(image, rect)
+
+    @classmethod
     def check_collisions(cls):
         if Map.pressed and Map.motion:
             return
@@ -965,8 +995,8 @@ class Music:
 
 class Bar:
     buttons = [
-        Button('map', (976, 609), image_path='assets/upgrade-elements/besi-button.png'),
-        Button('upgrade', (1120, 609), image_path='assets/upgrade-elements/besi-button.png'),
+        Button('map', (1120, 609), image_path='assets/upgrade-elements/besi-button.png'),
+        Button('upgrade', (976, 609), image_path='assets/upgrade-elements/besi-button.png'),
     ]   
 
     # Static elements will not collide with anything
