@@ -1154,9 +1154,9 @@ class News:
 
 
     @classmethod
-    def get_text_object(cls, name, font_size):
+    def get_text_object(cls, name, font_size, color=(0,0,0)):
         font = pygame.font.Font("assets/font/lexend.ttf", font_size)
-        text = font.render(name, True, (0, 0, 0))
+        text = font.render(name, True, color)
         return text
 
     @classmethod
@@ -1172,7 +1172,7 @@ class News:
 
     @classmethod
     def display_hot_news_name(cls, window):
-        text = cls.get_text_object("Hot news", 30)
+        text = cls.get_text_object("Hot news", 30, color=(255,255,255))
         text_rect = text.get_rect()
         text_rect.center = cls.hot_news_pos
         window.blit(text, text_rect)    
