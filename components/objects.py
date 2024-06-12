@@ -663,7 +663,7 @@ class Country(pygame.sprite.Sprite):
 class Wine:
     wine_color = (89, 16, 56)
     wines = []
-    trandmarks = ['red-wine', 'sparkling-wine', 'pink-wine', 'white-wine']
+    trandmarks = ['Red Wine', 'Sparkling Wine', 'Pink Wine', 'White Wine']
     focus_on_wine = None
 
     def __init__(self, name, taste=0, naturality=0, advertisement=0):
