@@ -180,7 +180,7 @@ class Graph(nx.Graph):
         return temp_sum
 
     def collect_data_for_statistics_week(self):
-        if len(self.x) < 52 and Timer.get_time() not in self.x:
+        if len(self.x) < 24 and Timer.get_time() not in self.x:
             self.x.append(Timer.get_time())
             self.y.append(self.total_income)
             # print(self.y)

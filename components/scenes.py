@@ -279,6 +279,7 @@ class Statistic:
             x = graph.x
             plt.figure(figsize=(7,6))
             y = graph.y
+            plt.tick_params(axis='x', labelrotation=45)
             plt.plot(x, y)
             plt.title('Accumulated income')
             plt.xlabel("Date")
