@@ -280,17 +280,23 @@ class Statistic:
             plt.figure(figsize=(7,6))
             y = graph.y
             plt.plot(x, y)
-            plt.title('Wine sold')
+            plt.title('Accumulated income')
             plt.xlabel("Date")
             plt.ylabel("Deal")
             plt.savefig('plot1.png', transparent=True)
 
-            labels = ['A', 'B', 'C', 'D']
-            sizes = [15, 30, 45, 10]  # %
-            colors = ['#ff9999','#66b3ff','#99ff99','#ffcc99']
+            total_accumulated = 0
+            labels = Wine.trandmarks
+            for wine in Wine.wines:
+                total_accumulated+=wine.total_accumulated
+            if total_accumulated!=0:    
+                sizes = [(acc.total_accumulated*100)/total_accumulated for acc in Wine.wines]
+            else:
+                sizes = [25,25,25,25]    
+            colors = ['#b73229','#ffff99','#FFC0CB','#fff1fa']
             fig, ax = plt.subplots()
             ax.pie(sizes, colors=colors, labels=labels, autopct='%1.1f%%', startangle=90, textprops=dict(color="black"))
-            plt.title('Another Title')
+            plt.title('Revenue from wines')
             plt.savefig('plot2.png', transparent=True)
 
             plot1 = pygame.image.load('plot1.png')
@@ -315,6 +321,7 @@ class Statistic:
             if button.rect.collidepoint(pygame.mouse.get_pos()) and not pygame.mouse.get_pressed()[0] and GameState.mouse_button_was_pressed:
                 Music.play_click_sound()
                 if button.name == 'Back':
+                    plt.close()
                     GameState.statistic = False
                     GameState.play = True
 
@@ -604,7 +611,8 @@ class CountryStatistic:
                                           "Taste low" if country.taste_coef < 0.4 else("Taste middle" if 0.6>country.taste_coef > 0.4 else "Taste high"),
                                           f"Naturality needed {int(country.contract_condition_naturality)}",
                                           f"Advertisment needed {int(country.contract_condition_advertisment)}",
-                                          f"Taste needed {int(country.contract_condition_taste)}"] for country in Country.countries}
+                                          f"Taste needed {int(country.contract_condition_taste)}",
+                                          f"Prefered wine {country.prefered_wine}".replace("-wine","")] for country in Country.countries}
 
     @classmethod
     def update(cls, window):
@@ -671,6 +679,7 @@ class CountryStatistic:
             fourth_text = cls.country_description[country.name][3]
             fifth_text = cls.country_description[country.name][4]
             sixth_text = cls.country_description[country.name][5]
+            seventh_text = cls.country_description[country.name][6]
         except:
             first_text = 'Soon'
             second_text = ''
@@ -680,24 +689,28 @@ class CountryStatistic:
         first_text_rect.topleft = (900, 200)
 
         second_text_surface = font.render(second_text, True, (0, 0, 0))
-        second_text_rect = first_text_surface.get_rect()       
+        second_text_rect = second_text_surface.get_rect()       
         second_text_rect.topleft = (900, 250)
 
         third_text_surface = font.render(third_text, True, (0, 0, 0))
-        third_text_rect = first_text_surface.get_rect()       
+        third_text_rect = third_text_surface.get_rect()       
         third_text_rect.topleft = (900, 300)
 
         fourth_text_surface = font.render(fourth_text, True, (0, 0, 0))
-        fourth_text_rect = first_text_surface.get_rect()       
+        fourth_text_rect = fourth_text_surface.get_rect()       
         fourth_text_rect.topleft = (900, 350)
 
         fifth_text_surface = font.render(fifth_text, True, (0, 0, 0))
-        fifth_text_rect = first_text_surface.get_rect()       
+        fifth_text_rect = fifth_text_surface.get_rect()       
         fifth_text_rect.topleft = (900, 400)
 
         sixth_text_surface = font.render(sixth_text, True, (0, 0, 0))
-        sixth_text_rect = first_text_surface.get_rect()       
+        sixth_text_rect = sixth_text_surface.get_rect()       
         sixth_text_rect.topleft = (900, 450)
+
+        seventh_text_surface = font.render(seventh_text, True, (0, 0, 0))
+        seventh_text_rect = seventh_text_surface.get_rect()       
+        seventh_text_rect.topleft = (900, 500)
 
         window.blit(first_text_surface, first_text_rect)
         window.blit(second_text_surface, second_text_rect)
@@ -705,6 +718,7 @@ class CountryStatistic:
         window.blit(fourth_text_surface, fourth_text_rect)
         window.blit(fifth_text_surface, fifth_text_rect)
         window.blit(sixth_text_surface, sixth_text_rect)
+        window.blit(seventh_text_surface, seventh_text_rect)
 
     @classmethod
     def check_collisions(cls):

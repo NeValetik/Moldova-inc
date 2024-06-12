@@ -49,6 +49,7 @@ while True:
                 elif GameState.statistic:
                     GameState.statistic = False
                     Statistic._one_plot = True
+                    plt.close()
                     Statistic.delete_plot()
                     GameState.play = True
 
