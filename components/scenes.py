@@ -249,8 +249,8 @@ class Statistic:
 
     @classmethod
     def update(cls, window):
-        # cls.display_transparent_background(window)
-        cls.display_background(window)
+        cls.display_transparent_background(window)
+        # cls.display_background(window)
         cls.display_buttons(window)
         cls.display_plot(window)
         cls.check_collisions()

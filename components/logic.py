@@ -25,9 +25,9 @@ def exit_game():
             input.write("\n")
 
     with open("components/saved_game/winedata.csv", "w") as input:
-        input.write("advertisment,advertisment_index,naturality,naturality_index,taste,taste_index,trademark\n")
+        input.write("advertisment,advertisment_index,naturality,naturality_index,taste,taste_index,trademark,total_accumulated\n")
         for wine in Wine.wines:
-            input.write(str(BarsGetters.get_wine_advertisment(wine))+","+str(wine.advertisment_index)+","+str(BarsGetters.get_wine_naturality(wine))+","+str(wine.naturality_index)+","+str(BarsGetters.get_wine_taste(wine))+","+str(wine.taste_index)+","+str(wine.name)+"\n")
+            input.write(str(BarsGetters.get_wine_advertisment(wine))+","+str(wine.advertisment_index)+","+str(BarsGetters.get_wine_naturality(wine))+","+str(wine.naturality_index)+","+str(BarsGetters.get_wine_taste(wine))+","+str(wine.taste_index)+","+str(wine.name)+","+str(int(wine.total_accumulated))+"\n")
             #advertisment,advertisment_index,naturality,naturality_index,taste,taste_index,trademark
             #10000,-1,10000,-1,10000,-1,white-wine
     with open("components/saved_game/graph.txt", "w") as input:
@@ -42,7 +42,7 @@ def exit_game():
 
     with open("components/saved_game/taxes.csv", "w") as input:
         input.write("taxes_payed,taxes_sum\n")
-        input.write(str(Graph.taxes_payed) + ',' + str(Graph.taxes_sum) + "\n")
+        input.write(str(Graph.taxes_payed) + ',' + str(Graph.taxes_sum) + "\n") 
 
     sys.exit()
 

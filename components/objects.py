@@ -41,6 +41,7 @@ class ObjectInit:
                         wine.naturality_index = int(row['naturality_index'])
                         wine.taste=int(row['taste'])
                         wine.taste_index = int(row['taste_index'])
+                        wine.total_accumulated = int(float(row['total_accumulated']))
                         # advertisment,advertisment_index,naturality,naturality_index,taste,taste_index
 
     @staticmethod
