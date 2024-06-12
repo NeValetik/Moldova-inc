@@ -6,7 +6,10 @@ import csv
 # print(calculate)
 
 
-with open("components/saved_game/stored_news.csv") as saved_file:
-    csv_saved_reader = csv.DictReader(saved_file)
-    for r in csv_saved_reader:
-        print(r)
+# with open("components/saved_game/stored_news.csv") as saved_file:
+#     csv_saved_reader = csv.DictReader(saved_file)
+#     for r in csv_saved_reader:
+#         print(r)
+
+text = input()
+print(text[:76])

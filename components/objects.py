@@ -921,9 +921,12 @@ class NewsItem:
         self.rect = self.image.get_rect()
         self.rect.center = (640,670)
 
-        self.text = Button.get_text_object(news,15)
-        self.text_rect = self.text.get_rect()
-        self.text_rect.center = self.rect.center
+        self.texts = NewsItem.get_text_objects(news,15)
+        self.texts_rects = [text.get_rect() for text in self.texts]
+        accumulator = np.array((0,-10))
+        for text_rect in self.texts_rects:
+            text_rect.center = self.rect.center + accumulator 
+            accumulator += np.array((0,20))
 
     @classmethod
     def update(cls, window):
@@ -974,9 +977,20 @@ class NewsItem:
 
 
     @classmethod
-    def get_text_object(cls, name, font_size):
+    def get_text_objects(cls, name, font_size):
         font = pygame.font.Font("assets/font/evil-empire.ttf", font_size)
-        text = font.render(name, True, (0, 0, 0))
+        number_of_rows = len(name)/73
+        if number_of_rows<=1:
+            text = [font.render(name, True, (0, 0, 0))]
+        else:
+            text = []
+            temp_name = name
+            while number_of_rows>1:
+                text.append(font.render(temp_name[:73]+"-", True, (0, 0, 0)))
+                temp_name = temp_name[73:]
+                number_of_rows = len(temp_name)/73
+                if number_of_rows<=1:
+                    text.append(font.render(temp_name, True, (0, 0, 0)))    
         return text
 
 
@@ -999,14 +1013,13 @@ class NewsItem:
     @classmethod
     def display_notification(cls,window):
         window.blit(cls.current_notification.image,cls.current_notification.rect)
-        window.blit(cls.current_notification.text,cls.current_notification.text_rect)        
+        for i in range(len(cls.current_notification.texts)):
+            window.blit(cls.current_notification.texts[i],cls.current_notification.texts_rects[i])        
     
     @staticmethod
     def make_surface(size=(200, 80), color=(255, 255, 255, 128)):
-        box = pygame.Surface(size, pygame.SRCALPHA)
-        box.fill(color)
-        pygame.draw.rect(box, (255, 255, 255, 255), (0, 0, *size))
-        return box 
+        panel = pygame.image.load('assets/stuff/news-panel.png')
+        return panel
 
     @classmethod
     def store_notification(cls):
