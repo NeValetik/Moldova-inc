@@ -275,13 +275,14 @@ class Statistic:
     def display_plot(cls, window):
         if Statistic._one_plot:
             x = graph.x
-            plt.figure(figsize=(7,6))
+            plt.figure(figsize=(8,6))
             y = graph.y
             plt.tick_params(axis='x', labelrotation=45)
             plt.plot(x, y)
             plt.title('Accumulated income')
             plt.xlabel("Date")
             plt.ylabel("Deal")
+            plt.subplots_adjust(bottom=0.2)
             plt.savefig('plot1.png', transparent=True)
 
             total_accumulated = 0
@@ -297,16 +298,17 @@ class Statistic:
             ax.pie(sizes, colors=colors, labels=labels, autopct='%1.1f%%', startangle=90, textprops=dict(color="black"))
             plt.title('Revenue from wines')
             plt.savefig('plot2.png', transparent=True)
+            plt.close()
 
             plot1 = pygame.image.load('plot1.png')
             plot2 = pygame.image.load('plot2.png')
-            window.blit(plot1, (90,30))
+            window.blit(plot1, (60,30))
             window.blit(plot2, (650,90))
             Statistic._one_plot = False
         else:
             plot1 = pygame.image.load('plot1.png')
             plot2 = pygame.image.load('plot2.png')
-            window.blit(plot1, (90,30))
+            window.blit(plot1, (60,30))
             window.blit(plot2, (650,90))
     
     @classmethod
@@ -567,13 +569,13 @@ class UpgradeMenu:
 
     @classmethod
     def dislpay_focus_wine(cls, window):
-        if Wine.focus_on_wine.name == 'red-wine':
+        if Wine.focus_on_wine.name == 'Red Wine':
             image = pygame.image.load('assets/wine-tags/red-wine.png')
-        elif Wine.focus_on_wine.name == 'pink-wine':
+        elif Wine.focus_on_wine.name == 'Pink Wine':
             image = pygame.image.load('assets/wine-tags/pink-wine.png')
-        elif Wine.focus_on_wine.name == 'sparkling-wine':
+        elif Wine.focus_on_wine.name == 'Sparkling Wine':
             image = pygame.image.load('assets/wine-tags/sparkling-wine.png')
-        elif Wine.focus_on_wine.name == 'white-wine':
+        elif Wine.focus_on_wine.name == 'White Wine':
             image = pygame.image.load('assets/wine-tags/white-wine.png')
         rect = image.get_rect()
         rect.center = (896.5, 592)
@@ -814,6 +816,7 @@ class Map:
     buttons = [
         Button('upgrade menu', (1100, 670), image_path='assets/stuff/menu-button.png'),
         Button('statistics', (170, 670), image_path='assets/stuff/menu-button.png'),
+        Button('pause', (40, 40), add_text=False, image_path='assets/icons/pause.png', dimension=(40,40))
     ]
 
     stats_bars = [
@@ -954,13 +957,13 @@ class Map:
 
     @classmethod
     def dislpay_focus_wine(cls, window):
-        if Wine.focus_on_wine.name == 'red-wine':
+        if Wine.focus_on_wine.name == 'Red Wine':
             image = pygame.image.load('assets/wine-tags/red-wine.png')
-        elif Wine.focus_on_wine.name == 'pink-wine':
+        elif Wine.focus_on_wine.name == 'Pink Wine':
             image = pygame.image.load('assets/wine-tags/pink-wine.png')
-        elif Wine.focus_on_wine.name == 'sparkling-wine':
+        elif Wine.focus_on_wine.name == 'Sparkling Wine':
             image = pygame.image.load('assets/wine-tags/sparkling-wine.png')
-        elif Wine.focus_on_wine.name == 'white-wine':
+        elif Wine.focus_on_wine.name == 'White Wine':
             image = pygame.image.load('assets/wine-tags/white-wine.png')
         rect = image.get_rect()
         rect.center = (980, 650)
@@ -982,6 +985,9 @@ class Map:
                         elif button.name == 'statistics':
                             GameState.play = False
                             GameState.statistic = True
+                        elif button.name == 'pause':
+                            GameState.play = False
+                            GameState.pause = True
                         return 'changed' 
                 else:
                     cls.pressed_icon = False
@@ -1049,8 +1055,7 @@ class Bar:
         cls.display_static_and_dynamic_elements(window)
         cls.display_buttons(window)
         cls.display_title(window)
-        cls.display_wine_information(window)
-        cls.check_collisions(window)  # check collisions + load and display big wine glass
+        cls.check_collisions(window)  # check collisions + display big wine glass
 
     @classmethod
     def display_background(cls, window):
@@ -1071,13 +1076,13 @@ class Bar:
     
     @classmethod
     def display_title(cls, window):
-        if Wine.focus_on_wine.name == 'red-wine':
+        if Wine.focus_on_wine.name == 'Red Wine':
             text = 'Red Wine'
-        if Wine.focus_on_wine.name == 'pink-wine':
+        if Wine.focus_on_wine.name == 'Pink Wine':
             text = 'Pink Wine'
-        if Wine.focus_on_wine.name == 'sparkling-wine':
+        if Wine.focus_on_wine.name == 'Sparkling Wine':
             text = 'Sparkling Wine'
-        if Wine.focus_on_wine.name == 'white-wine':
+        if Wine.focus_on_wine.name == 'White Wine':
             text = 'White Wine'
 
         font = pygame.font.Font('assets/font/lexend.ttf', 36)
@@ -1085,20 +1090,16 @@ class Bar:
         text_rect = text.get_rect()
         text_rect.center = (1046.50, 140)
         window.blit(text, text_rect)
-    
-    @classmethod
-    def display_wine_information(cls, window):
-        pass
 
     @classmethod
     def check_collisions(cls , window):
-        if Wine.focus_on_wine.name == 'red-wine':
+        if Wine.focus_on_wine.name == 'Red Wine':
             big_wine = pygame.image.load('assets/bar/wines/big-red-wine.png')
-        elif Wine.focus_on_wine.name == 'sparkling-wine':
+        elif Wine.focus_on_wine.name == 'Sparkling Wine':
             big_wine = pygame.image.load('assets/bar/wines/big-sparkling-wine.png')
-        elif Wine.focus_on_wine.name == 'pink-wine':
+        elif Wine.focus_on_wine.name == 'Pink Wine':
             big_wine = pygame.image.load('assets/bar/wines/big-pink-wine.png')
-        elif Wine.focus_on_wine.name == 'white-wine':
+        elif Wine.focus_on_wine.name == 'White Wine':
             big_wine = pygame.image.load('assets/bar/wines/big-white-wine.png')
 
         for button in cls.buttons:
@@ -1127,13 +1128,13 @@ class Bar:
                     if not cls.pressed_1:
                         cls.pressed_1 = True
                         if cls.focus.name == 'tag-1' or cls.focus.name == 'support-rect-1':
-                                Wine.change_focus('white-wine')
+                                Wine.change_focus('White Wine')
                         elif cls.focus.name == 'tag-2' or cls.focus.name == 'support-rect-2':
-                                Wine.change_focus('pink-wine')
+                                Wine.change_focus('Pink Wine')
                         elif cls.focus.name == 'tag-3' or cls.focus.name == 'support-rect-3':
-                                Wine.change_focus('red-wine')
+                                Wine.change_focus('Red Wine')
                         elif cls.focus.name == 'tag-4' or cls.focus.name == 'support-rect-4':
-                                Wine.change_focus('sparkling-wine')
+                                Wine.change_focus('Sparkling Wine')
                 else:
                     cls.pressed_1 = False
                     Music.is_clicked = False

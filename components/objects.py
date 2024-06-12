@@ -118,9 +118,10 @@ class Button(pygame.sprite.Sprite):
     frame = pygame.transform.scale(pygame.image.load("assets/stuff/button-frame.png"), (230, 80))
     frame_rect = frame.get_rect()
 
-    def __init__(self, name, position, image_path=None, dimension=None, size = (200, 80), font_size=30):
+    def __init__(self, name, position, add_text=True, image_path=None, dimension=None, size = (200, 80), font_size=30):
         super().__init__()
         self.name = name
+        self.add_text = add_text  # if we don't want any names on the button (made for pause button (ik, weird))
 
         self.text = Button.get_text_object(name,font_size)
         self.text_rect = self.text.get_rect()
@@ -151,8 +152,9 @@ class Button(pygame.sprite.Sprite):
     @classmethod
     def display_text_on_buttons(cls, from_class, window):
         for button in from_class.buttons:
-            button.text_rect.center = button.rect.center
-            window.blit(button.text, button.text_rect)
+            if button.add_text:
+                button.text_rect.center = button.rect.center
+                window.blit(button.text, button.text_rect)
     
     @classmethod
     def display_buttons(cls, from_class, window):
@@ -663,7 +665,7 @@ class Country(pygame.sprite.Sprite):
 class Wine:
     wine_color = (89, 16, 56)
     wines = []
-    trandmarks = ['red-wine', 'sparkling-wine', 'pink-wine', 'white-wine']
+    trandmarks = ['Red Wine', 'Sparkling Wine', 'Pink Wine', 'White Wine']
     focus_on_wine = None
 
     def __init__(self, name, taste=0, naturality=0, advertisement=0):
