@@ -292,7 +292,7 @@ class Statistic:
                 sizes = [(acc.total_accumulated*100)/total_accumulated for acc in Wine.wines]
             else:
                 sizes = [25,25,25,25]    
-            colors = ['#b73229','#ffff99','#FFC0CB','#fff1fa']
+            colors = ['#e07a5f','#3d405b','#81b29a','#f2cc8f']
             fig, ax = plt.subplots()
             ax.pie(sizes, colors=colors, labels=labels, autopct='%1.1f%%', startangle=90, textprops=dict(color="black"))
             plt.title('Revenue from wines')
