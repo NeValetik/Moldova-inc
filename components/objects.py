@@ -9,8 +9,16 @@ pygame.init()
 def income(contract):
     total_income = 0
     for wine in Wine.wines:
-        total_income += wine.naturality * contract.naturality_coef + wine.advertisment * contract.advertisment_coef + wine.taste * contract.taste_coef 
-    return total_income
+        if wine.name == contract.prefered_wine:
+            temp_income = (wine.naturality * contract.naturality_coef + wine.advertisment * contract.advertisment_coef + wine.taste * contract.taste_coef)*contract.prefered_wine_coef
+            wine.total_accumulated += temp_income
+            total_income += temp_income
+        else:
+            temp_income = wine.naturality * contract.naturality_coef + wine.advertisment * contract.advertisment_coef + wine.taste * contract.taste_coef
+            wine.total_accumulated += temp_income
+            total_income += temp_income
+
+    return int(total_income)
 
 class ObjectInit:
     @classmethod
@@ -480,7 +488,7 @@ class Country(pygame.sprite.Sprite):
     old_map_scale = 1  # To rescale the map only after Map.scale modification
     initial_scale_factor = 0.325    # Optimal scale for countries for 1200x800
 
-    def __init__(self, name, image_path, position, continent,naturality,advertisment,taste,contract_condition_naturality,contract_condition_advertisment,contract_condition_taste):
+    def __init__(self, name, image_path, position, continent,naturality,advertisment,taste,contract_condition_naturality,contract_condition_advertisment,contract_condition_taste,prefered_wine):
         self.initial_scale_factor = 0.325  # Optimal scale for countries for 1200x800
         self.not_scaled_width = Image.open(image_path).size[0]
         self.not_scaled_height = Image.open(image_path).size[1]
@@ -522,6 +530,9 @@ class Country(pygame.sprite.Sprite):
         self.contract_condition_taste = contract_condition_taste
 
         self.contracted = False
+
+        self.prefered_wine = prefered_wine
+        self.prefered_wine_coef = random.uniform(1.1,1.5)
 
         Country.countries.append(self)
         if name == "Moldova":
@@ -628,7 +639,7 @@ class Country(pygame.sprite.Sprite):
                         Country(row['country'], row['image_path'], (float(row['x_position']), float(row['y_position'])),
                                 str(row['continent']),float(row["naturality"]),float(row["advertisment"]),
                                 float(row["taste"]),float(row["contract_condition_naturality"]),
-                                float(row["contract_condition_advertisment"]),float(row["contract_condition_taste"]))
+                                float(row["contract_condition_advertisment"]),float(row["contract_condition_taste"]),row["prefered_wine"])
             elif cls.initiate_from == 'sqlite3':
                 db_file = 'components/countries_data/countries_data.db'
                 conn = sqlite3.connect(db_file)
@@ -666,6 +677,8 @@ class Wine:
         self.taste_index = 0
         self.naturality_index = 0
         self.advertisment_index = 0
+
+        self.total_accumulated = 0
 
 
     @classmethod
