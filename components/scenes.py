@@ -1149,10 +1149,19 @@ class News:
     image = NewsItem.make_surface(size = (450,50))
     rect = image.get_rect()
     rect.center = (640,670)
+    hot_news_pos = rect.center + np.array((-150,-39))
+
+
+    @classmethod
+    def get_text_object(cls, name, font_size):
+        font = pygame.font.Font("assets/font/lexend.ttf", font_size)
+        text = font.render(name, True, (0, 0, 0))
+        return text
 
     @classmethod
     def update(cls, window):
         cls.display_background(window)
+        cls.display_hot_news_name(window)
         NewsItem.update(window)
         # cls.display_static_and_dynamic_elements(window)
 
@@ -1160,6 +1169,11 @@ class News:
     def display_background(cls, window):
         window.blit(cls.image, cls.rect)
 
-           
+    @classmethod
+    def display_hot_news_name(cls, window):
+        text = cls.get_text_object("Hot news", 30)
+        text_rect = text.get_rect()
+        text_rect.center = cls.hot_news_pos
+        window.blit(text, text_rect)    
 
 pygame.quit()
