@@ -127,7 +127,7 @@ class GameState:
 class MainMenu:
     buttons = ScenesInit.buttons_init()
 
-    background = pygame.transform.scale(pygame.image.load('assets/background/main-background.png'), (1280, 720))
+    background = pygame.transform.scale(pygame.image.load('assets/background/main.png'), (1280, 720))
     stripe = pygame.transform.scale(pygame.image.load('assets/background/stripe.png'), (400, 720))
     stripe_rect = stripe.get_rect()
     stripe_rect.center = (300, 360)
@@ -196,7 +196,7 @@ class Pause:
         Button('exit', (300, 450), dimension=(230, 80)),
     ]
 
-    background = pygame.transform.scale(pygame.image.load('assets/background/pause-background.png'), (1280, 720))
+    background = pygame.transform.scale(pygame.image.load('assets/background/pause.png'), (1280, 720))
     stripe = pygame.transform.scale(pygame.image.load('assets/background/stripe.png'), (400, 720))
     stripe_rect = stripe.get_rect()
     stripe_rect.center = (300, 360)
@@ -241,18 +241,16 @@ class Statistic:
         Button('Back', (640, 650), image_path='assets/stuff/menu-button.png')
     ]
 
-    image_path = 'assets/background/pause-background.png'
-    initial_image = pygame.image.load(image_path)
-
-    background = pygame.transform.scale(pygame.image.load(image_path), (1280, 720))
-    background.set_alpha(50)
+    image_path = 'assets/background/statistic.jpg'
+    background = pygame.image.load(image_path)
+    # background.set_alpha(50)
 
     back_is = None
 
     @classmethod
     def update(cls, window):
-        cls.display_transparent_background(window)
-        # cls.display_background(window)  # in case our designer will honor us with an image
+        # cls.display_transparent_background(window)
+        cls.display_background(window)
         cls.display_buttons(window)
         cls.display_plot(window)
         cls.check_collisions()
@@ -264,9 +262,9 @@ class Statistic:
         background.set_alpha(230)
         window.blit(background, (0, 0))
 
-    # @classmethod
-    # def display_background(cls, window):
-    #     window.blit(cls.background, cls.background.get_rect())
+    @classmethod
+    def display_background(cls, window):
+        window.blit(cls.background, cls.background.get_rect())
 
     @classmethod
     def display_buttons(cls, window):
@@ -295,13 +293,13 @@ class Statistic:
 
             plot1 = pygame.image.load('plot1.png')
             plot2 = pygame.image.load('plot2.png')
-            window.blit(plot1, (40,30))
+            window.blit(plot1, (90,30))
             window.blit(plot2, (650,90))
             Statistic._one_plot = False
         else:
             plot1 = pygame.image.load('plot1.png')
             plot2 = pygame.image.load('plot2.png')
-            window.blit(plot1, (40,30))
+            window.blit(plot1, (90,30))
             window.blit(plot2, (650,90))
     
     @classmethod
@@ -396,7 +394,7 @@ class UpgradeMenu:
     }
     
 
-    image = pygame.transform.scale(pygame.image.load('assets/background/besi-background.png'),  (1280, 720))
+    image = pygame.transform.scale(pygame.image.load('assets/background/besi.png'),  (1280, 720))
     rect = image.get_rect()
 
     grape = pygame.image.load('assets/upgrade-elements/grape.png')
@@ -415,7 +413,7 @@ class UpgradeMenu:
         cls.display_icon_skills(window)
         cls.display_info_panel(window)
         cls.display_buttons(window)
-        # cls.dislpay_focus_wine(window)
+        cls.dislpay_focus_wine(window)
         cls.check_collisions(window)
 
     @classmethod
@@ -570,7 +568,7 @@ class UpgradeMenu:
         elif Wine.focus_on_wine.name == 'white-wine':
             image = pygame.image.load('assets/wine-tags/white-wine.png')
         rect = image.get_rect()
-        rect.center = (600, 600)
+        rect.center = (896.5, 592)
         window.blit(image, rect)
 
     @classmethod
@@ -726,7 +724,7 @@ class Settings:
     sound_effect_state = Button('off', (720, 330), size=(60, 49))
 
     
-    image_path = 'assets/background/pause-background.png'
+    image_path = 'assets/background/pause.png'
     initial_image = pygame.image.load(image_path)
 
     background = pygame.transform.scale(pygame.image.load(image_path), (1280, 720))
@@ -857,7 +855,7 @@ class Map:
         ToSellButton.display_buttons(window, Map)
         if Map.ui_on:
             Map.display_buttons(window)
-            # cls.dislpay_focus_wine(window)
+            cls.dislpay_focus_wine(window)
         Transport.update(window, Map, graph)
 
         if Map.personal_update(window) != 'changed' and Map.ui_on:  # Checking the Country collision only if map Button were not pressed
@@ -950,7 +948,7 @@ class Map:
         elif Wine.focus_on_wine.name == 'white-wine':
             image = pygame.image.load('assets/wine-tags/white-wine.png')
         rect = image.get_rect()
-        rect.center = (600, 600)
+        rect.center = (980, 650)
         window.blit(image, rect)
 
     @classmethod
@@ -1001,29 +999,29 @@ class Bar:
 
     # Static elements will not collide with anything
     static_elements = [
-        Button('assets/upgrade-wine/rect.png', (1046, 357), image_path='assets/upgrade-wine/rect.png'),
-        Button('assets/upgrade-wine/rect.png', (1046, 583.5), image_path='assets/upgrade-wine/table.png'),
+        Button('assets/bar/rect.png', (1046, 357), image_path='assets/bar/rect.png'),
+        Button('assets/bar/rect.png', (1046, 583.5), image_path='assets/bar/table.png'),
 
-        Button('assets/upgrade-wine/rect.png', (204.00, 263.5), image_path='assets/upgrade-wine/small-white-wine.png'),
-        Button('assets/upgrade-wine/rect.png', (204, 500.5), image_path='assets/upgrade-wine/small-red-wine.png'),
-        Button('assets/upgrade-wine/rect.png', (565.00,263.5), image_path='assets/upgrade-wine/small-pink-wine.png'),
-        Button('assets/upgrade-wine/rect.png', (565, 500.5), image_path='assets/upgrade-wine/small-sparkling-wine.png'),
+        Button('assets/bar/rect.png', (204.00, 263.5), image_path='assets/bar/wines/small-white-wine.png'),
+        Button('assets/bar/rect.png', (204, 500.5), image_path='assets/bar/wines/small-red-wine.png'),
+        Button('assets/bar/rect.png', (565.00,263.5), image_path='assets/bar/wines/small-pink-wine.png'),
+        Button('assets/bar/rect.png', (565, 500.5), image_path='assets/bar/wines/small-sparkling-wine.png'),
     ]
 
     # Elements that will (check collision and) change big wine glass
     dynamic_elements = [
-        Button('support-rect-1', (213, 264), image_path='assets/upgrade-wine/support-rect.png'),
-        Button('support-rect-2', (568, 264), image_path='assets/upgrade-wine/support-rect.png'),
-        Button('support-rect-3', ( 213, 501), image_path='assets/upgrade-wine/support-rect.png'),
-        Button('support-rect-4', (568, 501), image_path='assets/upgrade-wine/support-rect.png'),
+        Button('support-rect-1', (213, 264), image_path='assets/bar/support-rect.png'),
+        Button('support-rect-2', (568, 264), image_path='assets/bar/support-rect.png'),
+        Button('support-rect-3', ( 213, 501), image_path='assets/bar/support-rect.png'),
+        Button('support-rect-4', (568, 501), image_path='assets/bar/support-rect.png'),
 
-        Button('tag-1', (320.5, 261.5), image_path='assets/upgrade-wine/tag.png'),
-        Button('tag-2', (684.5, 261.5), image_path='assets/upgrade-wine/tag.png'),
-        Button('tag-3', (320.5, 498.5), image_path='assets/upgrade-wine/tag.png'),
-        Button('tag-4', (684.5, 498.5), image_path='assets/upgrade-wine/tag.png'),
+        Button('tag-1', (320.5, 261.5), image_path='assets/bar/tags/white-wine-tag.png'),
+        Button('tag-2', (684.5, 261.5), image_path='assets/bar/tags/rose-wine-tag.png'),
+        Button('tag-3', (320.5, 498.5), image_path='assets/bar/tags/red-wine-tag.png'),
+        Button('tag-4', (684.5, 498.5), image_path='assets/bar/tags/sparkling-wine-tag.png'),
     ]
 
-    image = pygame.image.load('assets/upgrade-wine/background.png')
+    image = pygame.image.load('assets/background/bar.png')
     rect = image.get_rect()
 
     pressed_1 = True
@@ -1080,13 +1078,13 @@ class Bar:
     @classmethod
     def check_collisions(cls , window):
         if Wine.focus_on_wine.name == 'red-wine':
-            big_wine = pygame.image.load('assets/upgrade-wine/big-red-wine.png')
+            big_wine = pygame.image.load('assets/bar/wines/big-red-wine.png')
         elif Wine.focus_on_wine.name == 'sparkling-wine':
-            big_wine = pygame.image.load('assets/upgrade-wine/big-sparkling-wine.png')
+            big_wine = pygame.image.load('assets/bar/wines/big-sparkling-wine.png')
         elif Wine.focus_on_wine.name == 'pink-wine':
-            big_wine = pygame.image.load('assets/upgrade-wine/big-pink-wine.png')
+            big_wine = pygame.image.load('assets/bar/wines/big-pink-wine.png')
         elif Wine.focus_on_wine.name == 'white-wine':
-            big_wine = pygame.image.load('assets/upgrade-wine/big-white-wine.png')
+            big_wine = pygame.image.load('assets/bar/wines/big-white-wine.png')
 
         for button in cls.buttons:
             if button.rect.collidepoint(pygame.mouse.get_pos()):
