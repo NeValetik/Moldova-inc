@@ -816,6 +816,7 @@ class Map:
     buttons = [
         Button('upgrade menu', (1100, 670), image_path='assets/stuff/menu-button.png'),
         Button('statistics', (170, 670), image_path='assets/stuff/menu-button.png'),
+        Button('pause', (40, 40), add_text=False, image_path='assets/icons/pause.png', dimension=(40,40))
     ]
 
     stats_bars = [
@@ -984,6 +985,9 @@ class Map:
                         elif button.name == 'statistics':
                             GameState.play = False
                             GameState.statistic = True
+                        elif button.name == 'pause':
+                            GameState.play = False
+                            GameState.pause = True
                         return 'changed' 
                 else:
                     cls.pressed_icon = False
