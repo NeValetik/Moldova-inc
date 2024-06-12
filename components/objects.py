@@ -979,16 +979,16 @@ class NewsItem:
     @classmethod
     def get_text_objects(cls, name, font_size):
         font = pygame.font.Font("assets/font/evil-empire.ttf", font_size)
-        number_of_rows = len(name)/76
+        number_of_rows = len(name)/73
         if number_of_rows<=1:
             text = [font.render(name, True, (0, 0, 0))]
         else:
             text = []
             temp_name = name
             while number_of_rows>1:
-                text.append(font.render(temp_name[:76], True, (0, 0, 0)))
-                temp_name = temp_name[76:]
-                number_of_rows = len(temp_name)/76
+                text.append(font.render(temp_name[:73]+"-", True, (0, 0, 0)))
+                temp_name = temp_name[73:]
+                number_of_rows = len(temp_name)/73
                 if number_of_rows<=1:
                     text.append(font.render(temp_name, True, (0, 0, 0)))    
         return text
@@ -1018,10 +1018,8 @@ class NewsItem:
     
     @staticmethod
     def make_surface(size=(200, 80), color=(255, 255, 255, 128)):
-        box = pygame.Surface(size, pygame.SRCALPHA)
-        box.fill(color)
-        pygame.draw.rect(box, (255, 255, 255, 255), (0, 0, *size))
-        return box 
+        panel = pygame.image.load('assets/stuff/news-panel.png')
+        return panel
 
     @classmethod
     def store_notification(cls):
