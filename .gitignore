@@ -2,4 +2,4 @@ plot1.png
 plot2.png
 .venv
 .idea/
-
+components/__pycache__
